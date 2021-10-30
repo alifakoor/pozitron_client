@@ -3,41 +3,29 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "test:unit": "vue-cli-service test:unit",
-    "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint"
+    "dev": "vite",
+    "serve": "vite preview",
+    "build": "vite build",
+    "test": "jest"
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "primeflex": "^3.1.0",
+    "primeicons": "^4.1.0",
+    "primevue": "^3.8.2",
     "register-service-worker": "^1.7.1",
+    "sass": "^1.43.4",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "~4.5.0",
-    "@vue/cli-plugin-e2e-cypress": "~4.5.0",
-    "@vue/cli-plugin-eslint": "~4.5.0",
-    "@vue/cli-plugin-pwa": "~4.5.0",
-    "@vue/cli-plugin-router": "~4.5.0",
-    "@vue/cli-plugin-unit-jest": "~4.5.0",
-    "@vue/cli-plugin-vuex": "~4.5.0",
-    "@vue/cli-service": "~4.5.0",
+    "@vitejs/plugin-vue": "^1.9.4",
     "@vue/compiler-sfc": "^3.0.0",
-    "@vue/eslint-config-standard": "^5.1.2",
     "@vue/test-utils": "^2.0.0-0",
-    "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-import": "^2.20.2",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.0",
-    "eslint-plugin-vue": "^7.0.0",
-    "less": "^3.0.4",
-    "less-loader": "^5.0.0",
+    "sass-loader": "^12.3.0",
     "typescript": "~3.9.3",
+    "vite": "^2.6.13",
     "vue-jest": "^5.0.0-0"
   }
 }
