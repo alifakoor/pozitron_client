@@ -18,12 +18,12 @@ const routes = [
 	{
 		path: '/username',
 		name: 'user.show',
-		component: () => { },
+		component: () => import('../views/Panel.vue'),
 		children: [
 			{
 				path: 'products',
 				name: 'porduct.show',
-				component: () => { },
+				component: () => import('../views/products/List.vue'),
 				children: [
 					{
 						path: 'create',
