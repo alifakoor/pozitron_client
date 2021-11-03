@@ -7,6 +7,11 @@ import Dialog from 'primevue/dialog/Dialog.vue'
 import DataTable from 'primevue/datatable/DataTable.vue'
 import Column from 'primevue/column/Column.vue'
 import ColumnGroup from 'primevue/columngroup/ColumnGroup.vue'
+import Row from 'primevue/row/Row.vue'
+import Chip from 'primevue/chip/Chip.vue'
+import Tag from 'primevue/tag/Tag.vue'
+import Badge from 'primevue/badge/Badge.vue'
+import InputSwitch from 'primevue/inputswitch/InputSwitch.vue'
 
 // zi
 import RTLBreadcrumb from './TheRTLBreadcrumb.vue'
@@ -26,6 +31,11 @@ export default {
 		app.component('DataTable', DataTable)
 		app.component('Column', Column)
 		app.component('ColumnGroup', ColumnGroup)
+		app.component('Row', Row)
+		app.component('Chip', Chip)
+		app.component('Tag', Tag)
+		app.component('Badge', Badge)
+		app.component('InputSwitch', InputSwitch)
 
 		// zi
 		app.component('zi-rtl-breadcrumb', RTLBreadcrumb)
