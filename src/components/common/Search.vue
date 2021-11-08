@@ -28,18 +28,28 @@ export default {
 <style lang="scss" scoped>
 	.zi-search {
 		direction: ltr;
-		margin: 0 1.25rem;
+		margin-right: 1.937984496124031007751937984496%;
+		margin-left: 2.325581395348837209302325581395%;
 		.p-button,
 		.p-inputgroup-addon {
 			width: 2.5rem;
-			padding: .375rem 0;
 			color: #B4B4B4;
 			border: 1px solid $buttonBorderColor;
 			background-color: #F6F6F7;
+			padding-top: 1.515151515151515151515151515152%;
+    		padding-bottom: 1.515151515151515151515151515152%;
+		}
+
+		.p-button {
+			border-radius: 4px 0px 0px 4px;
+		}
+
+		.p-inputgroup-addon {
+			border-radius: 0px 4px 4px 0px;
 		}
 
 		.p-inputtext {
-			padding: .375rem;
+			padding: 1.515151515151515151515151515152%;
 			text-align: right;
 			font-family: Vazir;
 		}

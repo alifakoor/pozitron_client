@@ -42,7 +42,7 @@ export default {
 .zi-sidebar {
   	width: 10%;
 	height: 100vh;
-	padding-top: 55px;
+	padding-top: 4.375%;
 	
 	ul {
 		display: flex;

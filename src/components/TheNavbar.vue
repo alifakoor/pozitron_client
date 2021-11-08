@@ -11,7 +11,6 @@ export default {
     return {
       home: { icon: 'pi pi-home', to: '/' },
       items: [
-        { label: 'انبار' },
         { label: 'محصولات' }
       ]
     }
