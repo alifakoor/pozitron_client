@@ -18,9 +18,9 @@ build app:
         - npm run build
         - echo "App Builded Successful"
     artifacts:
-    expire_in: 1 week
-    paths:
-        - build
+        expire_in: 1 week
+        paths:
+            - build
 
 deploy to dev.pozitronet.ir :
     image: ubuntu
