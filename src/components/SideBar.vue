@@ -10,15 +10,17 @@
 @import "../assets/styles/variables";
 .blueSideBar {
   background: $sideBarBackground;
-  height: 80vh;
+  // min-width: 504px;
+  min-height: 648px;
   font-size: 24px;
+  border-radius: 32px 0px 0px 32px;
   .title {
     margin-top: 84px;
-    color: #fff;
+    color: $sideBarTitle;
     font-style: normal;
     font-weight: 500;
-    font-size: 1.5rem;
-    line-height: 162%;
+    font-size: 1.125rem;
+    line-height: 180%;
     display: flex;
     align-items: center;
     text-align: center;

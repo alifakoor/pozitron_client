@@ -1,49 +1,56 @@
 <template>
-  <div class="p-col-5 p-d-flex p-ai-center p-jc-center formContainer">
-    <Toast position="top-right" class="send-code" />
-
-    <div class="innerBox p-d-flex p-ai-start p-jc-start p-flex-column">
-      <p class="title">ورود به پنل کاربری پوزیترون</p>
-
-      <!-- enter phone number -->
-      <form @submit.prevent="sendToken()" v-if="!sendCode || changeNumber">
-        <p class="formTitle">لطفا شماره موبایل خود را وارد کنید.</p>
-        <div class="inputContainer">
-          <input
-            type="text"
-            class="loginInput"
-            :placeholder="!notValidData ? 'شماره موبایل(ضروری)' : ''"
-            v-model="userTel"
-            @blur="validData()"
-            :class="{ 'p-invalid': notValidData, 'p-valid': correctPhone }"
-            maxlength="15"
-            v-mask="['####  ###  ####']"
-            @input="phoneIsCorrect()"
-          />
-          <i
-            class="ri-checkbox-circle-line iconInput iconCorrect"
-            v-show="correctPhone"
-          ></i>
-          <i
+  <div
+    class="p-col-5 p-d-flex p-ai-center p-jc-start formContainer p-flex-column"
+  >
+    <!-- enter phone number -->
+    <div
+      class="innerBox p-d-flex p-ai-center p-jc-start p-flex-column"
+      v-if="!sendCode || changeNumber"
+    >
+      <p class="title">ثبت‌نام / ورود به پنل کاربری پوزیترون</p>
+      <form @submit.prevent="sendToken()">
+        <div class="middleBox">
+          <p class="formTitle">لطفا شماره موبایل خود را وارد کنید.</p>
+          <div class="inputContainer">
+            <input
+              type="text"
+              class="loginInput inputText"
+              v-model="userTel"
+              @blur="validData()"
+              :class="{ 'p-invalid': notValidData, 'p-valid': correctPhone }"
+              maxlength="15"
+              v-mask="['####  ###  ####']"
+              @input="phoneIsCorrect()"
+            />
+            <span class="floating-label">شماره موبایل(ضروری)</span>
+            <i
+              class="ri-checkbox-circle-line iconInput iconCorrect"
+              v-show="correctPhone"
+            ></i>
+            <!-- <i
             class="ri-close-circle-line iconInput iconInCorrect"
             v-show="notValidData"
-          ></i>
-          <p class="errText" v-show="notValidData">
-            لطفا شماره تلفن را به درستی وارد کنید.
-          </p>
+          ></i> -->
+            <p class="errText" v-show="notValidData">
+              لطفا شماره تلفن را به درستی وارد کنید.
+            </p>
+          </div>
         </div>
         <button class="loginButton" :class="loading ? 'sendData' : ''">
           <i v-show="!loading" class="ri-checkbox-circle-line p-ml-1"></i>
           <i v-show="loading" class="pi pi-spin pi-spinner p-m-1"></i>
           <p>ورود به پوزیترون</p>
         </button>
-        <p class="signUp p-mr-2">
-          حساب کاربری ندارید؟
-          <a class="linkSignUp p-mr-1" href="#"> ثبت نام کنید.</a>
-        </p>
       </form>
-      <!-- enter code  -->
-      <form @submit.prevent="sendToken()" v-else>
+    </div>
+
+    <!-- enter code of login -->
+    <div
+      class="innerBox p-d-flex p-ai-start p-jc-start p-flex-column"
+      v-else-if="phoneIsExist"
+    >
+      <p class="title">ثبت‌نام / ورود به پنل کاربری پوزیترون</p>
+      <form @submit.prevent="sendToken()">
         <p class="formTitle">
           کد ارسال شده به شماره {{ userTelOut }} را وارد کنید.
         </p>
@@ -86,31 +93,33 @@
         </p>
       </form>
     </div>
+
+    <!-- enter sign up information -->
+    <Register v-else :userTelOut="userTelOut"></Register>
   </div>
 </template>
 
 <script>
 import { ref, computed, defineComponent, watchEffect } from "vue";
-import { useToast } from "primevue/usetoast";
+import Register from "./Register.vue";
 
 export default defineComponent({
   setup() {
-    const toast = useToast();
+    const regex = new RegExp("^(\\+98|0)?9\\d{9}$");
     const inputs = ref([]);
-
     const userTel = ref("");
     const notValidData = ref(false);
     const correctPhone = ref(false);
     const loading = ref(false);
     const sendCode = ref(false);
     const changeNumber = ref(false);
+    const phoneIsExist = ref(false);
     const activationKeyFields = ref([
       { length: 1, value: "" },
       { length: 1, value: "" },
       { length: 1, value: "" },
       { length: 1, value: "" },
     ]);
-
     const activationKey = computed(() => {
       let value = "";
       for (let field of activationKeyFields.value) {
@@ -118,28 +127,24 @@ export default defineComponent({
       }
       return value;
     });
-
     const userTelOut = computed(() => {
       return userTel.value.replace(/\s/g, "");
     });
-
     function validData() {
-      if (userTel.value === "") {
+      if (userTel.value === "" || !regex.test(userTelOut.value)) {
         notValidData.value = true;
       } else {
         notValidData.value = false;
       }
     }
-
     function phoneIsCorrect() {
-      if (userTelOut.value.length == 11) {
+      if (userTelOut.value.length == 11 && regex.test(userTelOut.value)) {
         correctPhone.value = true;
         notValidData.value = false;
       } else {
         correctPhone.value = false;
       }
     }
-
     function sendToken() {
       if (userTelOut.value == "" || correctPhone.value == false) {
         notValidData.value = true;
@@ -147,27 +152,37 @@ export default defineComponent({
         notValidData.value = false;
         loading.value = true;
         setTimeout(() => {
-          toast.add({
-            severity: "success",
-            summary: "کد تایید ارسال شد.",
-            styleClass: "sendCodeMessage",
+          Swal.fire({
+            icon: "success",
+            title: "کد تایید ارسال شد",
+            toast: true,
+            position: "top-right",
+            iconColor: "#065143",
+            customClass: {
+              popup: "colored-toast",
+            },
+            showConfirmButton: false,
+            timer: 1500,
+            timerProgressBar: true,
+            showCloseButton: true,
+            closeButtonColor: "#065143",
           });
           loading.value = false;
           sendCode.value = true;
           changeNumber.value = false;
-
-          watchEffect(
-            () => {
-              inputs.value[0].focus();
-            },
-            {
-              flush: "post",
-            }
-          );
+          if (inputs.value.length > 0) {
+            watchEffect(
+              () => {
+                inputs.value[0].focus();
+              },
+              {
+                flush: "post",
+              }
+            );
+          }
         }, 3000);
       }
     }
-
     function handleActivationInput(e) {
       // Grab input's value
       let value = e.target.value;
@@ -175,13 +190,11 @@ export default defineComponent({
       let index = parseInt(e.target.dataset.index);
       // Grab data-length value
       let maxlength = e.target.dataset.length;
-
       // Shift focus to next input field if max length reached
       if (value.length >= maxlength) {
         if (typeof activationKeyFields.value[index + 1] == "undefined") {
           watchEffect(
             () => {
-              console.log("fcfdcfcfdc");
               inputs.value[index].blur();
             },
             {
@@ -218,7 +231,6 @@ export default defineComponent({
         e.preventDefault();
       }
     }
-
     return {
       userTel,
       notValidData,
@@ -234,20 +246,33 @@ export default defineComponent({
       handleActivationInput,
       activationKey,
       changeNumber,
+      phoneIsExist,
     };
   },
+  components: { Register },
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import "../assets/styles/variables";
 .formContainer {
   background: #ffffff;
   box-shadow: 0px 0px 5px rgba(23, 24, 24, 0.05);
-  border-radius: 0 8px 8px 0;
-  height: 80vh;
+  border-radius: 0px 32px 32px 0px;
+  min-height: 648px;
+  min-width: 504px;
+  position: relative;
   .innerBox {
-    width: 70%;
+    width: 65%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    min-width: 328px;
+    min-height: 354px;
+    position: absolute;
+    left: 88px;
+    top: 80px;
   }
   form {
     width: 100%;
@@ -255,28 +280,36 @@ export default defineComponent({
   .title {
     font-style: normal;
     font-weight: 500;
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     line-height: 162%;
     display: flex;
-    color: #000;
+    color: $Green;
     align-items: center;
     text-align: right;
     margin-bottom: 56px;
   }
   .formTitle {
     color: $formTitle;
-    font-size: 1rem;
+    font-size: 0.9rem;
     line-height: 150%;
-    display: flex;
     align-items: center;
     text-align: right;
     margin-bottom: 16px;
   }
   .inputContainer {
     position: relative;
-    height: fit-content;
-    margin-bottom: 56px;
+    margin: 16px 0px;
+    height: 78px;
   }
+  .middleBox {
+    margin: 72px 0px;
+    min-width: 328px;
+    min-height: 122px;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+  }
+
   .iconInput {
     position: absolute;
     right: 0;
@@ -297,6 +330,7 @@ export default defineComponent({
     display: flex;
     align-items: center;
     text-align: right;
+    margin: 4px 0px;
   }
   .loginInput {
     border: none;
@@ -343,6 +377,8 @@ export default defineComponent({
     background: $blueButtonBg;
     border-radius: 16px;
     box-shadow: 0px 0px 5px rgba(23, 24, 24, 0.05);
+    margin: 8px 0;
+
     //inner text
     p {
       font-style: normal;
@@ -356,6 +392,7 @@ export default defineComponent({
     }
   }
   .codeTokenInput {
+    height: fit-content;
     direction: ltr;
     border: 0;
     border-bottom: 1px solid $loginBorder;
@@ -391,23 +428,58 @@ export default defineComponent({
   }
 }
 
-::v-deep(.send-code.p-toast) {
-  // .p-toast-message {
-  //   background: #c8e6c9;
-  //   border: solid #439446;
-  //   border-width: 0 6px 0 0;
-  //   color: #224a23;
-  // }
-  .sendCodeMessage {
-    font-size: 40px;
-    background: blue !important;
+.colored-toast.swal2-icon-success {
+  width: 227px !important;
+  height: 48px;
+  background: #c5dacf !important;
+  border-radius: 8px;
+  border-right: 7px solid #558b6e;
+  align-items: center !important;
+  justify-content: right;
+  display: flex !important;
+  padding: 20px 10px;
+  // padding-top: 0 !important;
+
+  .swal2-title {
+    font-size: 16px;
+    color: #065143;
+    margin: 0.5em 0 0.5em 1em;
+  }
+
+  .swal2-success-ring,
+  .swal2-success-fix {
+    visibility: hidden !important;
+    background: #558b6e;
+  }
+
+  .swal2-icon-show {
+    margin: -5px 0 0 0 !important;
+  }
+
+  .swal2-close {
+    position: absolute;
+    left: 0;
+    color: #065143;
+    margin-top: -5px;
   }
 }
+input:focus ~ .floating-label,
+.p-valid ~ .floating-label {
+  top: -15px;
+  right: 5px;
+  font-size: 12px;
+  opacity: 1;
+}
 
-// .p-toast .p-toast-message.p-toast-message-success {
-//   background: #c8e6c9;
-//   border: solid #439446;
-//   border-width: 0 6px 0 0;
-//   color: #224a23;
-// }
+.p-invalid ~ .floating-label {
+  right: 5px;
+}
+
+.floating-label {
+  position: absolute;
+  pointer-events: none;
+  right: 0;
+  top: 0;
+  transition: 0.2s ease all;
+}
 </style>
