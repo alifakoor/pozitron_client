@@ -61,6 +61,13 @@
           />
         </div>
       </div>
+      <p class="counter">
+        0{{ Math.floor(timerCounter / 1000 / 60) }}:{{
+          Math.ceil((timerCounter % (60 * 60)) % 60) > 10
+            ? Math.ceil((timerCounter % (60 * 60)) % 60)
+            : "0" + Math.ceil((timerCounter % (60 * 60)) % 60)
+        }}
+      </p>
       <button
         @click.prevent="changeStep()"
         class="loginButton"
@@ -243,6 +250,8 @@ export default {
     },
   },
   setup() {
+    // timerCounte
+    const timerCounter = ref(180000);
     // ------------------variables-----------------------
     const urlRegex = new RegExp(
       "(?:www.|(?!www)[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))[a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})"
@@ -312,6 +321,12 @@ export default {
         flush: "post",
       }
     );
+
+    let interval = setInterval(() => {
+      if (timerCounter.value > 0) {
+        timerCounter.value -= 1;
+      }
+    }, 1000);
     // ----------------------functions-------------------------
     function changeStep() {
       switch (step.value) {
@@ -501,6 +516,7 @@ export default {
       pozitronUrl,
       notValidPozURL,
       correctPozURL,
+      timerCounter,
       notValidPass,
       notValidKey,
       correctURL,
@@ -517,6 +533,15 @@ export default {
 
 <style lang="scss">
 @import "../assets/styles/variables";
+
+.counter {
+  text-align: left;
+  color: #131520;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 162%;
+  margin-left: 15px;
+}
 
 .stepsContainer {
   min-width: 479px;

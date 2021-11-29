@@ -29,13 +29,81 @@
         را در قسمت مربوطه بچسبانید.
       </p>
     </div>
-    <div class="infoGallery"></div>
+    <div class="infoGallery">
+      <Galleria
+        class="custom-galleria"
+        :value="images"
+        :responsiveOptions="responsiveOptions"
+        :numVisible="5"
+        :circular="true"
+        containerStyle="max-width: 640px"
+        :showItemNavigators="true"
+        :showThumbnails="false"
+        :showIndicators="true"
+      >
+        <template #item="slotProps">
+          <img
+            :src="slotProps.item.itemImageSrc"
+            :alt="slotProps.item.alt"
+            style="width: 100%; display: block"
+          />
+        </template>
+        <template #indicator="{ index }">
+          <span style="color: #e9ecef; cursor: pointer">
+            {{ index + 1 }}
+          </span>
+        </template>
+        <!-- <template #thumbnail="slotProps">
+          <img
+            :src="slotProps.item.thumbnailImageSrc"
+            :alt="slotProps.item.alt"
+            style="display: block"
+          />
+        </template> -->
+      </Galleria>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  data() {},
+  data() {
+    return {
+      images: [
+        {
+          itemImageSrc: "../../public/images/image_2021-11-21_18-09-41.png",
+          thumbnailImageSrc:
+            "../../public/images/image_2021-11-21_18-09-41.png",
+          alt: "Description for Image 1",
+          title: "Title 1",
+        },
+        {
+          itemImageSrc: "../../public/images/woocommerce2.PNG",
+          thumbnailImageSrc: "../../public/images/woocommerce2.PNG",
+          alt: "Description for Image 2",
+          title: "Title 2",
+        },
+      ],
+      responsiveOptions: [
+        {
+          breakpoint: "1024px",
+          numVisible: 5,
+        },
+        {
+          breakpoint: "960px",
+          numVisible: 4,
+        },
+        {
+          breakpoint: "768px",
+          numVisible: 3,
+        },
+        {
+          breakpoint: "560px",
+          numVisible: 1,
+        },
+      ],
+    };
+  },
   props: ["modalShow"],
   methods: {
     modalHandle() {
@@ -45,7 +113,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "../assets/styles/variables";
 .modalInfo {
   width: fit-content;
@@ -102,6 +170,31 @@ export default {
   .arrowRight {
     color: #558b6e;
     font-size: 30px;
+  }
+}
+.infoGallery {
+  border-radius: 15px;
+  margin-top: 20px;
+  width: 100%;
+  height: 200px;
+}
+
+::v-deep(.custom-galleria) {
+  width: 428px !important;
+  .p-galleria-indicator {
+    span {
+      border: 2px solid #558b6e;
+    }
+  }
+  .indicator-text {
+    color: red;
+    cursor: pointer;
+  }
+
+  .p-highlight {
+    .indicator-text {
+      color: red;
+    }
   }
 }
 </style>

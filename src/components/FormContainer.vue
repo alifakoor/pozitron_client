@@ -72,6 +72,7 @@
             :maxlength="key.length"
           />
         </div>
+
         <button class="loginButton" :class="loading ? 'sendData' : ''">
           <i v-show="!loading" class="pi pi-clock p-ml-1"></i>
           <i v-show="loading" class="pi pi-spin pi-spinner p-m-1"></i>
@@ -82,7 +83,7 @@
             @click.prevent="
               () => {
                 changeNumber = true;
-                loadin = false;
+                loading = false;
               }
             "
             class="linkSignUp p-mr-1"
@@ -105,6 +106,9 @@ import Register from "./Register.vue";
 
 export default defineComponent({
   setup() {
+    // timerCounte
+    const timerCounter = ref(18000);
+
     const regex = new RegExp("^(\\+98|0)?9\\d{9}$");
     const inputs = ref([]);
     const userTel = ref("");
@@ -151,6 +155,7 @@ export default defineComponent({
       } else if (correctPhone.value) {
         notValidData.value = false;
         loading.value = true;
+
         setTimeout(() => {
           Swal.fire({
             icon: "success",
@@ -167,6 +172,7 @@ export default defineComponent({
             showCloseButton: true,
             closeButtonColor: "#065143",
           });
+
           loading.value = false;
           sendCode.value = true;
           changeNumber.value = false;
@@ -237,6 +243,7 @@ export default defineComponent({
       validData,
       userTelOut,
       correctPhone,
+      timerCounter,
       phoneIsCorrect,
       sendToken,
       loading,
