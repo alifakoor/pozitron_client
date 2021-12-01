@@ -47,10 +47,10 @@
     <!-- enter code of login -->
     <div
       class="innerBox p-d-flex p-ai-start p-jc-start p-flex-column"
-      v-else-if="phoneIsExist"
+      v-else-if="userExist"
     >
       <p class="title">ثبت‌نام / ورود به پنل کاربری پوزیترون</p>
-      <form @submit.prevent="sendToken()">
+      <form @submit.prevent="checkKey()">
         <p class="formTitle">
           کد ارسال شده به شماره {{ userTelOut }} را وارد کنید.
         </p>
@@ -72,7 +72,13 @@
             :maxlength="key.length"
           />
         </div>
-
+        <p class="counter">
+          0{{ Math.floor(timerCounter / 1000 / 60) }}:{{
+            Math.ceil((timerCounter % (60 * 60)) % 60) > 10
+              ? Math.ceil((timerCounter % (60 * 60)) % 60)
+              : "0" + Math.ceil((timerCounter % (60 * 60)) % 60)
+          }}
+        </p>
         <button class="loginButton" :class="loading ? 'sendData' : ''">
           <i v-show="!loading" class="pi pi-clock p-ml-1"></i>
           <i v-show="loading" class="pi pi-spin pi-spinner p-m-1"></i>
@@ -84,6 +90,7 @@
               () => {
                 changeNumber = true;
                 loading = false;
+                timerCounter = 180000;
               }
             "
             class="linkSignUp p-mr-1"
@@ -96,16 +103,28 @@
     </div>
 
     <!-- enter sign up information -->
-    <Register v-else :userTelOut="userTelOut"></Register>
+    <Register
+      v-else
+      :userTelOut="userTelOut"
+      @changingNumber="
+        () => {
+          changeNumber = true;
+          sendCode = false;
+        }
+      "
+    ></Register>
   </div>
 </template>
 
 <script>
-import { ref, computed, defineComponent, watchEffect } from "vue";
+import { ref, computed, defineComponent, watchEffect, inject } from "vue";
 import Register from "./Register.vue";
+import axios from "axios";
 
 export default defineComponent({
   setup() {
+    // userToken
+    const userToken = ref(null);
     // timerCounte
     const timerCounter = ref(18000);
 
@@ -117,7 +136,7 @@ export default defineComponent({
     const loading = ref(false);
     const sendCode = ref(false);
     const changeNumber = ref(false);
-    const phoneIsExist = ref(false);
+    const userExist = ref(false);
     const activationKeyFields = ref([
       { length: 1, value: "" },
       { length: 1, value: "" },
@@ -156,37 +175,71 @@ export default defineComponent({
         notValidData.value = false;
         loading.value = true;
 
-        setTimeout(() => {
-          Swal.fire({
-            icon: "success",
-            title: "کد تایید ارسال شد",
-            toast: true,
-            position: "top-right",
-            iconColor: "#065143",
-            customClass: {
-              popup: "colored-toast",
-            },
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true,
-            showCloseButton: true,
-            closeButtonColor: "#065143",
-          });
-
-          loading.value = false;
-          sendCode.value = true;
-          changeNumber.value = false;
-          if (inputs.value.length > 0) {
-            watchEffect(
-              () => {
-                inputs.value[0].focus();
+        axios
+          .post("http://api-dev.pozitronet.ir/auth", {
+            phone: userTelOut.value,
+          })
+          .then((response) => {
+            if (response.status == 200) {
+              userExist.value = response.data.data.created;
+            }
+            Swal.fire({
+              icon: "success",
+              title: "کد تایید ارسال شد",
+              toast: true,
+              position: "top-right",
+              iconColor: "#065143",
+              customClass: {
+                popup: "colored-toast",
               },
-              {
-                flush: "post",
-              }
-            );
-          }
-        }, 3000);
+              showConfirmButton: false,
+              timer: 1500,
+              timerProgressBar: true,
+              showCloseButton: true,
+              closeButtonColor: "#065143",
+            });
+            loading.value = false;
+            sendCode.value = true;
+            changeNumber.value = false;
+            if (inputs.value.length > 0) {
+              watchEffect(
+                () => {
+                  inputs.value[0].focus();
+                },
+                {
+                  flush: "post",
+                }
+              );
+            }
+          })
+          .catch((err) => console.log(err));
+      }
+    }
+
+    function checkKey() {
+      let interval = setInterval(() => {
+        if (timerCounter.value > 0) {
+          timerCounter.value -= 1;
+        }
+      }, 1000);
+      if (activationKey.value != "" && timerCounter.value > 0) {
+        loading.value = true;
+        axios
+          .post("http://api-dev.pozitronet.ir/auth/verify", {
+            phone: userTelOut.value,
+            code: parseInt(activationKey.value),
+          })
+          .then((response) => {
+            if (response.status == 200 && response.data.status == "success") {
+              userToken.value = response.data.token;
+              clearInterval(interval);
+              loading.value = false;
+              console.log(userToken.value);
+            }
+          })
+          .catch((err) => {
+            loading.value = false;
+          });
       }
     }
     function handleActivationInput(e) {
@@ -238,6 +291,7 @@ export default defineComponent({
       }
     }
     return {
+      userToken,
       userTel,
       notValidData,
       validData,
@@ -251,9 +305,10 @@ export default defineComponent({
       sendCode,
       activationKeyFields,
       handleActivationInput,
+      checkKey,
       activationKey,
       changeNumber,
-      phoneIsExist,
+      userExist,
     };
   },
   components: { Register },

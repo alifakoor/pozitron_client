@@ -21,4 +21,5 @@ app.use(VueTheMask);
 app.component("Steps", Steps);
 app.component("Galleria", Galleria);
 
+app.provide("apiURL", "EDFEGTETGvfvg");
 app.mount("#app");

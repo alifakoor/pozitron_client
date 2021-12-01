@@ -13,7 +13,12 @@
     <div class="stepLine stepLine1" :class="stepClass[0]"></div>
     <div class="stepContainer p-d-flex">
       <div class="step">
-        <div class="stepCircle" :class="stepClass[1]" @click="stepBack(1)">
+        <div
+          class="stepCircle"
+          :class="stepClass[1]"
+          @click="stepBack(1)"
+          style="cursor: pointer"
+        >
           <i v-if="step >= 2" class="ri-check-line"></i>
           <span v-else>2</span>
         </div>
@@ -23,7 +28,12 @@
     <div class="stepLine stepLine2" :class="stepClass[1]"></div>
     <div class="stepContainer p-d-flex">
       <div class="step">
-        <div class="stepCircle" :class="stepClass[2]" @click="stepBack(2)">
+        <div
+          class="stepCircle"
+          :class="stepClass[2]"
+          @click="stepBack(2)"
+          style="cursor: pointer"
+        >
           <i v-if="step == 3" class="ri-check-line"></i>
           <span v-else>3</span>
         </div>
@@ -60,6 +70,9 @@
             :maxlength="key.length"
           />
         </div>
+        <p class="errText" v-show="wrongKey">
+          لطفا کد تایید را صحیح وارد کنید.
+        </p>
       </div>
       <p class="counter">
         0{{ Math.floor(timerCounter / 1000 / 60) }}:{{
@@ -77,20 +90,15 @@
         <i v-show="loading" class="pi pi-spin pi-spinner p-m-1"></i>
         <p>تایید و ادامه</p>
       </button>
-      <!-- <p class="signUp p-mr-2">
+      <p class="signUp p-mr-2">
         <a
-          @click.prevent="
-            () => {
-              changeNumber = true;
-              loading = false;
-            }
-          "
+          @click.prevent="$emit('changingNumber')"
           class="linkSignUp p-mr-1"
           href="#"
           >تغییر شماره موبایل</a
         >
         <i class="ri-arrow-left-line"></i>
-      </p> -->
+      </p>
     </form>
   </div>
   <!-- step 2 form -->
@@ -123,7 +131,7 @@
         </div>
       </div>
       <!-- pozitron url input -->
-      <div class="middleBox1">
+      <!-- <div class="middleBox1">
         <div class="inputContainer" v-show="correctSiteURL">
           <input
             name="pozUrl"
@@ -144,7 +152,7 @@
             لطفا آدرس فروشگاه را به درستی وارد کنید.
           </p>
         </div>
-      </div>
+      </div> -->
       <button
         @click.prevent="changeStep()"
         class="loginButton"
@@ -164,8 +172,12 @@
     <form>
       <div class="middleBox">
         <p class="formTitle">
-          برای ساخت کلید وارد <a href="#"> پیکربندی پنل سایت ووکامرس </a>خود
-          شوید.<i
+          برای ساخت کلید وارد
+          <a
+            href="/wp-login.php?redirect_to=https%3A%2F%2Fbilobaonline.com%2Fwp-admin%2Fadmin.php%3Fpage%3Dwc-settings%26tab%3Dadvanced%26section%3Dkeys&reauth=1"
+          >
+            پیکربندی پنل سایت ووکامرس </a
+          >خود شوید.<i
             class="pi pi-question-circle"
             @click="
               () => {
@@ -241,15 +253,20 @@
 <script>
 import { ref, computed, defineComponent, watchEffect } from "vue";
 import GuidModal from "./GuidModal.vue";
+import axios from "axios";
 
 export default {
+  emit: ["changingNumber"],
   props: {
     userTelOut: {
       require: true,
       type: String,
     },
   },
-  setup() {
+  setup(props) {
+    // userToken
+    const userToken = ref(null);
+
     // timerCounte
     const timerCounter = ref(180000);
     // ------------------variables-----------------------
@@ -257,6 +274,9 @@ export default {
       "(?:www.|(?!www)[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))[a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})"
     );
     const loading = ref(false);
+
+    // form 1 variables
+    const wrongKey = ref(false);
     // form 2 variables
     const siteUrl = ref("");
     const notValidSiteURL = ref(false);
@@ -332,25 +352,55 @@ export default {
       switch (step.value) {
         case 0:
           {
-            if (activationKey.value != "") {
+            if (activationKey.value != "" && timerCounter.value > 0) {
               loading.value = true;
-              setTimeout(() => {
-                step.value += 1;
-                loading.value = false;
-              }, 2000);
+              axios
+                .post("http://api-dev.pozitronet.ir/auth/verify", {
+                  phone: props.userTelOut,
+                  code: parseInt(activationKey.value),
+                })
+                .then((response) => {
+                  if (
+                    response.status == 200 &&
+                    response.data.status == "success"
+                  ) {
+                    userToken.value = response.data.data.token;
+                    step.value += 1;
+                    clearInterval(interval);
+                    loading.value = false;
+                    wrongKey.value = false;
+                    console.log(userToken.value);
+                  }
+                })
+                .catch((err) => {
+                  loading.value = false;
+                  wrongKey.value = true;
+                });
             }
           }
           break;
         case 1:
           {
-            if (correctSiteURL.value && correctPozURL.value) {
+            if (correctSiteURL.value) {
               loading.value = true;
-              setTimeout(() => {
-                step.value += 1;
-                loading.value = false;
-              }, 2000);
+              axios
+                .get(
+                  `http://api-dev.pozitronet.ir/business/check/${siteUrl.value.substr(
+                    4
+                  )}`
+                )
+                .then((response) => {
+                  console.log(response);
+                })
+                .catch((err) => {
+                  loading.value = false;
+                });
+              // setTimeout(() => {
+              //   step.value += 1;
+              //   loading.value = false;
+              // }, 2000);
             } else {
-              notValidPozURL.value = !correctPozURL.value;
+              // notValidPozURL.value = !correctPozURL.value;
               notValidSiteURL.value = !correctSiteURL.value;
             }
           }
@@ -519,6 +569,8 @@ export default {
       timerCounter,
       notValidPass,
       notValidKey,
+      userToken,
+      wrongKey,
       correctURL,
       validURL,
       validKey,
