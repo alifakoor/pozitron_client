@@ -31,12 +31,14 @@ deploy to server:
   before_script:
     - echo "Deploying app on dev.pozitronet.ir ..."
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-    - eval `ssh-agent -s`
+    - eval $(ssh-agent -s)
     - mkdir -p /root/.ssh
     - chmod 700 /root/.ssh
-    - cp $SSH_PRIVATE_KEY /root/.ssh/id_rsa
-    - chmod 600 /root/.ssh/id_rsa
-    - ssh-add /root/.ssh/id_rsa
+    - echo "$SSH_PRIVATE_KEY" >> /root/.ssh/id_ed25519
+    - chmod 600 /root/.ssh/id_ed25519
+    - ssh-keyscan $SERVER_IP >> /root/.ssh/known_hosts
+    - chmod 644 /root/.ssh/known_hosts
   script:
+    - cat ~/.ssh/id_ed25519
     - scp -r dist $SERVER_USER@$SERVER_IP:/var/www/dev.html
     - echo "App successfully deployed."
