@@ -1,0 +1,30 @@
+{
+  "name": "login-page",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "@anivive/vue3-form-wizard": "^1.0.1",
+    "axios": "^0.24.0",
+    "primeflex": "^2.0.0",
+    "primeicons": "^5.0.0",
+    "primevue": "^3.8.2",
+    "remixicon": "^2.5.0",
+    "sass": "^1.43.4",
+    "sweetalert2": "^11.1.10",
+    "vue": "^3.2.16",
+    "vue-form-wizard": "^0.8.4",
+    "vue-router": "^4.0.12",
+    "vue-step-progress": "^0.3.7",
+    "vue-step-wizard": "^0.1.17",
+    "vue-sweetalert2": "^5.0.2",
+    "vue-the-mask": "^0.11.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^1.9.4",
+    "vite": "^2.6.4"
+  }
+}
