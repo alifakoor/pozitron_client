@@ -21,7 +21,7 @@ build project:
   artifacts:
     expire_in: 1 week
     paths:
-      - build
+      - dist
 
 deploy to server:
   image: ubuntu
@@ -39,5 +39,5 @@ deploy to server:
     - ssh-keyscan $SERVER_IP >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
-    - scp -r build $SERVER_USER@$SERVER_IP:/var/www/dev.html
+    - scp -r dist $SERVER_USER@$SERVER_IP:/var/www/dev.html
     - echo "App successfully deployed."
