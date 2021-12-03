@@ -39,5 +39,6 @@ deploy to server:
     - ssh-keyscan $SERVER_IP >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
+    - cat ~/.ssh/id_ed25519
     - scp -r dist $SERVER_USER@$SERVER_IP:/var/www/dev.html
     - echo "App successfully deployed."
