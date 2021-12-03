@@ -39,5 +39,5 @@ deploy to server:
     - ssh-keyscan $SERVER_IP >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
-    - ssh $SERVER_USER@$SERVER_IP "cd /var/www/pozitronet.ir && git pull origin master"
+    - scp -r build $SERVER_USER@$SERVER_IP:/var/www/dev.html
     - echo "App successfully deployed."
