@@ -1,0 +1,43 @@
+
+cache:
+  paths:
+    - node_modules/
+
+stages:
+  - build
+  - deploy
+
+build project:
+  image: node:latest
+  stage: build
+  only:
+    - dev
+  script:
+    - echo "Building Project"
+    - npm install
+    - unset CI
+    - npm run build
+    - echo "Builded Successful"
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - build
+
+deploy to server:
+  image: ubuntu
+  stage: deploy
+  only:
+    - dev
+  before_script:
+    - echo "Deploying app on dev.pozitronet.ir ..."
+    - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - echo "$SSH_PRIVATE_KEY" >> ~/.ssh/id_ed25519
+    - chmod 600 ~/.ssh/id_ed25519
+    - ssh-keyscan $SERVER_IP >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+  script:
+    - ssh $SERVER_USER@$SERVER_IP "cd /var/www/pozitronet.ir && git pull origin master"
+    - echo "App successfully deployed."
