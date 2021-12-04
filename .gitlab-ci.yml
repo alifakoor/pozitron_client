@@ -34,7 +34,7 @@ deploy to server:
     - eval $(ssh-agent -s)
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - echo $SSH_PRIVATE_KEY >> ~/.ssh/id_ed25519
+    - echo "$SSH_PRIVATE_KEY" >> ~/.ssh/id_ed25519
     - chmod 600 ~/.ssh/id_ed25519
     - ssh-keyscan $SERVER_IP >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
