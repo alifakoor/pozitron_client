@@ -1,0 +1,33 @@
+{
+  "name": "pozitron-project",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "axios": "^0.24.0",
+    "core-js": "^3.19.3",
+    "corejs": "^1.0.0",
+    "num2persian": "^3.2.2",
+    "primeflex": "^2.0.0",
+    "primeicons": "^5.0.0",
+    "primevue": "^3.10.0",
+    "register-service-worker": "^1.7.2",
+    "remixicon": "^2.5.0",
+    "sass": "^1.44.0",
+    "sweetalert2": "^11.3.0",
+    "vue": "^3.2.23",
+    "vue-router": "^4.0.12",
+    "vue-the-mask": "^0.11.1",
+    "vue3-cookies": "^1.0.6",
+    "vuex": "^4.0.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^1.10.2",
+    "node-sass": "^7.0.0",
+    "sass-loader": "^12.4.0",
+    "vite": "^2.7.0"
+  }
+}
