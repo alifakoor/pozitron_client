@@ -106,13 +106,13 @@
               آنلاین
             </p>
 
-            <div class="p-d-flex p-jc-around">
+            <div class="p-d-flex p-jc-around p-flex-wrap">
               <InputHasInfo
                 inputText="قیمت آنلاین"
                 InPlaceholder="تومان"
                 explaination="true"
                 inType="number"
-                InGrid="p-col-3"
+                InGrid="p-col-12 p-lg-3"
                 InHeight="32px"
                 @changeInputValue="setOnlinePrice"
               ></InputHasInfo>
@@ -121,7 +121,7 @@
                 inputText="تخفیف آنلاین "
                 InPlaceholder="درصد"
                 inType="number"
-                InGrid="p-col-3"
+                InGrid="p-col-12 p-lg-3"
                 InHeight="32px"
                 :MaxValue="100"
                 @changeInputValue="setOnlineDiscountPercent"
@@ -131,7 +131,7 @@
                 inputText="موجودی آنلاین"
                 InPlaceholder="تعداد"
                 inType="number"
-                InGrid="p-col-3"
+                InGrid="p-col-12 p-lg-3"
                 InHeight="32px"
                 @changeInputValue="setOnlineStock"
               ></InputHasInfo>
