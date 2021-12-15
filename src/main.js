@@ -2,9 +2,15 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import PrimeVue from "primevue/config";
 import VueTheMask from "vue-the-mask";
+import Vuex from "vuex";
+import VueCookies from "vue3-cookies";
+import { globalCookiesConfig } from "vue3-cookies";
+import "./registerServiceWorker";
+import router from "./router";
+import store from "./store";
 
-import Steps from "primevue/steps";
-import Galleria from "primevue/galleria";
+// add components
+import components from "./installComponents";
 
 //style import
 import "primevue/resources/themes/saga-blue/theme.css";
@@ -15,11 +21,23 @@ import "primeflex/primeflex.css";
 //remix icon import
 import "remixicon/fonts/remixicon.css";
 
-const app = createApp(App);
-app.use(PrimeVue);
-app.use(VueTheMask);
-app.component("Steps", Steps);
-app.component("Galleria", Galleria);
+// globalCookiesConfig({
+//   expireTimes: "60s",
+//   path: "/",
+//   domain: "",
+//   secure: true,
+// });
+
+const app = createApp(App)
+  .use(Vuex)
+  .use(store)
+  .use(router)
+  .use(PrimeVue)
+  .use(VueTheMask)
+  .use(VueCookies);
+
+// install components
+components.install(app);
 
 app.provide("apiURL", "EDFEGTETGvfvg");
 app.mount("#app");
