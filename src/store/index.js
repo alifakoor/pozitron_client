@@ -61,13 +61,43 @@ export default createStore({
       }
     },
     onlineSell(state, data) {
+      let sell = null;
       data.forEach((element) => {
         state.products.map((item) => {
           if (item.id == element) {
-            item.onlineSell = !item.onlineSell;
+            sell = !item.onlineSell;
+            return;
           }
         });
       });
+      axios
+        .put(
+          "https://api-dev.pozitronet.ir/products/edit",
+          {
+            ids: [...data],
+            fields: {
+              onlineSell: sell,
+            },
+          },
+          { headers: { "zi-access-token": state.userToken } }
+        )
+        .then((response) => {
+          console.log(response);
+          if (response.status == 200 && response.data.success) {
+            data.forEach((element) => {
+              state.products.map((item) => {
+                if (item.id == element) {
+                  item.onlineSell = !item.onlineSell;
+                  return;
+                }
+              });
+            });
+            state.mainProducts = state.products;
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     deleteProduct(state, data) {
       Swal.fire({
@@ -93,8 +123,14 @@ export default createStore({
           axios
             .delete(
               "https://api-dev.pozitronet.ir/products/remove",
-              { ids: [...data] },
-              { headers: { "zi-access-token": state.userToken } }
+              { ids: [1] },
+              {
+                "X-Requested-With": "XMLHttpRequest",
+                headers: {
+                  "zi-access-token":
+                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJwaG9uZSI6OTMwNzg4Nzk3OCwiZnVsbE5hbWUiOm51bGwsImVtYWlsIjpudWxsLCJyb2xlIjpudWxsLCJjb2RlIjoxMTAxLCJjb2RlQ3JlYXRlZEF0IjoiMjAyMS0xMi0xNFQwODozNTo0OS4wMDBaIiwic3RhdHVzIjpudWxsLCJjcmVhdGVkQXQiOiIyMDIxLTEyLTE0VDA4OjA4OjE0LjAwMFoiLCJ1cGRhdGVkQXQiOiIyMDIxLTEyLTE0VDA4OjM1OjQ5LjAwMFoifSwiaWF0IjoxNjM5NDcxMzcyLCJleHAiOjE2Mzk1NTc3NzJ9.RAteh5L6PCoTIFTWl43JLnkYEpoRPd9yVlMYNCH2N4o",
+                },
+              }
             )
             .then((response) => {
               console.log(response);
