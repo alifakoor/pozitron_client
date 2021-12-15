@@ -16,6 +16,10 @@ export default {
         name: "products",
         params: { userId: cookies.get("uzit") },
       });
+    } else {
+      router.push({
+        name: "SignUp",
+      });
     }
   },
 };
