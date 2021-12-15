@@ -43,6 +43,7 @@
               <Button
                 class="p-button-outlined p-button-secondary"
                 label="ویرایش"
+                :icon="sendEdit ? 'pi pi-spin pi-spinner zi-button-icon' : ''"
                 @click="edit()"
               />
             </div>
@@ -150,6 +151,7 @@ export default {
     return {
       display: false,
       editLoading: false,
+      sendEdit: false,
       onlinePrice: null,
       OnlineDiscountPercent: null,
       onlineStock: null,
@@ -188,10 +190,14 @@ export default {
         (a, [k, v]) => (v === null ? a : ((a[k] = v), a)),
         {}
       );
-      this.editSelections(lastEdit);
-      setTimeout(() => {
-        this.display = false;
-      }, 1500);
+      if (Object.keys(lastEdit).length != 0) {
+        this.sendEdit = true;
+        this.editSelections(lastEdit);
+        setTimeout(() => {
+          this.display = false;
+          this.sendEdit = false;
+        }, 3000);
+      }
     },
     setOnlinePrice(inputValue) {
       console.log(inputValue);
