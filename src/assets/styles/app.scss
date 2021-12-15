@@ -35,10 +35,20 @@
   text-align: center;
 
   .p-breadcrumb {
-    padding: 0 10%;
+    padding: 0;
+    padding-left: 8%;
     border: unset;
     position: relative;
     border-bottom: 1px solid #dee2e6;
+  }
+}
+
+@media (min-width: 680px) {
+  .zi-navbar {
+    .p-breadcrumb {
+      padding: 0 10%;
+      right: 0;
+    }
   }
 }
 

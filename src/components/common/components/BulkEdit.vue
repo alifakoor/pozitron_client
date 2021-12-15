@@ -43,6 +43,7 @@
               <Button
                 class="p-button-outlined p-button-secondary"
                 label="ویرایش"
+                :icon="sendEdit ? 'pi pi-spin pi-spinner zi-button-icon' : ''"
                 @click="edit()"
               />
             </div>
@@ -106,13 +107,13 @@
               آنلاین
             </p>
 
-            <div class="p-d-flex p-jc-around">
+            <div class="p-d-flex p-jc-around p-flex-wrap">
               <InputHasInfo
                 inputText="قیمت آنلاین"
                 InPlaceholder="تومان"
                 explaination="true"
                 inType="number"
-                InGrid="p-col-3"
+                InGrid="p-col-12 p-lg-3"
                 InHeight="32px"
                 @changeInputValue="setOnlinePrice"
               ></InputHasInfo>
@@ -121,7 +122,7 @@
                 inputText="تخفیف آنلاین "
                 InPlaceholder="درصد"
                 inType="number"
-                InGrid="p-col-3"
+                InGrid="p-col-12 p-lg-3"
                 InHeight="32px"
                 :MaxValue="100"
                 @changeInputValue="setOnlineDiscountPercent"
@@ -131,7 +132,7 @@
                 inputText="موجودی آنلاین"
                 InPlaceholder="تعداد"
                 inType="number"
-                InGrid="p-col-3"
+                InGrid="p-col-12 p-lg-3"
                 InHeight="32px"
                 @changeInputValue="setOnlineStock"
               ></InputHasInfo>
@@ -150,6 +151,7 @@ export default {
     return {
       display: false,
       editLoading: false,
+      sendEdit: false,
       onlinePrice: null,
       OnlineDiscountPercent: null,
       onlineStock: null,
@@ -188,10 +190,14 @@ export default {
         (a, [k, v]) => (v === null ? a : ((a[k] = v), a)),
         {}
       );
-      this.editSelections(lastEdit);
-      setTimeout(() => {
-        this.display = false;
-      }, 1500);
+      if (Object.keys(lastEdit).length != 0) {
+        this.sendEdit = true;
+        this.editSelections(lastEdit);
+        setTimeout(() => {
+          this.display = false;
+          this.sendEdit = false;
+        }, 3000);
+      }
     },
     setOnlinePrice(inputValue) {
       console.log(inputValue);

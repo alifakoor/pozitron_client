@@ -234,12 +234,40 @@ export default createStore({
         .then((response) => {
           console.log(response);
           if (response.status == 200 && response.data.success) {
+            editData.forEach((editID) => {
+              state.products.map((product) => {
+                if (product.id == editID) {
+                  //add changing for onlineSell changing
+                  fields.onlineSell
+                    ? (product.onlineSell = fields.onlineSell)
+                    : "";
+                  // add changing for onlineStock changing
+                  fields.onlineStock
+                    ? (product.onlineStock = fields.onlineStock)
+                    : "";
+                  // add changing for onlinePrice & onlineDiscount changing
+                  fields.onlinePrice
+                    ? (product.onlinePrice = fields.onlinePrice)
+                    : "";
+
+                  fields.onlineDiscount
+                    ? (product.onlineDiscount = fields.onlineDiscount)
+                    : "";
+
+                  fields.onlinePrice || fields.onlineDiscount
+                    ? (product.onlineSalePrice =
+                        product.onlinePrice *
+                        ((100 - product.onlineDiscount) / 100))
+                    : "";
+                }
+              });
+            });
+            state.mainProducts = state.products;
             state.selections = [];
           }
         })
         .catch((err) => {
           console.log(err);
-          return false;
         });
     },
 

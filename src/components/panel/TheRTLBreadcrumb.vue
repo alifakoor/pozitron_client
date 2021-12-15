@@ -20,10 +20,7 @@
 				/>
 			</template>
 		</ul> -->
-    <div
-      class="p-d-flex p-ai-center p-jc-between navbarBox"
-      style="margin-right: 3%"
-    >
+    <div class="p-d-flex p-ai-center p-jc-between navbarBox">
       <div class="p-d-flex p-ai-center p-jc-around navbarInfo">
         <div class="navbarBurger">
           <i
@@ -63,7 +60,7 @@
 
       <div class="p-d-flex p-ai-center p-jc-around userInfo">
         <div class="welcomeText p-d-flex">
-          شماره پشتیبانی&nbsp;:&nbsp;&nbsp;
+          <span>شماره پشتیبانی&nbsp;:&nbsp;&nbsp;</span>
           <a
             href="tel:5558920234"
             onclick="ga('send', 'event', { eventCategory: 'Contact', eventAction: 'Call', eventLabel: 'Mobile Button'});"
@@ -72,7 +69,7 @@
         </div>
         <div class="userImg">
           <img
-            src="../../../public/images/usersImg/Group 12584.jpg"
+            src="../../../public/images/usersImg/Group-12584.jpg"
             alt="عکس کاربر"
           />
           <div class="triangle"></div>
@@ -138,9 +135,6 @@ export default {
       this.$refs.menu.toggle(event);
     },
   },
-  // components: {
-  //   BreadcrumbItem: BreadcrumbItem
-  // }
 };
 </script>
 
@@ -151,13 +145,21 @@ export default {
   top: 0;
   right: 0;
   border-bottom: 3px solid #7de6fc;
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   color: #7de6fc;
   background: #23273c;
   width: 96px;
   height: 100%;
+}
+@media (min-width: 680px) {
+  .pozitronBrand {
+    display: flex;
+  }
+  .navbarBox {
+    margin-right: 3%;
+  }
 }
 .p-breadcrumb {
   overflow-x: visible;
@@ -197,6 +199,7 @@ export default {
   height: 38px;
   cursor: pointer;
   position: relative;
+  margin-right: 25px;
   i {
     color: #7b84b2;
     font-size: 20px;
@@ -218,6 +221,9 @@ export default {
   font-size: 14px;
   color: #000;
   margin: 0px 8px;
+  span {
+    display: none;
+  }
   a {
     text-decoration: underline;
     color: #38489b;
@@ -364,11 +370,17 @@ export default {
 // }
 .navbarBurger {
   display: inline-block;
-  margin: 0 25px 0 15px;
+  margin: 0 0 0 15px;
 }
 @media (min-width: 680px) {
   .navbarBurger {
     display: none;
+    margin: 0 25px 0 15px;
+  }
+  .welcomeText {
+    span {
+      display: inline;
+    }
   }
 }
 
