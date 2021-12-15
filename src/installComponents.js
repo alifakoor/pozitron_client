@@ -20,6 +20,7 @@ import BadgeDirective from "primevue/badgedirective";
 import Tooltip from "primevue/tooltip";
 import Divider from "primevue/divider";
 import Textarea from "primevue/textarea";
+import Menu from "primevue/menu";
 
 // zi
 import RTLBreadcrumb from "./components/panel/TheRTLBreadcrumb.vue";
@@ -54,6 +55,7 @@ export default {
     app.component("Galleria", Galleria);
     app.component("Textarea", Textarea);
     app.component("ProgressBar", ProgressBar);
+    app.component("Menu", Menu);
     app.directive("badge", BadgeDirective);
     app.directive("tooltip", Tooltip);
 

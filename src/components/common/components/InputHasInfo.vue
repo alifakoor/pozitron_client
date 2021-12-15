@@ -41,6 +41,7 @@
         class="explaination"
         v-if="explaination === 'true' && inputValue"
         for="explain"
+        style="text-align: right"
         >{{ changeNumToPersian(inputValue) }} تومان‌‌‌‌
       </small>
     </span>
@@ -180,7 +181,7 @@ export default {
   }
   .explaination {
     display: inline-block;
-    width: 15em;
+    width: 100%;
     font-size: 12px;
     overflow-wrap: break-word;
   }

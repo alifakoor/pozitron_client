@@ -52,6 +52,12 @@ export default {
   font-size: 12px;
   margin: 0px 16px 0 8px;
 }
+
+@media (max-width: 680px) {
+  .p-inputtext {
+    width: 182px;
+  }
+}
 .p-inputtext::placeholder {
   font-size: 12px;
   color: #b4b4b4;

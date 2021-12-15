@@ -267,7 +267,7 @@ export default defineComponent({
               cookies.set("uToken", userToken.value, "1d");
               cookies.set("uzit", response.data.data.id, "1d");
               router.push({
-                name: "panel",
+                name: "products",
                 params: { userId: response.data.data.id },
               });
             }
@@ -283,6 +283,7 @@ export default defineComponent({
     }
 
     function clearInput(e) {
+      console.log(e.code);
       let index = parseInt(e.target.dataset.index);
       if (e.code == "Backspace" && e.target.value.length == 0) {
         if (typeof activationKeyFields.value[index - 1] == "undefined") {
@@ -292,6 +293,20 @@ export default defineComponent({
         watchEffect(
           () => {
             inputs.value[index - 1].focus();
+          },
+          {
+            flush: "post",
+          }
+        );
+        e.preventDefault();
+      } else if (e.target.value.length > 1) {
+        if (typeof activationKeyFields.value[index + 1] == "undefined") {
+          e.preventDefault();
+          return;
+        }
+        watchEffect(
+          () => {
+            inputs.value[index + 1].focus();
           },
           {
             flush: "post",

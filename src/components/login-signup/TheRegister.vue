@@ -286,15 +286,10 @@
 </template>
 
 <script>
-import {
-  ref,
-  computed,
-  defineComponent,
-  watchEffect,
-  onUpdated,
-  onBeforeUnmount,
-  watch,
-} from "vue";
+import { ref, computed, watchEffect } from "vue";
+import { useCookies } from "vue3-cookies";
+import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 import GuidModal from "./TheGuidModal.vue";
 import axios from "axios";
 
@@ -307,6 +302,9 @@ export default {
     },
   },
   setup(props, context) {
+    const router = useRouter();
+    const store = useStore();
+    const { cookies } = useCookies();
     // userToken
     const userToken = ref(null);
 
@@ -409,6 +407,7 @@ export default {
                   console.log(response);
                   if (response.status == 200 && response.data.success) {
                     userToken.value = response.data.data.token;
+                    cookies.set("uzit", response.data.data.id, "1d");
                     step.value += 1;
                     clearInterval(interval);
                     loading.value = false;
@@ -463,6 +462,7 @@ export default {
           {
             if (!notValidKey.value && !notValidPass.value) {
               loading.value = true;
+              startProgress(100);
               axios
                 .post(
                   "https://api-dev.pozitronet.ir/business/create",
@@ -478,7 +478,6 @@ export default {
                   if (response.status == 200 && response.data.success) {
                     loading.value = false;
                     showProductLoading.value = true;
-                    startProgress(100);
                   } else {
                     notValidKey.value = true;
                     notValidPass.value = true;
@@ -503,7 +502,7 @@ export default {
     }
 
     function clearInput(e) {
-      console.log(e.target);
+      console.log(e.code);
       let index = parseInt(e.target.dataset.index);
       if (e.code == "Backspace" && e.target.value.length == 0) {
         if (typeof activationKeyFields.value[index - 1] == "undefined") {
@@ -519,7 +518,7 @@ export default {
           }
         );
         e.preventDefault();
-      } else if (e.target.value.length >= 1) {
+      } else if (e.target.value.length > 1) {
         if (typeof activationKeyFields.value[index + 1] == "undefined") {
           e.preventDefault();
           return;
@@ -538,7 +537,7 @@ export default {
     function handleActivationInput(e) {
       // Grab input's value
       let value = e.target.value;
-      console.log(value);
+      // console.log(value);
       // Grab data-index value
       let index = parseInt(e.target.dataset.index);
       // Grab data-length value
@@ -686,15 +685,14 @@ export default {
         percent = (counter / count) * 100;
         counter++;
         progressValue.value = percent;
-        if (percent >= 100) {
+        if (percent >= count) {
           endProgress();
+          cookies.set("uToken", userToken.value, "1d");
+          router.push({
+            name: "products",
+            params: { userId: cookies.get("uzit") },
+          });
         }
-
-        // let newValue = progressValue.value + 1;
-        // if (newValue >= 100) {
-        //   newValue = 100;
-        // }
-        // progressValue.value = newValue;
       }, 1000);
     };
     const endProgress = () => {

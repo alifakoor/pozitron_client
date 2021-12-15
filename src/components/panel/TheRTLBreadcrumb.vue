@@ -25,6 +25,17 @@
       style="margin-right: 3%"
     >
       <div class="p-d-flex p-ai-center p-jc-around navbarInfo">
+        <div class="navbarBurger">
+          <i
+            class="pi pi-bars"
+            type="button"
+            label="Toggle"
+            @click="toggle"
+            aria-haspopup="true"
+            aria-controls="overlay_menu"
+          ></i>
+          <Menu id="overlay_menu" ref="menu" :model="items" :popup="true" />
+        </div>
         <i
           class="pi pi-bell"
           v-badge.info="notifCount"
@@ -56,8 +67,8 @@
           <a
             href="tel:5558920234"
             onclick="ga('send', 'event', { eventCategory: 'Contact', eventAction: 'Call', eventLabel: 'Mobile Button'});"
-            ><p class="call-button">0901-933-0922</p></a
-          >
+            ><p class="call-button">0901-933-0922</p>
+          </a>
         </div>
         <div class="userImg">
           <img
@@ -98,7 +109,34 @@ export default {
     return {
       showNotif: false,
       notifCount: 1,
+      items: [
+        {
+          icon: "ri-store-2-line",
+          // to: "/panel",
+        },
+        {
+          icon: "pi pi-box",
+          to: "/panel/1/products",
+        },
+        {
+          icon: "ri-file-list-line",
+          // to: "/panel",
+        },
+        {
+          icon: "ri-group-line",
+          // to: "/panel",
+        },
+        {
+          icon: "ri-settings-3-line",
+          // to: "/panel/1",
+        },
+      ],
     };
+  },
+  methods: {
+    toggle(event) {
+      this.$refs.menu.toggle(event);
+    },
   },
   // components: {
   //   BreadcrumbItem: BreadcrumbItem
@@ -155,13 +193,14 @@ export default {
   width: 104%;
 }
 .navbarInfo {
-  width: 145px;
+  min-width: 145px;
   height: 38px;
   cursor: pointer;
   position: relative;
   i {
     color: #7b84b2;
     font-size: 20px;
+    margin-left: 5px;
   }
   a {
     color: #036378;
@@ -323,4 +362,38 @@ export default {
 // .pi-bell:hover ~ .triangle2 {
 // 	visibility: visible;
 // }
+.navbarBurger {
+  display: inline-block;
+  margin: 0 25px 0 15px;
+}
+@media (min-width: 680px) {
+  .navbarBurger {
+    display: none;
+  }
+}
+
+.p-menu-overlay {
+  z-index: 999999999999999999999999999999999999999999999 !important;
+  width: fit-content !important;
+  .p-menuitem-link:not(.p-disabled):hover {
+    background: transparent !important;
+    outline: none;
+    border: none;
+  }
+
+  .p-menuitem-link:not(.p-disabled):hover .p-menuitem-icon {
+    color: #048ba8 !important;
+  }
+  .p-menuitem-link:focus {
+    outline: none;
+    border: none;
+    box-shadow: none !important;
+  }
+  .p-menuitem-link {
+    justify-content: center;
+    .p-menuitem-icon {
+      margin: 0;
+    }
+  }
+}
 </style>

@@ -11,7 +11,7 @@
       </li>
       <li>
         <router-link :to="{ name: 'products', params: { userId: '1' } }">
-          <i class="pi pi-home"></i>
+          <i class="pi pi-box"></i>
         </router-link>
       </li>
       <li>
@@ -25,7 +25,7 @@
         </router-link>
       </li>
       <li>
-        <router-link :to="{ name: 'panel', params: { userId: '1' } }">
+        <router-link :to="{ name: 'setting', params: { userId: '1' } }">
           <i class="ri-settings-3-line"></i>
         </router-link>
       </li>
@@ -36,7 +36,25 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      items: [
+        {
+          icon: "ri-store-2-line",
+        },
+        {
+          icon: "pi pi-hom",
+        },
+        {
+          icon: "ri-file-list-line",
+        },
+        {
+          icon: "ri-group-lin",
+        },
+        {
+          icon: "ri-settings-3-line",
+        },
+      ],
+    };
   },
 };
 </script>
@@ -46,39 +64,46 @@ export default {
 ::v-deep(.route-link-active) {
   color: #ffceb7;
 }
+
 .zi-sidebar {
-  min-height: 100vh;
-  position: sticky;
-  background: #23273c;
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: center;
-  padding: 16px 30px 0;
-  width: 96px;
+  display: none;
+}
 
-  ul {
+@media (min-width: 680px) {
+  .zi-sidebar {
+    min-height: 100vh;
+    position: sticky;
+    background: #23273c;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: start;
     align-items: center;
-    flex-flow: column wrap;
-    list-style: none;
-    margin-top: 30px;
-  }
+    padding: 16px 30px 0;
+    width: 96px;
 
-  a {
-    width: 100%;
-    color: #ffffff;
-    display: block;
-    padding: 1.3125rem 0;
-    text-decoration: none;
-    &.router-link-exact-active {
-      color: #7de6fc;
+    ul {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-flow: column wrap;
+      list-style: none;
+      margin-top: 30px;
     }
-  }
 
-  i {
-    font-size: 1.5rem;
+    a {
+      width: 100%;
+      color: #ffffff;
+      display: block;
+      padding: 1.3125rem 0;
+      text-decoration: none;
+      &.router-link-exact-active {
+        color: #7de6fc;
+      }
+    }
+
+    i {
+      font-size: 1.5rem;
+    }
   }
 }
 </style>

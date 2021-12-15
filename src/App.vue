@@ -13,7 +13,7 @@ export default {
 
     if (cookies.get("uToken")) {
       router.push({
-        name: "panel",
+        name: "products",
         params: { userId: cookies.get("uzit") },
       });
     }

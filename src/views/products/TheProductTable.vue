@@ -61,7 +61,7 @@
       :rowsPerPageOptions="[5, 10, 15, 20]"
       v-model:selection="selectedProducts"
       dataKey="id"
-      tableClass="zi-table"
+      tableClass="zi-table "
       scrollHeight="27rem"
       responsiveLayout="scroll"
       :globalFilterFields="['name', 'barcode']"
@@ -282,7 +282,7 @@
                 {{ slotProps.data.onlinePrice.toLocaleString() }}
               </p>
               <p v-if="slotProps.data.onlineSalePrice > 0">
-                {{ slotProps.data.onlinePrice.toLocaleString() }}
+                {{ slotProps.data.onlineSalePrice.toLocaleString() }}
               </p>
             </div>
           </div>

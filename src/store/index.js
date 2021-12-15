@@ -104,6 +104,7 @@ export default createStore({
                   (item) => item.id != element
                 );
               });
+              state.mainProducts = state.products;
               state.selections = [];
             })
             .catch((err) => {
@@ -157,6 +158,7 @@ export default createStore({
                   (item) => item.id != element.id
                 );
               });
+              state.mainProducts = state.products;
               state.selections = [];
             })
             .catch((err) => {
@@ -180,15 +182,15 @@ export default createStore({
     },
     editSelections(state, fields) {
       console.log(fields);
-      let deleteData = [];
+      let editData = [];
       state.selections.forEach((element) => {
-        deleteData.push(element.id);
+        editData.push(element.id);
       });
       axios
         .put(
           "https://api-dev.pozitronet.ir/products/edit",
           {
-            ids: [...deleteData],
+            ids: [...editData],
             fields: fields,
           },
           { headers: { "zi-access-token": state.userToken } }
