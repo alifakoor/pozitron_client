@@ -196,7 +196,7 @@ export default {
         setTimeout(() => {
           this.display = false;
           this.sendEdit = false;
-        }, 3000);
+        }, 1000);
       }
     },
     setOnlinePrice(inputValue) {

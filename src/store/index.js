@@ -125,8 +125,8 @@ export default createStore({
               "https://api-dev.pozitronet.ir/products/remove",
               { ids: [1] },
               {
-                "X-Requested-With": "XMLHttpRequest",
                 headers: {
+                  "Content-Type": "application/json",
                   "zi-access-token":
                     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJwaG9uZSI6OTMwNzg4Nzk3OCwiZnVsbE5hbWUiOm51bGwsImVtYWlsIjpudWxsLCJyb2xlIjpudWxsLCJjb2RlIjoxMTAxLCJjb2RlQ3JlYXRlZEF0IjoiMjAyMS0xMi0xNFQwODozNTo0OS4wMDBaIiwic3RhdHVzIjpudWxsLCJjcmVhdGVkQXQiOiIyMDIxLTEyLTE0VDA4OjA4OjE0LjAwMFoiLCJ1cGRhdGVkQXQiOiIyMDIxLTEyLTE0VDA4OjM1OjQ5LjAwMFoifSwiaWF0IjoxNjM5NDcxMzcyLCJleHAiOjE2Mzk1NTc3NzJ9.RAteh5L6PCoTIFTWl43JLnkYEpoRPd9yVlMYNCH2N4o",
                 },
@@ -216,20 +216,26 @@ export default createStore({
         }
       });
     },
-    editSelections(state, fields) {
+    async editSelections(state, fields) {
       console.log(fields);
       let editData = [];
       state.selections.forEach((element) => {
         editData.push(element.id);
       });
-      axios
+      await axios
         .put(
           "https://api-dev.pozitronet.ir/products/edit",
           {
             ids: [...editData],
             fields: fields,
           },
-          { headers: { "zi-access-token": state.userToken } }
+          {
+            headers: {
+              "X-Requested-With": "XMLHttpRequest",
+              "zi-access-token": state.userToken,
+            },
+          },
+          { withCredentials: true }
         )
         .then((response) => {
           console.log(response);
