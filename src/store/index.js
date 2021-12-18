@@ -82,7 +82,6 @@ export default createStore({
           { headers: { "zi-access-token": state.userToken } }
         )
         .then((response) => {
-          console.log(response);
           if (response.status == 200 && response.data.success) {
             data.forEach((element) => {
               state.products.map((item) => {
@@ -121,27 +120,27 @@ export default createStore({
           let text = "";
           text = `محصول "${state.products[index].name}" از انبار حذف شد.`;
           axios
-            .delete(
+            .post(
               "https://api-dev.pozitronet.ir/products/remove",
-              { ids: [1] },
+              { ids: [...data] },
               {
                 headers: {
                   "Content-Type": "application/json",
-                  "zi-access-token":
-                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJwaG9uZSI6OTMwNzg4Nzk3OCwiZnVsbE5hbWUiOm51bGwsImVtYWlsIjpudWxsLCJyb2xlIjpudWxsLCJjb2RlIjoxMTAxLCJjb2RlQ3JlYXRlZEF0IjoiMjAyMS0xMi0xNFQwODozNTo0OS4wMDBaIiwic3RhdHVzIjpudWxsLCJjcmVhdGVkQXQiOiIyMDIxLTEyLTE0VDA4OjA4OjE0LjAwMFoiLCJ1cGRhdGVkQXQiOiIyMDIxLTEyLTE0VDA4OjM1OjQ5LjAwMFoifSwiaWF0IjoxNjM5NDcxMzcyLCJleHAiOjE2Mzk1NTc3NzJ9.RAteh5L6PCoTIFTWl43JLnkYEpoRPd9yVlMYNCH2N4o",
+                  "zi-access-token": state.userToken,
                 },
               }
             )
             .then((response) => {
-              console.log(response);
-              const removeSelected = state.products;
-              data.forEach((element) => {
-                state.products = removeSelected.filter(
-                  (item) => item.id != element
-                );
-              });
-              state.mainProducts = state.products;
-              state.selections = [];
+              if (response.status == 200 && response.data.success) {
+                const removeSelected = state.products;
+                data.forEach((element) => {
+                  state.products = removeSelected.filter(
+                    (item) => item.id != element
+                  );
+                });
+                state.mainProducts = state.products;
+                state.selections = [];
+              }
             })
             .catch((err) => {
               console.log(err);
@@ -181,21 +180,22 @@ export default createStore({
           let text = "";
           text = `${state.selections.length}محصول از انبار حذف شد.`;
           axios
-            .delete(
+            .post(
               "https://api-dev.pozitronet.ir/products/remove",
               { ids: [...deleteData] },
               { headers: { "zi-access-token": state.userToken } }
             )
             .then((response) => {
-              console.log(response);
-              let removeSelected = state.products;
-              state.selections.forEach((element) => {
-                state.products = removeSelected.filter(
-                  (item) => item.id != element.id
-                );
-              });
-              state.mainProducts = state.products;
-              state.selections = [];
+              if (response.status == 200 && response.data.success) {
+                deleteData.forEach((element) => {
+                  let removeSelected = state.products;
+                  state.products = removeSelected.filter(
+                    (item) => item.id != element
+                  );
+                });
+                state.mainProducts = state.products;
+                state.selections = [];
+              }
             })
             .catch((err) => {
               console.log(err);
@@ -217,7 +217,6 @@ export default createStore({
       });
     },
     async editSelections(state, fields) {
-      console.log(fields);
       let editData = [];
       state.selections.forEach((element) => {
         editData.push(element.id);
@@ -238,7 +237,6 @@ export default createStore({
           { withCredentials: true }
         )
         .then((response) => {
-          console.log(response);
           if (response.status == 200 && response.data.success) {
             editData.forEach((editID) => {
               state.products.map((product) => {
@@ -278,7 +276,6 @@ export default createStore({
     },
 
     searchProduct(state, searchData) {
-      console.log(searchData);
       if (searchData == "") {
         state.products = state.mainProducts;
       } else {
@@ -314,8 +311,6 @@ export default createStore({
           },
         })
         .then((response) => {
-          console.log(response);
-
           if (response.status == 200 && response.data.success) {
             setTimeout(() => {
               state.loadingTable = false;

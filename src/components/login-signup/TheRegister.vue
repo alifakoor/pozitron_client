@@ -617,7 +617,8 @@ export default {
           {
             if (
               urlRegex.test(siteUrl.value) &&
-              siteUrl.value.split(".").length - 1 == 2
+              siteUrl.value.split(".").length - 1 == 2 &&
+              siteUrl.value.slice(-1) != "."
             ) {
               correctSiteURL.value = true;
               notValidSiteURL.value = false;

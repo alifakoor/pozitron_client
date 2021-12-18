@@ -689,6 +689,7 @@ export default {
   .p-datatable-tbody {
     tr {
       display: table-row;
+      width: 11rem;
     }
   }
 }
