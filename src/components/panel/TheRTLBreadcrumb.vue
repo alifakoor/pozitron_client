@@ -73,7 +73,10 @@
             alt="عکس کاربر"
           />
           <div class="triangle"></div>
-          <div class="exitAccount p-d-flex p-ai-center p-jc-center">
+          <div
+            class="exitAccount p-d-flex p-ai-center p-jc-center"
+            @click="logOut()"
+          >
             <i class="ri-logout-box-r-line"></i>
             <p class="exitText">خروج از پوزیترون</p>
           </div>
@@ -84,7 +87,8 @@
 </template>
 
 <script>
-// import BreadcrumbItem from 'primevue/breadcrumb/BreadcrumbItem.vue'
+import { mapMutations } from "vuex";
+import { useCookies } from "vue3-cookies";
 
 export default {
   name: "zi-rtl-breadcrumb",
@@ -104,6 +108,7 @@ export default {
   },
   data() {
     return {
+      cookies: useCookies(),
       showNotif: false,
       notifCount: 1,
       items: [
@@ -131,8 +136,15 @@ export default {
     };
   },
   methods: {
+    ...mapMutations(["changeUserToken"]),
     toggle(event) {
       this.$refs.menu.toggle(event);
+    },
+    logOut() {
+      this.changeUserToken("");
+      this.cookies.cookies.remove("uToken");
+      this.cookies.cookies.remove("uzit");
+      window.location.reload();
     },
   },
 };

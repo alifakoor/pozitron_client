@@ -23,8 +23,12 @@ export default createStore({
     addSelections(state, items) {
       state.selections = items;
     },
-    changeUserToken(state) {
-      state.userToken = state.cookies.cookies.get("uToken");
+    changeUserToken(state, data = null) {
+      if (data == "") {
+        state.userToken = "";
+      } else {
+        state.userToken = state.cookies.cookies.get("uToken");
+      }
     },
     sortProducts(state, data) {
       switch (data[0]) {
@@ -82,12 +86,12 @@ export default createStore({
           { headers: { "zi-access-token": state.userToken } }
         )
         .then((response) => {
+          console.log(data);
           if (response.status == 200 && response.data.success) {
             data.forEach((element) => {
               state.products.map((item) => {
                 if (item.id == element) {
-                  item.onlineSell = !item.onlineSell;
-                  return;
+                  item.onlineSell = sell;
                 }
               });
             });

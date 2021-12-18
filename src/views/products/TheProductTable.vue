@@ -194,7 +194,7 @@
             <img
               :src="
                 slotProps.data.images == ''
-                  ? '../../../../public/images/usersImg/Default Image.jpg'
+                  ? '../../../../public/images/usersImg/Default-Image.jpg'
                   : slotProps.data.images[0].src
               "
               class="product-image"
@@ -275,13 +275,13 @@
             <div
               :class="[
                 'zi-table-content-has-sub',
-                slotProps.data.onlineSalePrice > 0 ? 'zi-has-discount' : null,
+                slotProps.data.onlineDiscount > 0 ? 'zi-has-discount' : null,
               ]"
             >
               <p>
                 {{ slotProps.data.onlinePrice.toLocaleString() }}
               </p>
-              <p v-if="slotProps.data.onlineSalePrice > 0">
+              <p v-if="slotProps.data.onlineDiscount > 0">
                 {{ slotProps.data.onlineSalePrice.toLocaleString() }}
               </p>
             </div>
@@ -312,13 +312,13 @@
 					</div>
 				</template>
 			</Column> -->
-      <Column field="onlineSell" bodyClass="zi-table-body">
+      <Column  bodyClass="zi-table-body">
         <template #body="slotProps">
           <div class="zi-table-content">
             <InputSwitch
-              v-model="slotProps.data.onlineSell"
               class="zi-switch-input"
               @click="onlineSell([slotProps.data.id])"
+               v-model="slotProps.data.onlineSell"
             />
           </div>
         </template>
@@ -688,8 +688,8 @@ export default {
 
   .p-datatable-tbody {
     tr {
-      display: table-row;
-      width: 11rem;
+      display: inherit;
+      // width: 11rem;
     }
   }
 }
