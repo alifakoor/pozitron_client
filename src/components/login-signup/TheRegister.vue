@@ -193,8 +193,17 @@
           برای ساخت کلید وارد
           <a
             :href="
-              siteUrl.substr(4) +
-              '/wp-login.php?redirect_to=https%3A%2F%2Fbilobaonline.com%2Fwp-admin%2Fadmin.php%3Fpage%3Dwc-settings%26tab%3Dadvanced%26section%3Dkeys&reauth=1'
+              'https://' +
+              siteUrl
+                .replace('https://', '')
+                .replace('http://', '')
+                .replace('www.', '') +
+              '/wp-login.php?redirect_to=https%3A%2F%2F' +
+              siteUrl
+                .replace('https://', '')
+                .replace('http://', '')
+                .replace('www.', '') +
+              '%2Fwp-admin%2Fadmin.php%3Fpage%3Dwc-settings%26tab%3Dadvanced%26section%3Dkeys&reauth=1'
             "
             target="_blank"
           >
@@ -257,8 +266,13 @@
         class="progressLoading p-d-flex p-flex-column"
         v-if="showProductLoading"
       >
-        <p>بارگذاری انبار محصولات</p>
-        <p>این فرآیند کمی زمانبر است.لطفا صبر کنید.</p>
+        <p v-if="myColor == '#558b6e'">
+          این فرآیند کمی زمانبر است.لطفا صبر کنید.
+        </p>
+        <p v-else style="color: #e61f10">
+          متاسفانه همه‌ی محصولات کامل از سایت شما بارگذاری نشدند.لطفا مجددا تلاش
+          کنید.
+        </p>
         <ProgressBar
           :value="progressValue"
           :showValue="true"
@@ -266,6 +280,7 @@
         />
       </div>
       <button
+        v-if="myColor == '#558b6e'"
         @click.prevent="changeStep()"
         class="loginButton"
         :class="loading ? 'sendData' : ''"
@@ -273,6 +288,16 @@
         <i v-show="!loading" class="ri-checkbox-circle-line p-ml-1"></i>
         <i v-show="loading" class="pi pi-spin pi-spinner p-m-1"></i>
         <p>اتصال به پوزیترون</p>
+      </button>
+      <button
+        v-else
+        @click.prevent="createConnection()"
+        class="loginButton"
+        :class="loading ? 'sendData' : ''"
+      >
+        <i v-show="!loading" class="ri-checkbox-circle-line p-ml-1"></i>
+        <i v-show="loading" class="pi pi-spin pi-spinner p-m-1"></i>
+        <p>تلاش مجدد</p>
       </button>
     </form>
   </div>
@@ -302,6 +327,7 @@ export default {
     },
   },
   setup(props, context) {
+    const myColor = ref("#558b6e");
     const router = useRouter();
     const store = useStore();
     const { cookies } = useCookies();
@@ -392,6 +418,30 @@ export default {
       }
     }, 1000);
     // ----------------------functions-------------------------
+    function createConnection() {
+      progressValue.value = 0;
+      myColor.value = "#558b6e";
+      startProgress(100);
+      axios
+        .post(
+          "https://api-dev.pozitronet.ir/business/create",
+          {
+            domain: siteUrl.value,
+            key: useKey.value,
+            secret: passKey.value,
+          },
+          { headers: { "zi-access-token": userToken.value } }
+        )
+        .then((response) => {
+          if (response.status == 200 && response.data.success) {
+            endProgress();
+          } else {
+            myColor.value = "#E61F10";
+            endProgress();
+          }
+        })
+        .catch((err) => {});
+    }
     function changeStep() {
       switch (step.value) {
         case 0:
@@ -404,7 +454,6 @@ export default {
                   code: parseInt(activationKey.value),
                 })
                 .then((response) => {
-                  console.log(response);
                   if (response.status == 200 && response.data.success) {
                     userToken.value = response.data.data.token;
                     cookies.set("uzit", response.data.data.id, "1d");
@@ -412,12 +461,22 @@ export default {
                     clearInterval(interval);
                     loading.value = false;
                     wrongKey.value = false;
-                    console.log(userToken.value);
+                  } else {
+                    activationKeyFields.value.forEach((input) => {
+                      input.value = "";
+                    });
+                    inputs.value[0].focus();
+                    loading.value = false;
+                    wrongKey.value = true;
                   }
                 })
                 .catch((err) => {
                   loading.value = false;
                   wrongKey.value = true;
+                  activationKeyFields.value.forEach((input) => {
+                    input.value = "";
+                  });
+                  inputs.value[0].focus();
                 });
             } else {
               wrongKey.value = true;
@@ -429,14 +488,12 @@ export default {
             if (correctSiteURL.value) {
               loading.value = true;
               axios
-                .get(
-                  `https://api-dev.pozitronet.ir/business/check/${siteUrl.value.substr(
-                    4
-                  )}`,
+                .post(
+                  "https://api-dev.pozitronet.ir/business/check",
+                  { domain: siteUrl.value },
                   { headers: { "zi-access-token": userToken.value } }
                 )
                 .then((response) => {
-                  console.log(response);
                   if (response.data.success) {
                     if (response.data.existed) {
                       urlExist.value = true;
@@ -462,22 +519,20 @@ export default {
           {
             if (!notValidKey.value && !notValidPass.value) {
               loading.value = true;
-              startProgress(100);
               axios
                 .post(
-                  "https://api-dev.pozitronet.ir/business/create",
+                  "https://api-dev.pozitronet.ir/business/check_domain",
                   {
-                    domain: siteUrl.value.substr(4),
+                    domain: siteUrl.value,
                     key: useKey.value,
                     secret: passKey.value,
                   },
                   { headers: { "zi-access-token": userToken.value } }
                 )
                 .then((response) => {
-                  console.log(response);
                   if (response.status == 200 && response.data.success) {
-                    loading.value = false;
                     showProductLoading.value = true;
+                    createConnection();
                   } else {
                     notValidKey.value = true;
                     notValidPass.value = true;
@@ -496,13 +551,10 @@ export default {
     }
 
     function stepBack(prevStep) {
-      if (activationKey.value != "") {
-        step.value = prevStep;
-      }
+      step.value = prevStep;
     }
 
     function clearInput(e) {
-      console.log(e.code);
       let index = parseInt(e.target.dataset.index);
       if (e.code == "Backspace" && e.target.value.length == 0) {
         if (typeof activationKeyFields.value[index - 1] == "undefined") {
@@ -553,6 +605,8 @@ export default {
               flush: "post",
             }
           );
+          loading.value = false;
+          wrongKey.value = false;
           changeStep();
           e.preventDefault();
           return;
@@ -615,11 +669,7 @@ export default {
       switch (event.target.name) {
         case "siteUrl":
           {
-            if (
-              urlRegex.test(siteUrl.value) &&
-              siteUrl.value.split(".").length - 1 == 2 &&
-              siteUrl.value.slice(-1) != "."
-            ) {
+            if (siteUrl.value != "" || siteUrl.value != null) {
               correctSiteURL.value = true;
               notValidSiteURL.value = false;
             } else {
@@ -682,21 +732,26 @@ export default {
       let percent = 0;
       let counter = 0;
       interval2.value = setInterval(() => {
-        percent = (counter / count) * 100;
+        percent = Math.trunc((counter / count) * 100);
         counter++;
         progressValue.value = percent;
         if (percent >= count) {
           endProgress();
-          cookies.set("uToken", userToken.value, "1d");
-          router.push({
-            name: "products",
-            params: { userId: cookies.get("uzit") },
-          });
         }
       }, 1000);
     };
     const endProgress = () => {
       clearInterval(interval2.value);
+      if (myColor.value == "#558b6e") {
+        setTimeout(function () {
+          progressValue.value = 100;
+          cookies.set("uToken", userToken.value, "1d");
+          router.push({
+            name: "products",
+            params: { userId: cookies.get("uzit") },
+          });
+        }, 2000);
+      }
       interval2.value = null;
     };
 
@@ -729,10 +784,12 @@ export default {
       progressValue,
       showProductLoading,
       urlExist,
+      myColor,
       correctURL,
       validURL,
       validKey,
       handleActivationInput,
+      createConnection,
       clearInput,
       changeStep,
       modalHandle,
@@ -919,7 +976,7 @@ export default {
 }
 
 .p-progressbar .p-progressbar-value {
-  background: #558b6e !important;
+  background: v-bind("myColor") !important;
   border-radius: 4px;
 }
 

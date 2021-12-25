@@ -9,10 +9,11 @@ export default createStore({
     mainProducts: [],
     products: [],
     selections: [],
-    priceSort: false,
-    titleSort: false,
-    stockSort: false,
+    priceSort: null,
+    titleSort: null,
+    stockSort: null,
     loadingTable: true,
+    notValidSearch: false,
     userToken: "",
   },
   mutations: {
@@ -42,24 +43,50 @@ export default createStore({
             state.titleSort = !state.titleSort;
           }
           break;
-        case "price":
+        case "onlinePrice":
           {
+            state.stockSort = null;
+            state.priceSort == null
+              ? (state.priceSort = false)
+              : (state.priceSort = !state.priceSort);
             state.products.sort((a, b) => {
-              return state.priceSort
-                ? a.regularPrice - b.regularPrice
-                : b.regularPrice - a.regularPrice;
+              if (a.onlineDiscount > 0 && b.onlineDiscount > 0) {
+                return !state.priceSort
+                  ? a.onlineSalePrice - b.onlineSalePrice
+                  : b.onlineSalePrice - a.onlineSalePrice;
+              } else if (a.onlineDiscount > 0 && b.onlineDiscount == 0) {
+                return !state.priceSort
+                  ? a.onlineSalePrice - b.onlinePrice
+                  : b.onlinePrice - a.onlineSalePrice;
+              } else if (a.onlineDiscount == 0 && b.onlineDiscount > 0) {
+                return !state.priceSort
+                  ? a.onlinePrice - b.onlineSalePrice
+                  : b.onlineSalePrice - a.onlinePrice;
+              } else {
+                return !state.priceSort
+                  ? a.onlinePrice - b.onlinePrice
+                  : b.onlinePrice - a.onlinePrice;
+              }
             });
-            state.priceSort = !state.priceSort;
           }
           break;
-        case "generalStock":
+        case "onlineStock":
           {
+            state.priceSort = null;
+            state.stockSort == null
+              ? (state.stockSort = false)
+              : (state.stockSort = !state.stockSort);
             state.products.sort((a, b) => {
-              return state.stockSort
-                ? a.generalStock - b.generalStock
-                : b.generalStock - a.generalStock;
+              if (a.infiniteStock) {
+                return !state.stockSort ? 1 : -1;
+              } else if (b.infiniteStock) {
+                return !state.stockSort ? -1 : 1;
+              } else {
+                return !state.stockSort
+                  ? a.onlineStock - b.onlineStock
+                  : b.onlineStock - a.onlineStock;
+              }
             });
-            state.stockSort = !state.stockSort;
           }
           break;
       }
@@ -86,7 +113,6 @@ export default createStore({
           { headers: { "zi-access-token": state.userToken } }
         )
         .then((response) => {
-          console.log(data);
           if (response.status == 200 && response.data.success) {
             data.forEach((element) => {
               state.products.map((item) => {
@@ -160,7 +186,7 @@ export default createStore({
             customClass: {
               htmlContainer: "bottomZero",
             },
-            timer: 1500,
+            timer: 5000,
           });
         }
       });
@@ -215,7 +241,7 @@ export default createStore({
             customClass: {
               htmlContainer: "bottomZero",
             },
-            timer: 1500,
+            timer: 5000,
           });
         }
       });
@@ -267,11 +293,29 @@ export default createStore({
                         product.onlinePrice *
                         ((100 - product.onlineDiscount) / 100))
                     : "";
+                  fields.onlineDiscount == 0
+                    ? (product.onlineDiscount = 0)
+                    : "";
                 }
               });
             });
             state.mainProducts = state.products;
             state.selections = [];
+            Swal.fire({
+              icon: "success",
+              title: "تغییرات با موفقیت اعمال شد.",
+              toast: true,
+              position: "top-right",
+              iconColor: "#065143",
+              customClass: {
+                popup: "colored-toast",
+                title: "toastTitle",
+              },
+              showConfirmButton: false,
+              timer: 5000,
+              timerProgressBar: true,
+              showCloseButton: true,
+            });
           }
         })
         .catch((err) => {
@@ -282,6 +326,7 @@ export default createStore({
     searchProduct(state, searchData) {
       if (searchData == "") {
         state.products = state.mainProducts;
+        state.notValidSearch = false;
       } else {
         let searchDataProduct = state.mainProducts;
         state.products = searchDataProduct.filter((product) => {
@@ -304,6 +349,9 @@ export default createStore({
             option.toLowerCase().search(searchData.toLowerCase()) > -1
           );
         });
+        state.products.length == 0
+          ? (state.notValidSearch = true)
+          : (state.notValidSearch = false);
       }
     },
 

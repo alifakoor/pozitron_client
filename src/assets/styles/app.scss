@@ -151,14 +151,21 @@
   padding-right: 0;
   position: absolute;
   right: 10px;
+  padding: 10px;
 }
 
-.swal2-popup {
+.swal2-popup:not(.swal2-toast) {
   padding: 10px 20px;
   box-shadow: 0px 0px 5px rgba(23, 24, 24, 0.05);
   border-radius: 8px;
   width: 269px;
   height: 165px;
+  direction: rtl;
+}
+
+.swal2-container {
+  z-index: 9999999999999999999999999999;
+  direction: rtl;
 }
 
 .swal2-html-container:not(.bottomZero) {
@@ -196,4 +203,53 @@
 .myTooltip.p-tooltip-bottom .p-tooltip-arrow,
 .myTooltip.p-tooltip-top .p-tooltip-arrow {
   border-bottom-color: #bbc0d8 !important;
+}
+.colored-toast.swal2-icon-success {
+  width: 300px !important;
+  height: 48px;
+  background: #c5dacf !important;
+  border-radius: 8px;
+  border-right: 7px solid #558b6e;
+  align-items: center !important;
+  justify-content: right;
+  display: flex !important;
+  padding: 20px 10px;
+  direction: rtl;
+  // padding-top: 0 !important;
+
+  .swal2-title {
+    font-size: 16px;
+    color: #065143;
+    margin: 0.5em 0 0.5em 1em;
+  }
+
+  .toastTitle {
+    position: relative;
+  }
+
+  .swal2-success-ring,
+  .swal2-success-fix {
+    visibility: hidden !important;
+    background: #558b6e;
+  }
+
+  .swal2-close {
+    position: absolute;
+    left: 5px;
+    color: #065143;
+    margin-top: -5px;
+  }
+}
+
+.swal2-container {
+  .swal2-html-container {
+    padding: auto 10px;
+  }
+
+  .swal2-icon-success:not(.swal2-toast) {
+    min-width: 300px;
+    .swal2-icon-show {
+      margin: 2em auto 0.6em;
+    }
+  }
 }

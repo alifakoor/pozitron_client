@@ -21,8 +21,8 @@
       </div>
     </div>
     <!-- selected product message -->
-    <!-- <div
-			class="selectMessage p-d-flex p-jc-center"
+    <div
+			class="selectMessage p-d-flex p-jc-center p-ai-center"
 			v-if="selections.length > 0"
 		>
 			<p>
@@ -33,22 +33,8 @@
 				}}
 			</p>
 
-			<Button
-				v-show="
-					selections.length > 0 &&
-					selections.length != products.length
-				"
-				label="انتخاب همه ی محصولات"
-				class="p-button-text p-mx-1"
-				@click="addSelections(products)"
-			/>
-			<Button
-				v-show="selections.length == products.length"
-				label="از انتخاب خارج کردن محصولات"
-				class="p-button-text p-mx-1"
-				@click="() => (selectedProducts = [])"
-			/>
-		</div> -->
+			
+		</div>
     <div v-if="loadingTable" class="table-loading">
       <div class="lds-hourglass"></div>
     </div>
@@ -66,6 +52,9 @@
       responsiveLayout="scroll"
       :globalFilterFields="['name', 'barcode']"
     >
+     <template #empty >
+          <p  v-show="notValidSearch" >محصولی با این مشخصات یافت نشد.</p>
+      </template>
       <ColumnGroup type="header">
         <Row>
           <Column
@@ -115,12 +104,14 @@
           <Column
             headerClass="zi-table-header zi-table-header-lg"
             :rowspan="2"
-            :sortable="true"
-            field="onlineStock"
+            
           >
             <template #header>
-              <div class="zi-table-header-has-sub">
+              <div class="zi-table-header-has-sub p-d-flex p-ai-center"  @click="sortProducts(['onlineStock'])" >
                 <p>موجودی (تعداد)</p>
+                <i v-if="stockSort==null" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-alt p-mr-1" style="color: #6c757d;"></i>
+                <i v-else-if="!stockSort" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-up-alt" style="color: #048ba8;"></i>
+                <i v-else-if="stockSort" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-down" style="color: #048ba8;"></i>
               </div>
             </template>
           </Column>
@@ -128,12 +119,13 @@
             headerClass="zi-table-header
 					zi-table-header-lg"
             :rowspan="2"
-            :sortable="true"
-            field="onlinePrice"
           >
             <template #header>
-              <div class="zi-table-header-has-sub">
-                <p>قیمت (تومان)</p>
+              <div class="zi-table-header-has-sub p-d-flex p-ai-center" @click="sortProducts(['onlinePrice'])">
+                <p >قیمت (تومان)</p>
+                 <i v-if="priceSort==null" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-alt p-mr-1" style="color: #6c757d;"></i>
+                <i v-else-if="priceSort" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-up-alt" style="color: #048ba8;"></i>
+                <i v-else-if="!priceSort" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-down" style="color: #048ba8;"></i>
               </div>
             </template>
           </Column>
@@ -189,14 +181,13 @@
       >
       </Column>
       <Column field="image" bodyClass="zi-table-body" :rowspan="2">
+      
         <template #body="slotProps">
           <div class="zi-table-content">
-            <img
-              :src="
-                slotProps.data.images == ''
-                  ? '../../../../public/images/usersImg/Default-Image.jpg'
-                  : slotProps.data.images[0].src
-              "
+            <img v-if="slotProps.data.images == ''" src="../../assets/images/usersImg/DefaultImage.jpg" class="product-image"
+              :alt="slotProps.data.name">
+            <img v-else
+              :src="slotProps.data.images[0].src"
               class="product-image"
               :alt="slotProps.data.name"
             />
@@ -279,10 +270,10 @@
               ]"
             >
               <p>
-                {{ slotProps.data.onlinePrice.toLocaleString() }}
+                {{ slotProps.data.onlinePrice }}
               </p>
               <p v-if="slotProps.data.onlineDiscount > 0">
-                {{ slotProps.data.onlineSalePrice.toLocaleString() }}
+                {{ slotProps.data.onlineSalePrice }}
               </p>
             </div>
           </div>
@@ -348,7 +339,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["products", "selections", "loadingTable"]),
+    ...mapState(["products", "selections", "loadingTable","notValidSearch" ,"stockSort","priceSort"]),
   },
   methods: {
     ...mapMutations([
@@ -377,6 +368,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../assets/styles/app.scss";
+
+
 .fa-trash {
   color: #7b84b2;
   font-size: 20px;
@@ -492,6 +486,7 @@ export default {
   }
 
   .p-datatable-thead {
+    display: inline-table !important;
     background-color: #dcdeea !important;
   }
 
@@ -688,8 +683,13 @@ export default {
 
   .p-datatable-tbody {
     tr {
-      display: inherit;
+      display: inline-table !important;
       // width: 11rem;
+    }
+    .p-datatable-emptymessage{
+      td{
+        justify-content: center;
+      }
     }
   }
 }
@@ -800,5 +800,9 @@ export default {
   .p-inputswitch-slider {
     box-shadow: none;
   }
+}
+
+.sortCursor{
+  cursor: pointer;
 }
 </style>
