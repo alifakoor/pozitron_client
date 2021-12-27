@@ -422,7 +422,7 @@ export default {
       startProgress(100);
       axios
         .post(
-          "https://api-dev.pozitronet.ir/business/create",
+          `${store.state.apiURL}/business/create`,
           {
             domain: siteUrl.value,
             key: useKey.value,
@@ -454,7 +454,7 @@ export default {
             if (activationKey.value != "" && timerCounter.value > 0) {
               loading.value = true;
               axios
-                .post("https://api-dev.pozitronet.ir/auth/verify", {
+                .post(`${store.state.apiURL}/auth/verify`, {
                   phone: props.userTelOut,
                   code: parseInt(activationKey.value),
                 })
@@ -494,7 +494,7 @@ export default {
               loading.value = true;
               axios
                 .post(
-                  "https://api-dev.pozitronet.ir/business/check",
+                  `${store.state.apiURL}/business/check`,
                   { domain: siteUrl.value },
                   { headers: { "zi-access-token": userToken.value } }
                 )
@@ -530,7 +530,7 @@ export default {
               loading.value = true;
               axios
                 .post(
-                  "https://api-dev.pozitronet.ir/business/check_domain",
+                  `${store.state.apiURL}/business/check_domain`,
                   {
                     domain: siteUrl.value,
                     key: useKey.value,

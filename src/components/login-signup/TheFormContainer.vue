@@ -198,7 +198,7 @@ export default defineComponent({
         }
 
         await axios
-          .post("https://api-dev.pozitronet.ir/auth", {
+          .post(`${store.state.apiURL}/auth`, {
             phone: userTelOut.value,
           })
           .then((response) => {
@@ -253,7 +253,7 @@ export default defineComponent({
       if (activationKey.value != "" && timerCounter.value > 0) {
         loading.value = true;
         axios
-          .post("https://api-dev.pozitronet.ir/auth/verify", {
+          .post(`${store.state.apiURL}/auth/verify`, {
             phone: userTelOut.value,
             code: parseInt(activationKey.value),
           })
@@ -403,7 +403,6 @@ export default defineComponent({
       userExist,
     };
   },
-
   components: { Register },
 });
 </script>

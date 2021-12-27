@@ -5,6 +5,7 @@ import axios from "axios";
 
 export default createStore({
   state: {
+    apiURL: "api-dev.pozitronet.ir",
     cookies: useCookies(),
     mainProducts: [],
     products: [],
@@ -103,7 +104,7 @@ export default createStore({
       });
       axios
         .put(
-          "https://api-dev.pozitronet.ir/products/edit",
+          `${state.apiURL}/products/edit`,
           {
             ids: [...data],
             fields: {
@@ -151,7 +152,7 @@ export default createStore({
           text = `محصول "${state.products[index].name}" از انبار حذف شد.`;
           axios
             .post(
-              "https://api-dev.pozitronet.ir/products/remove",
+              `${state.apiURL}/products/remove`,
               { ids: [...data] },
               {
                 headers: {
@@ -211,7 +212,7 @@ export default createStore({
           text = `${state.selections.length}محصول از انبار حذف شد.`;
           axios
             .post(
-              "https://api-dev.pozitronet.ir/products/remove",
+              `${state.apiURL}/products/remove`,
               { ids: [...deleteData] },
               { headers: { "zi-access-token": state.userToken } }
             )
@@ -253,7 +254,7 @@ export default createStore({
       });
       await axios
         .put(
-          "https://api-dev.pozitronet.ir/products/edit",
+          `${state.apiURL}/products/edit`,
           {
             ids: [...editData],
             fields: fields,
@@ -357,7 +358,7 @@ export default createStore({
 
     setProducts(state) {
       axios
-        .get("https://api-dev.pozitronet.ir/products", {
+        .get(`${state.apiURL}/products`, {
           headers: {
             "zi-access-token": state.userToken,
           },
