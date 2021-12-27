@@ -5,7 +5,7 @@ import axios from "axios";
 
 export default createStore({
   state: {
-    apiURL: "api.pozitronet.ir",
+    apiURL: "https://api.pozitronet.ir",
     cookies: useCookies(),
     mainProducts: [],
     products: [],
