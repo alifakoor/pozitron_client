@@ -81,9 +81,9 @@
         <div class="welcomeText p-d-flex">
           <span>شماره پشتیبانی&nbsp;:&nbsp;&nbsp;</span>
           <a
-            href="tel:09019330922"
+            href="tel:09010922933"
             onclick="ga('send', 'event', { eventCategory: 'Contact', eventAction: 'Call', eventLabel: 'Mobile Button'});"
-            ><p class="call-button">0901-933-0922</p>
+            ><p class="call-button">0901-0922-933</p>
           </a>
         </div>
         <div class="userImg">

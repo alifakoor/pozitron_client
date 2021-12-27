@@ -312,7 +312,7 @@ export default createStore({
                 title: "toastTitle",
               },
               showConfirmButton: false,
-              timer: 5000,
+              timer: 4000,
               timerProgressBar: true,
               showCloseButton: true,
             });
@@ -378,6 +378,10 @@ export default createStore({
                 }
               });
               state.mainProducts = state.products;
+            }, 1000);
+          } else if (response.status == 200 && !response.data.success) {
+            setTimeout(function () {
+              state.loadingTable = false;
             }, 1000);
           }
         })

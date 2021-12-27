@@ -203,7 +203,7 @@
                 .replace('https://', '')
                 .replace('http://', '')
                 .replace('www.', '') +
-              '%2Fwp-admin%2Fadmin.php%3Fpage%3Dwc-settings%26tab%3Dadvanced%26section%3Dkeys&reauth=1'
+              '/wp-admin/admin.php?page=wc-settings&tab=advanced&section=keys&create-key=1'
             "
             target="_blank"
           >
@@ -270,14 +270,11 @@
           این فرآیند کمی زمانبر است.لطفا صبر کنید.
         </p>
         <p v-else style="color: #e61f10">
-          متاسفانه همه‌ی محصولات کامل از سایت شما بارگذاری نشدند.لطفا مجددا تلاش
-          کنید.
+          متاسفانه فرآیند بارگزاری محصولات،کامل انجام نشد.لطفا مجددا تلاش کنید.
         </p>
-        <ProgressBar
-          :value="progressValue"
-          :showValue="true"
-          style="direction: ltr"
-        />
+        <ProgressBar :value="progressValue" style="direction: ltr">
+          {{ progressValue + "%" }}
+        </ProgressBar>
       </div>
       <button
         v-if="myColor == '#558b6e'"
@@ -295,7 +292,6 @@
         class="loginButton"
         :class="loading ? 'sendData' : ''"
       >
-        <i v-show="!loading" class="ri-checkbox-circle-line p-ml-1"></i>
         <i v-show="loading" class="pi pi-spin pi-spinner p-m-1"></i>
         <p>تلاش مجدد</p>
       </button>
@@ -328,6 +324,7 @@ export default {
   },
   setup(props, context) {
     const myColor = ref("#558b6e");
+    const progressLabelColor = ref("#495057");
     const router = useRouter();
     const store = useStore();
     const { cookies } = useCookies();
@@ -421,6 +418,7 @@ export default {
     function createConnection() {
       progressValue.value = 0;
       myColor.value = "#558b6e";
+      progressLabelColor.value = "#495057";
       startProgress(100);
       axios
         .post(
@@ -437,10 +435,17 @@ export default {
             endProgress();
           } else {
             myColor.value = "#E61F10";
+            loading.value = false;
+            progressLabelColor.value = "#E61F10";
             endProgress();
           }
         })
-        .catch((err) => {});
+        .catch((err) => {
+          myColor.value = "#E61F10";
+          progressLabelColor.value = "#E61F10";
+          loading.value = false;
+          endProgress();
+        });
     }
     function changeStep() {
       switch (step.value) {
@@ -517,7 +522,11 @@ export default {
           break;
         case 2:
           {
-            if (!notValidKey.value && !notValidPass.value) {
+            if (
+              !notValidKey.value &&
+              !notValidPass.value &&
+              correctSiteURL.value
+            ) {
               loading.value = true;
               axios
                 .post(
@@ -551,7 +560,9 @@ export default {
     }
 
     function stepBack(prevStep) {
-      step.value = prevStep;
+      if (step.value > 0) {
+        step.value = prevStep;
+      }
     }
 
     function clearInput(e) {
@@ -750,7 +761,7 @@ export default {
             name: "products",
             params: { userId: cookies.get("uzit") },
           });
-        }, 2000);
+        }, 3000);
       }
       interval2.value = null;
     };
@@ -785,6 +796,7 @@ export default {
       showProductLoading,
       urlExist,
       myColor,
+      progressLabelColor,
       correctURL,
       validURL,
       validKey,
@@ -973,15 +985,19 @@ export default {
   border-radius: 4px;
   height: 21px !important;
   font-size: 14px;
+  position: relative;
 }
 
 .p-progressbar .p-progressbar-value {
   background: v-bind("myColor") !important;
   border-radius: 4px;
+  position: static;
 }
 
 .p-progressbar .p-progressbar-label {
   font-size: 14px !important;
-  color: #495057 !important;
+  color: v-bind("progressLabelColor") !important;
+  position: absolute;
+  left: 50%;
 }
 </style>

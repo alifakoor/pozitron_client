@@ -62,7 +62,13 @@
               v-for="selectedItem in selections"
               :key="selectedItem.id"
             >
-            <p>(</p>
+            <p v-if="selectedItem.type == 'variation' && selectedItem.meta[
+                  selectedItem.meta
+                    .map(function (e) {
+                      return e.metaKey;
+                    })
+                    .indexOf('attributes')
+                ].metaValue.length>0">(</p>
             <p
                 v-for="(pMeta,key) in selectedItem.meta[
                   selectedItem.meta
@@ -83,7 +89,13 @@
                     .indexOf('attributes')
                 ].metaValue.length-1" style="display: inline;">{{ "," }}</p>
               </p>
-              <P>)</P>
+              <P v-if="selectedItem.type == 'variation' && selectedItem.meta[
+                  selectedItem.meta
+                    .map(function (e) {
+                      return e.metaKey;
+                    })
+                    .indexOf('attributes')
+                ].metaValue.length>0">)</P>
               <p>{{ selectedItem.name }}</p>
 
               <i
@@ -221,7 +233,7 @@ export default {
         setTimeout(() => {
           this.display = false;
           this.sendEdit = false;
-        }, 1000);
+        }, 3000);
         this.allOnlineSell=false;
         this.onlinePrice= null;
         this.OnlineDiscountPercent= null;

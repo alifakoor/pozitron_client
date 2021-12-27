@@ -54,7 +54,9 @@
     >
      <template #empty >
           <p  v-show="notValidSearch" >محصولی با این مشخصات یافت نشد.</p>
+          <p  v-show="products.length==0 && !loadingTable" >محصولی برای نماش وجود ندارد.لطفا از پنل سایت خود،محصولات را تعریف کنید.</p>
       </template>
+
       <ColumnGroup type="header">
         <Row>
           <Column
@@ -124,8 +126,8 @@
               <div class="zi-table-header-has-sub p-d-flex p-ai-center" @click="sortProducts(['onlinePrice'])">
                 <p >قیمت (تومان)</p>
                  <i v-if="priceSort==null" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-alt p-mr-1" style="color: #6c757d;"></i>
-                <i v-else-if="priceSort" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-up-alt" style="color: #048ba8;"></i>
-                <i v-else-if="!priceSort" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-down" style="color: #048ba8;"></i>
+                <i v-else-if="!priceSort" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-up-alt" style="color: #048ba8;"></i>
+                <i v-else-if="priceSort" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-down" style="color: #048ba8;"></i>
               </div>
             </template>
           </Column>
@@ -270,10 +272,10 @@
               ]"
             >
               <p>
-                {{ slotProps.data.onlinePrice }}
+                {{ slotProps.data.onlinePrice.toLocaleString() }}
               </p>
               <p v-if="slotProps.data.onlineDiscount > 0">
-                {{ slotProps.data.onlineSalePrice }}
+                {{ slotProps.data.onlineSalePrice.toLocaleString() }}
               </p>
             </div>
           </div>
@@ -540,7 +542,7 @@ export default {
 
   .zi-table-body {
     width: 5.5rem;
-    padding: 0.75rem;
+    padding: 0.20rem;
     display: table-cell;
     color: black;
     text-align: center;
@@ -551,6 +553,10 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
+
+      img{
+        border-radius: 4px;
+      }
 
       .zi-bracode {
         .p-chip {
@@ -621,7 +627,7 @@ export default {
   .zi-table-selection-all,
   .zi-table-selection {
     width: 4.75rem;
-    padding-right: 0;
+    // padding-right: 10px;
   }
 
   .zi-table-delete-all,
@@ -684,7 +690,7 @@ export default {
   .p-datatable-tbody {
     tr {
       display: inline-table !important;
-      // width: 11rem;
+     height: 64px;
     }
     .p-datatable-emptymessage{
       td{
