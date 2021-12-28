@@ -5,7 +5,7 @@ import axios from "axios";
 
 export default createStore({
   state: {
-    apiURL: "https://api.pozitronet.ir",
+    apiURL: "https://api-dev.pozitronet.ir",
     cookies: useCookies(),
     mainProducts: [],
     products: [],
@@ -290,9 +290,10 @@ export default createStore({
                     : "";
 
                   fields.onlinePrice || fields.onlineDiscount
-                    ? (product.onlineSalePrice =
+                    ? (product.onlineSalePrice = Math.floor(
                         product.onlinePrice *
-                        ((100 - product.onlineDiscount) / 100))
+                          ((100 - product.onlineDiscount) / 100)
+                      ))
                     : "";
                   fields.onlineDiscount == 0
                     ? (product.onlineDiscount = 0)
