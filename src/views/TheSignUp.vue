@@ -1,5 +1,5 @@
 <template>
-  <div class="p-jc-center p-ai-center p-grid p-mx-0">
+  <div class="p-jc-center p-ai-center p-grid p-mx-0" style="margin-top: 36px">
     <FormContainer></FormContainer>
     <SideBar></SideBar>
   </div>

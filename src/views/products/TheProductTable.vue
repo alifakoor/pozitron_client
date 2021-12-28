@@ -21,8 +21,8 @@
       </div>
     </div>
     <!-- selected product message -->
-    <!-- <div
-			class="selectMessage p-d-flex p-jc-center"
+    <div
+			class="selectMessage p-d-flex p-jc-center p-ai-center"
 			v-if="selections.length > 0"
 		>
 			<p>
@@ -33,22 +33,8 @@
 				}}
 			</p>
 
-			<Button
-				v-show="
-					selections.length > 0 &&
-					selections.length != products.length
-				"
-				label="انتخاب همه ی محصولات"
-				class="p-button-text p-mx-1"
-				@click="addSelections(products)"
-			/>
-			<Button
-				v-show="selections.length == products.length"
-				label="از انتخاب خارج کردن محصولات"
-				class="p-button-text p-mx-1"
-				@click="() => (selectedProducts = [])"
-			/>
-		</div> -->
+			
+		</div>
     <div v-if="loadingTable" class="table-loading">
       <div class="lds-hourglass"></div>
     </div>
@@ -66,6 +52,11 @@
       responsiveLayout="scroll"
       :globalFilterFields="['name', 'barcode']"
     >
+     <template #empty >
+          <p  v-show="notValidSearch" >محصولی با این مشخصات یافت نشد.</p>
+          <p  v-show="products.length==0 && !loadingTable" >محصولی برای نماش وجود ندارد.لطفا از پنل سایت خود،محصولات را تعریف کنید.</p>
+      </template>
+
       <ColumnGroup type="header">
         <Row>
           <Column
@@ -115,12 +106,14 @@
           <Column
             headerClass="zi-table-header zi-table-header-lg"
             :rowspan="2"
-            :sortable="true"
-            field="onlineStock"
+            
           >
             <template #header>
-              <div class="zi-table-header-has-sub">
+              <div class="zi-table-header-has-sub p-d-flex p-ai-center"  @click="sortProducts(['onlineStock'])" >
                 <p>موجودی (تعداد)</p>
+                <i v-if="stockSort==null" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-alt p-mr-1" style="color: #6c757d;"></i>
+                <i v-else-if="!stockSort" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-up-alt" style="color: #048ba8;"></i>
+                <i v-else-if="stockSort" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-down" style="color: #048ba8;"></i>
               </div>
             </template>
           </Column>
@@ -128,12 +121,13 @@
             headerClass="zi-table-header
 					zi-table-header-lg"
             :rowspan="2"
-            :sortable="true"
-            field="onlinePrice"
           >
             <template #header>
-              <div class="zi-table-header-has-sub">
-                <p>قیمت (تومان)</p>
+              <div class="zi-table-header-has-sub p-d-flex p-ai-center" @click="sortProducts(['onlinePrice'])">
+                <p >قیمت (تومان)</p>
+                 <i v-if="priceSort==null" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-alt p-mr-1" style="color: #6c757d;"></i>
+                <i v-else-if="!priceSort" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-up-alt" style="color: #048ba8;"></i>
+                <i v-else-if="priceSort" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-down" style="color: #048ba8;"></i>
               </div>
             </template>
           </Column>
@@ -189,14 +183,13 @@
       >
       </Column>
       <Column field="image" bodyClass="zi-table-body" :rowspan="2">
+      
         <template #body="slotProps">
           <div class="zi-table-content">
-            <img
-              :src="
-                slotProps.data.images == ''
-                  ? '../../../../public/images/usersImg/Default Image.jpg'
-                  : slotProps.data.images[0].src
-              "
+            <img v-if="slotProps.data.images == ''" src="../../assets/images/usersImg/DefaultImage.jpg" class="product-image"
+              :alt="slotProps.data.name">
+            <img v-else
+              :src="slotProps.data.images[0].src"
               class="product-image"
               :alt="slotProps.data.name"
             />
@@ -275,13 +268,13 @@
             <div
               :class="[
                 'zi-table-content-has-sub',
-                slotProps.data.onlineSalePrice > 0 ? 'zi-has-discount' : null,
+                slotProps.data.onlineDiscount > 0 ? 'zi-has-discount' : null,
               ]"
             >
               <p>
                 {{ slotProps.data.onlinePrice.toLocaleString() }}
               </p>
-              <p v-if="slotProps.data.onlineSalePrice > 0">
+              <p v-if="slotProps.data.onlineDiscount > 0">
                 {{ slotProps.data.onlineSalePrice.toLocaleString() }}
               </p>
             </div>
@@ -312,13 +305,13 @@
 					</div>
 				</template>
 			</Column> -->
-      <Column field="onlineSell" bodyClass="zi-table-body">
+      <Column  bodyClass="zi-table-body">
         <template #body="slotProps">
           <div class="zi-table-content">
             <InputSwitch
-              v-model="slotProps.data.onlineSell"
               class="zi-switch-input"
               @click="onlineSell([slotProps.data.id])"
+               v-model="slotProps.data.onlineSell"
             />
           </div>
         </template>
@@ -348,7 +341,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["products", "selections", "loadingTable"]),
+    ...mapState(["products", "selections", "loadingTable","notValidSearch" ,"stockSort","priceSort"]),
   },
   methods: {
     ...mapMutations([
@@ -377,6 +370,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "../../assets/styles/app.scss";
+
+
 .fa-trash {
   color: #7b84b2;
   font-size: 20px;
@@ -492,6 +488,7 @@ export default {
   }
 
   .p-datatable-thead {
+    display: inline-table !important;
     background-color: #dcdeea !important;
   }
 
@@ -545,7 +542,7 @@ export default {
 
   .zi-table-body {
     width: 5.5rem;
-    padding: 0.75rem;
+    padding: 0.20rem;
     display: table-cell;
     color: black;
     text-align: center;
@@ -556,6 +553,10 @@ export default {
       display: flex;
       justify-content: center;
       align-items: center;
+
+      img{
+        border-radius: 4px;
+      }
 
       .zi-bracode {
         .p-chip {
@@ -626,7 +627,7 @@ export default {
   .zi-table-selection-all,
   .zi-table-selection {
     width: 4.75rem;
-    padding-right: 0;
+    // padding-right: 10px;
   }
 
   .zi-table-delete-all,
@@ -688,7 +689,13 @@ export default {
 
   .p-datatable-tbody {
     tr {
-      display: table-row;
+      display: inline-table !important;
+     height: 64px;
+    }
+    .p-datatable-emptymessage{
+      td{
+        justify-content: center;
+      }
     }
   }
 }
@@ -799,5 +806,9 @@ export default {
   .p-inputswitch-slider {
     box-shadow: none;
   }
+}
+
+.sortCursor{
+  cursor: pointer;
 }
 </style>

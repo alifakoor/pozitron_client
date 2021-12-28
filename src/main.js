@@ -39,5 +39,4 @@ const app = createApp(App)
 // install components
 components.install(app);
 
-app.provide("apiURL", "EDFEGTETGvfvg");
 app.mount("#app");

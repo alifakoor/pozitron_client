@@ -23,8 +23,9 @@
         <p class="textInfo">افرودن کلید</p>
       </div>
       <p class="textInfo">
-        توجه کنید که در توضیحات نام دلخواه خود را برای API بنویسید و قسمت مجوزها
-        را روی <span class="redInfo">"خواندن و نوشتن"</span>
+        <span class="redInfo">*</span> توجه کنید که در توضیحات نام دلخواه خود را
+        برای API بنویسید و قسمت مجوزها را روی
+        <span class="redInfo">"خواندن/نوشتن"</span>
         تنظیم کنید.
       </p>
       <p class="textInfo">
@@ -69,15 +70,12 @@ export default {
     return {
       images: [
         {
-          itemImageSrc: "../../../public/images/image_2021-11-21_18-09-41.png",
-          thumbnailImageSrc:
-            "../../../public/images/image_2021-11-21_18-09-41.png",
+          itemImageSrc: "../../assets/imageSlide.png",
           alt: "Description for Image 1",
           title: "Title 1",
         },
         {
-          itemImageSrc: "../../../public/images/woocommerce2.PNG",
-          thumbnailImageSrc: "../../../public/images/woocommerce2.PNG",
+          itemImageSrc: "../../assets/woocommerce2.PNG",
           alt: "Description for Image 2",
           title: "Title 2",
         },
@@ -110,6 +108,8 @@ export default {
 <style lang="scss" scoped>
 @import "../../assets/styles/variablesOfLogin";
 .modalInfo {
+  direction: rtl;
+  min-width: 537px;
   width: fit-content;
   display: flex;
   flex-direction: column;
@@ -145,6 +145,7 @@ export default {
     line-height: 150%;
   }
   .stepGuid {
+    margin-top: 20px;
     display: flex;
     align-items: center;
   }
@@ -152,8 +153,9 @@ export default {
     font-weight: normal;
     font-size: 12px;
     line-height: 130%;
-    margin: 7px 0;
     color: #131520;
+    text-align: right;
+    margin: 4px 0;
   }
   .redInfo {
     color: $errText;
