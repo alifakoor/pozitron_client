@@ -34,27 +34,46 @@
           <Menu id="overlay_menu" ref="menu" :model="items" :popup="true" />
         </div>
         <i
+          v-if="notifCount > 0"
           class="pi pi-bell"
           v-badge.info="notifCount"
           @click="
             () => {
-              if (notifCount > 0) {
-                showNotif = !showNotif;
-                notifCount--;
-              } else {
-                showNotif = false;
-              }
+              showNotif = true;
             }
           "
         ></i>
+        <i
+          v-else
+          @click="
+            () => {
+              showNotif = true;
+            }
+          "
+          class="pi pi-bell"
+        ></i>
         <a href="#">انبار محصولات</a>
 
-        <div
-          class="notif p-d-flex p-ai-center p-jc-center"
-          :class="showNotif && 'showNotif'"
-        >
+        <div class="notif p-ai-center p-jc-center" v-show="showNotif">
           <div class="triangle2"></div>
-          <p class="exitText">به پوزیترون خوش آمدین !</p>
+          <i
+            v-if="showNotif"
+            class="ri-close-line p-mr-1"
+            @click="
+              () => {
+                showNotif = false;
+                if (notifCount > 0) {
+                  notifCount--;
+                }
+              }
+            "
+          ></i>
+          <p v-if="notifCount == 1 && showNotif" class="exitText">
+            به پوزیترون خوش آمدین !
+          </p>
+          <p v-else-if="notifCount == 0 && showNotif" class="exitText">
+            هیچ پیغامی ندارید.
+          </p>
         </div>
       </div>
 
@@ -62,18 +81,27 @@
         <div class="welcomeText p-d-flex">
           <span>شماره پشتیبانی&nbsp;:&nbsp;&nbsp;</span>
           <a
-            href="tel:5558920234"
+            href="tel:09010922933"
             onclick="ga('send', 'event', { eventCategory: 'Contact', eventAction: 'Call', eventLabel: 'Mobile Button'});"
-            ><p class="call-button">0901-933-0922</p>
+            ><p class="call-button">0901-0922-933</p>
           </a>
         </div>
         <div class="userImg">
           <img
-            src="../../../public/images/usersImg/Group-12584.jpg"
+            @click="
+              () => {
+                exitBox = !exitBox;
+              }
+            "
+            src="../../assets/images/usersImg/Group-12584.jpg"
             alt="عکس کاربر"
           />
-          <div class="triangle"></div>
-          <div class="exitAccount p-d-flex p-ai-center p-jc-center">
+          <div v-show="exitBox" class="triangle"></div>
+          <div
+            :class="exitBox ? 'p-d-flex' : 'p-d-none'"
+            class="exitAccount p-ai-center p-jc-center"
+            @click="logOut()"
+          >
             <i class="ri-logout-box-r-line"></i>
             <p class="exitText">خروج از پوزیترون</p>
           </div>
@@ -84,7 +112,8 @@
 </template>
 
 <script>
-// import BreadcrumbItem from 'primevue/breadcrumb/BreadcrumbItem.vue'
+import { mapMutations } from "vuex";
+import { useCookies } from "vue3-cookies";
 
 export default {
   name: "zi-rtl-breadcrumb",
@@ -104,8 +133,10 @@ export default {
   },
   data() {
     return {
+      cookies: useCookies(),
       showNotif: false,
       notifCount: 1,
+      exitBox: false,
       items: [
         {
           icon: "ri-store-2-line",
@@ -131,8 +162,15 @@ export default {
     };
   },
   methods: {
+    ...mapMutations(["changeUserToken"]),
     toggle(event) {
       this.$refs.menu.toggle(event);
+    },
+    logOut() {
+      this.changeUserToken("");
+      this.cookies.cookies.remove("uToken");
+      this.cookies.cookies.remove("uzit");
+      window.location.reload();
     },
   },
 };
@@ -162,7 +200,7 @@ export default {
   }
 }
 .p-breadcrumb {
-  overflow-x: visible;
+  overflow-x: visible !important;
   height: 56px;
 }
 
@@ -253,7 +291,6 @@ export default {
   border-radius: 7px;
   z-index: 9999999999999;
   transform: translateX(-20%);
-  visibility: hidden;
   transition: all 0.3s ease-in-out;
   box-shadow: 0px 3.35593px 1.67797px rgba(0, 0, 0, 0.05),
     0px 0px 1.67797px rgba(0, 0, 0, 0.25);
@@ -271,15 +308,16 @@ export default {
 
 .notif {
   position: absolute;
+  display: flex;
   top: 100%;
   left: 0;
-  width: 190px;
+  min-width: 190px;
+  width: max-content;
   height: 58.33px;
   background: #fff;
   border-radius: 7px;
   z-index: 9999999999999;
   transform: translateX(18%);
-  visibility: hidden;
   transition: all 0.3s ease-in-out;
   box-shadow: 0px 3.35593px 1.67797px rgba(0, 0, 0, 0.05),
     0px 0px 1.67797px rgba(0, 0, 0, 0.25);
@@ -293,10 +331,6 @@ export default {
   i {
     color: #5c679e;
   }
-}
-
-.showNotif {
-  visibility: visible !important;
 }
 
 .triangle2 {
@@ -323,15 +357,14 @@ export default {
   position: absolute;
   top: 50%;
   left: calc(50% - 15px);
-  visibility: hidden;
   transition: all 0.3s ease-in-out;
   box-shadow: 0px 3.35593px 1.67797px rgba(0, 0, 0, 0.05);
 }
 
-.userImg:hover .exitAccount,
-.userImg:hover .triangle {
-  visibility: visible;
-}
+// .userImg:hover .exitAccount,
+// .userImg:hover .triangle {
+//   visibility: visible;
+// }
 
 // .userImg:hover .exitAccount,
 // .userImg:hover .triangle {
@@ -358,16 +391,13 @@ export default {
   border-radius: 50% !important;
   min-width: 21px !important;
   line-height: 1.25rem !important;
+  z-index: 9000000000000000000000 !important;
 }
 
 .p-badge.p-badge-info {
   background-color: #048ba8 !important;
 }
 
-// .pi-bell:hover ~ .notif,
-// .pi-bell:hover ~ .triangle2 {
-// 	visibility: visible;
-// }
 .navbarBurger {
   display: inline-block;
   margin: 0 0 0 15px;

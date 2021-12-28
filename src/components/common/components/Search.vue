@@ -39,11 +39,12 @@ export default {
 .p-input-icon-right {
   .pi-search {
     color: #7b84b2;
-    margin-right: 16px;
+    margin-right: 25px;
   }
 }
 .p-inputtext {
   padding: 16px;
+  padding-right: 40px !important;
   background: #f9f9fb;
   border-radius: 16px;
   border: 0;

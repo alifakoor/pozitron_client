@@ -4,29 +4,29 @@
       <p>POZITRON</p>
     </div>
     <ul>
-      <li>
-        <router-link :to="{ name: 'panel', params: { userId: '1' } }">
-          <i class="ri-store-2-line"></i>
+      <li class="notHand">
+        <router-link :to="{ name: 'dashboard', params: { userId: userID } }">
+          <i class="notHand ri-store-2-line"></i>
         </router-link>
       </li>
       <li>
-        <router-link :to="{ name: 'products', params: { userId: '1' } }">
+        <router-link :to="{ name: 'products', params: { userId: userID } }">
           <i class="pi pi-box"></i>
         </router-link>
       </li>
-      <li>
-        <router-link :to="{ name: 'home', params: { userId: '1' } }">
-          <i class="ri-file-list-line"></i>
+      <li class="notHand">
+        <router-link :to="{ name: 'home', params: { userId: userID } }">
+          <i class="notHand ri-file-list-line"></i>
         </router-link>
       </li>
-      <li>
-        <router-link :to="{ name: 'about', params: { userId: '1' } }">
-          <i class="ri-group-line"></i>
+      <li class="notHand">
+        <router-link :to="{ name: 'about', params: { userId: userID } }">
+          <i class="notHand ri-group-line"></i>
         </router-link>
       </li>
-      <li>
-        <router-link :to="{ name: 'setting', params: { userId: '1' } }">
-          <i class="ri-settings-3-line"></i>
+      <li class="notHand">
+        <router-link :to="{ name: 'setting', params: { userId: userID } }">
+          <i class="notHand ri-settings-3-line"></i>
         </router-link>
       </li>
     </ul>
@@ -34,9 +34,11 @@
 </template>
 
 <script>
+import { useCookies } from "vue3-cookies";
 export default {
   data() {
     return {
+      userID: this.$cookies.get("uzit"),
       items: [
         {
           icon: "ri-store-2-line",
@@ -61,10 +63,10 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../assets/styles/variablesOfTable";
-::v-deep(.route-link-active) {
-  color: #ffceb7;
-}
 
+.notHand {
+  cursor: auto;
+}
 .zi-sidebar {
   display: none;
 }
@@ -99,6 +101,10 @@ export default {
       &.router-link-exact-active {
         color: #7de6fc;
       }
+    }
+
+    .notHand > a {
+      cursor: auto !important;
     }
 
     i {

@@ -5,14 +5,16 @@ import axios from "axios";
 
 export default createStore({
   state: {
+    apiURL: "https://api.pozitronet.ir",
     cookies: useCookies(),
     mainProducts: [],
     products: [],
     selections: [],
-    priceSort: false,
-    titleSort: false,
-    stockSort: false,
+    priceSort: null,
+    titleSort: null,
+    stockSort: null,
     loadingTable: true,
+    notValidSearch: false,
     userToken: "",
   },
   mutations: {
@@ -23,8 +25,12 @@ export default createStore({
     addSelections(state, items) {
       state.selections = items;
     },
-    changeUserToken(state) {
-      state.userToken = state.cookies.cookies.get("uToken");
+    changeUserToken(state, data = null) {
+      if (data == "") {
+        state.userToken = "";
+      } else {
+        state.userToken = state.cookies.cookies.get("uToken");
+      }
     },
     sortProducts(state, data) {
       switch (data[0]) {
@@ -38,24 +44,50 @@ export default createStore({
             state.titleSort = !state.titleSort;
           }
           break;
-        case "price":
+        case "onlinePrice":
           {
+            state.stockSort = null;
+            state.priceSort == null
+              ? (state.priceSort = false)
+              : (state.priceSort = !state.priceSort);
             state.products.sort((a, b) => {
-              return state.priceSort
-                ? a.regularPrice - b.regularPrice
-                : b.regularPrice - a.regularPrice;
+              if (a.onlineDiscount > 0 && b.onlineDiscount > 0) {
+                return !state.priceSort
+                  ? a.onlineSalePrice - b.onlineSalePrice
+                  : b.onlineSalePrice - a.onlineSalePrice;
+              } else if (a.onlineDiscount > 0 && b.onlineDiscount == 0) {
+                return !state.priceSort
+                  ? a.onlineSalePrice - b.onlinePrice
+                  : b.onlinePrice - a.onlineSalePrice;
+              } else if (a.onlineDiscount == 0 && b.onlineDiscount > 0) {
+                return !state.priceSort
+                  ? a.onlinePrice - b.onlineSalePrice
+                  : b.onlineSalePrice - a.onlinePrice;
+              } else {
+                return !state.priceSort
+                  ? a.onlinePrice - b.onlinePrice
+                  : b.onlinePrice - a.onlinePrice;
+              }
             });
-            state.priceSort = !state.priceSort;
           }
           break;
-        case "generalStock":
+        case "onlineStock":
           {
+            state.priceSort = null;
+            state.stockSort == null
+              ? (state.stockSort = false)
+              : (state.stockSort = !state.stockSort);
             state.products.sort((a, b) => {
-              return state.stockSort
-                ? a.generalStock - b.generalStock
-                : b.generalStock - a.generalStock;
+              if (a.infiniteStock) {
+                return !state.stockSort ? 1 : -1;
+              } else if (b.infiniteStock) {
+                return !state.stockSort ? -1 : 1;
+              } else {
+                return !state.stockSort
+                  ? a.onlineStock - b.onlineStock
+                  : b.onlineStock - a.onlineStock;
+              }
             });
-            state.stockSort = !state.stockSort;
           }
           break;
       }
@@ -72,7 +104,7 @@ export default createStore({
       });
       axios
         .put(
-          "https://api-dev.pozitronet.ir/products/edit",
+          `${state.apiURL}/products/edit`,
           {
             ids: [...data],
             fields: {
@@ -82,13 +114,11 @@ export default createStore({
           { headers: { "zi-access-token": state.userToken } }
         )
         .then((response) => {
-          console.log(response);
           if (response.status == 200 && response.data.success) {
             data.forEach((element) => {
               state.products.map((item) => {
                 if (item.id == element) {
-                  item.onlineSell = !item.onlineSell;
-                  return;
+                  item.onlineSell = sell;
                 }
               });
             });
@@ -121,27 +151,27 @@ export default createStore({
           let text = "";
           text = `محصول "${state.products[index].name}" از انبار حذف شد.`;
           axios
-            .delete(
-              "https://api-dev.pozitronet.ir/products/remove",
-              { ids: [1] },
+            .post(
+              `${state.apiURL}/products/remove`,
+              { ids: [...data] },
               {
-                "X-Requested-With": "XMLHttpRequest",
                 headers: {
-                  "zi-access-token":
-                    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJwaG9uZSI6OTMwNzg4Nzk3OCwiZnVsbE5hbWUiOm51bGwsImVtYWlsIjpudWxsLCJyb2xlIjpudWxsLCJjb2RlIjoxMTAxLCJjb2RlQ3JlYXRlZEF0IjoiMjAyMS0xMi0xNFQwODozNTo0OS4wMDBaIiwic3RhdHVzIjpudWxsLCJjcmVhdGVkQXQiOiIyMDIxLTEyLTE0VDA4OjA4OjE0LjAwMFoiLCJ1cGRhdGVkQXQiOiIyMDIxLTEyLTE0VDA4OjM1OjQ5LjAwMFoifSwiaWF0IjoxNjM5NDcxMzcyLCJleHAiOjE2Mzk1NTc3NzJ9.RAteh5L6PCoTIFTWl43JLnkYEpoRPd9yVlMYNCH2N4o",
+                  "Content-Type": "application/json",
+                  "zi-access-token": state.userToken,
                 },
               }
             )
             .then((response) => {
-              console.log(response);
-              const removeSelected = state.products;
-              data.forEach((element) => {
-                state.products = removeSelected.filter(
-                  (item) => item.id != element
-                );
-              });
-              state.mainProducts = state.products;
-              state.selections = [];
+              if (response.status == 200 && response.data.success) {
+                const removeSelected = state.products;
+                data.forEach((element) => {
+                  state.products = removeSelected.filter(
+                    (item) => item.id != element
+                  );
+                });
+                state.mainProducts = state.products;
+                state.selections = [];
+              }
             })
             .catch((err) => {
               console.log(err);
@@ -157,7 +187,7 @@ export default createStore({
             customClass: {
               htmlContainer: "bottomZero",
             },
-            timer: 1500,
+            timer: 5000,
           });
         }
       });
@@ -181,21 +211,22 @@ export default createStore({
           let text = "";
           text = `${state.selections.length}محصول از انبار حذف شد.`;
           axios
-            .delete(
-              "https://api-dev.pozitronet.ir/products/remove",
+            .post(
+              `${state.apiURL}/products/remove`,
               { ids: [...deleteData] },
               { headers: { "zi-access-token": state.userToken } }
             )
             .then((response) => {
-              console.log(response);
-              let removeSelected = state.products;
-              state.selections.forEach((element) => {
-                state.products = removeSelected.filter(
-                  (item) => item.id != element.id
-                );
-              });
-              state.mainProducts = state.products;
-              state.selections = [];
+              if (response.status == 200 && response.data.success) {
+                deleteData.forEach((element) => {
+                  let removeSelected = state.products;
+                  state.products = removeSelected.filter(
+                    (item) => item.id != element
+                  );
+                });
+                state.mainProducts = state.products;
+                state.selections = [];
+              }
             })
             .catch((err) => {
               console.log(err);
@@ -211,28 +242,32 @@ export default createStore({
             customClass: {
               htmlContainer: "bottomZero",
             },
-            timer: 1500,
+            timer: 5000,
           });
         }
       });
     },
-    editSelections(state, fields) {
-      console.log(fields);
+    async editSelections(state, fields) {
       let editData = [];
       state.selections.forEach((element) => {
         editData.push(element.id);
       });
-      axios
+      await axios
         .put(
-          "https://api-dev.pozitronet.ir/products/edit",
+          `${state.apiURL}/products/edit`,
           {
             ids: [...editData],
             fields: fields,
           },
-          { headers: { "zi-access-token": state.userToken } }
+          {
+            headers: {
+              "X-Requested-With": "XMLHttpRequest",
+              "zi-access-token": state.userToken,
+            },
+          },
+          { withCredentials: true }
         )
         .then((response) => {
-          console.log(response);
           if (response.status == 200 && response.data.success) {
             editData.forEach((editID) => {
               state.products.map((product) => {
@@ -259,11 +294,29 @@ export default createStore({
                         product.onlinePrice *
                         ((100 - product.onlineDiscount) / 100))
                     : "";
+                  fields.onlineDiscount == 0
+                    ? (product.onlineDiscount = 0)
+                    : "";
                 }
               });
             });
             state.mainProducts = state.products;
             state.selections = [];
+            Swal.fire({
+              icon: "success",
+              title: "تغییرات با موفقیت اعمال شد.",
+              toast: true,
+              position: "top-right",
+              iconColor: "#065143",
+              customClass: {
+                popup: "colored-toast",
+                title: "toastTitle",
+              },
+              showConfirmButton: false,
+              timer: 4000,
+              timerProgressBar: true,
+              showCloseButton: true,
+            });
           }
         })
         .catch((err) => {
@@ -272,9 +325,9 @@ export default createStore({
     },
 
     searchProduct(state, searchData) {
-      console.log(searchData);
       if (searchData == "") {
         state.products = state.mainProducts;
+        state.notValidSearch = false;
       } else {
         let searchDataProduct = state.mainProducts;
         state.products = searchDataProduct.filter((product) => {
@@ -297,19 +350,20 @@ export default createStore({
             option.toLowerCase().search(searchData.toLowerCase()) > -1
           );
         });
+        state.products.length == 0
+          ? (state.notValidSearch = true)
+          : (state.notValidSearch = false);
       }
     },
 
     setProducts(state) {
       axios
-        .get("https://api-dev.pozitronet.ir/products", {
+        .get(`${state.apiURL}/products`, {
           headers: {
             "zi-access-token": state.userToken,
           },
         })
         .then((response) => {
-          console.log(response);
-
           if (response.status == 200 && response.data.success) {
             setTimeout(() => {
               state.loadingTable = false;
@@ -325,6 +379,10 @@ export default createStore({
                 }
               });
               state.mainProducts = state.products;
+            }, 1000);
+          } else if (response.status == 200 && !response.data.success) {
+            setTimeout(function () {
+              state.loadingTable = false;
             }, 1000);
           }
         })

@@ -62,7 +62,42 @@
               v-for="selectedItem in selections"
               :key="selectedItem.id"
             >
+            <p v-if="selectedItem.type == 'variation' && selectedItem.meta[
+                  selectedItem.meta
+                    .map(function (e) {
+                      return e.metaKey;
+                    })
+                    .indexOf('attributes')
+                ].metaValue.length>0">(</p>
+            <p
+                v-for="(pMeta,key) in selectedItem.meta[
+                  selectedItem.meta
+                    .map(function (e) {
+                      return e.metaKey;
+                    })
+                    .indexOf('attributes')
+                ].metaValue"
+                v-if="selectedItem.type == 'variation'"
+                style="display: inline"
+              >
+                {{  pMeta.name + ":" + pMeta.option }}
+                <p v-if="key != selectedItem.meta[
+                  selectedItem.meta
+                    .map(function (e) {
+                      return e.metaKey;
+                    })
+                    .indexOf('attributes')
+                ].metaValue.length-1" style="display: inline;">{{ "," }}</p>
+              </p>
+              <P v-if="selectedItem.type == 'variation' && selectedItem.meta[
+                  selectedItem.meta
+                    .map(function (e) {
+                      return e.metaKey;
+                    })
+                    .indexOf('attributes')
+                ].metaValue.length>0">)</P>
               <p>{{ selectedItem.name }}</p>
+
               <i
                 class="ri-close-circle-line"
                 @click="deSelectItem(selectedItem.id)"
@@ -103,7 +138,7 @@
 					</div> -->
           <div class="p-d-flex p-jc-around p-col-12 p-flex-column">
             <p class="p-text-right p-mx-5 p-d-flex p-ai-center p-jc-end">
-              <InputSwitch v-model="onlineSell" class="zi-switch-input" /> فروش
+              <InputSwitch v-model="allOnlineSell" class="zi-switch-input" /> فروش
               آنلاین
             </p>
 
@@ -155,7 +190,8 @@ export default {
       onlinePrice: null,
       OnlineDiscountPercent: null,
       onlineStock: null,
-      onlineSell: false,
+      allOnlineSell:false,
+      onlineSell: null,
     };
   },
   computed: {
@@ -190,6 +226,7 @@ export default {
         (a, [k, v]) => (v === null ? a : ((a[k] = v), a)),
         {}
       );
+      this.allOnlineSell=false;
       if (Object.keys(lastEdit).length != 0) {
         this.sendEdit = true;
         this.editSelections(lastEdit);
@@ -197,21 +234,28 @@ export default {
           this.display = false;
           this.sendEdit = false;
         }, 3000);
+        this.allOnlineSell=false;
+        this.onlinePrice= null;
+        this.OnlineDiscountPercent= null;
+        this.onlineStock= null;
+        this.onlineSell= null;
       }
     },
     setOnlinePrice(inputValue) {
-      console.log(inputValue);
       this.onlinePrice = inputValue;
     },
     setOnlineDiscountPercent(inputValue) {
-      console.log(inputValue);
       this.OnlineDiscountPercent = inputValue;
     },
     setOnlineStock(inputValue) {
-      console.log(inputValue);
       this.onlineStock = inputValue;
     },
   },
+  watch:{
+    allOnlineSell:function(){
+      this.onlineSell=this.allOnlineSell
+    }
+  }
 };
 </script>
 

@@ -5,7 +5,7 @@
       <p class="title2">دستیار هوشمند کسب‌وکار شما</p>
     </div>
     <div class="imgSide p-d-flex p-ai-center p-jc-center">
-      <img src="../../../public/images/Image0.png" alt="" />
+      <img src="../../assets/images/Image0.png" alt="" />
     </div>
   </div>
 </template>

@@ -198,7 +198,7 @@ export default defineComponent({
         }
 
         await axios
-          .post("https://api-dev.pozitronet.ir/auth", {
+          .post(`${store.state.apiURL}/auth`, {
             phone: userTelOut.value,
           })
           .then((response) => {
@@ -216,10 +216,9 @@ export default defineComponent({
                 popup: "colored-toast",
               },
               showConfirmButton: false,
-              timer: 1500,
               timerProgressBar: true,
               showCloseButton: true,
-              // closeButtonColor: "#065143",
+              timer: 5000,
             });
             loading.value = false;
             sendCode.value = true;
@@ -254,12 +253,11 @@ export default defineComponent({
       if (activationKey.value != "" && timerCounter.value > 0) {
         loading.value = true;
         axios
-          .post("https://api-dev.pozitronet.ir/auth/verify", {
+          .post(`${store.state.apiURL}/auth/verify`, {
             phone: userTelOut.value,
             code: parseInt(activationKey.value),
           })
           .then((response) => {
-            console.log(response);
             if (response.status == 200 && response.data.success) {
               userToken.value = response.data.data.token;
               loading.value = false;
@@ -270,12 +268,23 @@ export default defineComponent({
                 name: "products",
                 params: { userId: response.data.data.id },
               });
+            } else {
+              wrongKey.value = true;
+              loading.value = false;
+              activationKeyFields.value.forEach((input) => {
+                input.value = "";
+              });
+              inputs.value[0].focus();
             }
           })
           .catch((err) => {
             console.log(err);
             wrongKey.value = true;
             loading.value = false;
+            activationKeyFields.value.forEach((input) => {
+              input.value = "";
+            });
+            inputs.value[0].focus();
           });
       } else {
         wrongKey.value = true;
@@ -283,7 +292,6 @@ export default defineComponent({
     }
 
     function clearInput(e) {
-      console.log(e.code);
       let index = parseInt(e.target.dataset.index);
       if (e.code == "Backspace" && e.target.value.length == 0) {
         if (typeof activationKeyFields.value[index - 1] == "undefined") {
@@ -394,10 +402,6 @@ export default defineComponent({
       changeNumber,
       userExist,
     };
-  },
-  beforeUnmount() {
-    // this.cookies.set("myCoooookie", this.userToken);
-    // console.log(this.cookies.get("myCoooookie"));
   },
   components: { Register },
 });
@@ -617,7 +621,7 @@ export default defineComponent({
   justify-content: right;
   display: flex !important;
   padding: 20px 10px;
-  // padding-top: 0 !important;
+  direction: rtl;
 
   .swal2-title {
     font-size: 16px;
@@ -637,7 +641,7 @@ export default defineComponent({
 
   .swal2-close {
     position: absolute;
-    left: 0;
+    left: 5px;
     color: #065143;
     margin-top: -5px;
   }
