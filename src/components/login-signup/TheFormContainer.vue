@@ -34,7 +34,11 @@
             </p>
           </div>
         </div>
-        <button class="loginButton" :class="loading ? 'sendData' : ''">
+        <button
+          id="getPhoneBut"
+          class="loginButton"
+          :class="loading ? 'sendData' : ''"
+        >
           <i
             v-show="!loading && timerCounter > 0"
             class="ri-checkbox-circle-line p-ml-1"
@@ -89,7 +93,11 @@
               : "0" + Math.ceil((timerCounter % (60 * 60)) % 60)
           }}
         </p>
-        <button class="loginButton" :class="loading ? 'sendData' : ''">
+        <button
+          id="loginBut"
+          class="loginButton"
+          :class="loading ? 'sendData' : ''"
+        >
           <i v-show="!loading" class="pi pi-clock p-ml-1"></i>
           <i v-show="loading" class="pi pi-spin pi-spinner p-m-1"></i>
           <p v-show="timerCounter > 0">تایید و ادامه</p>

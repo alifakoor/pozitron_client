@@ -172,6 +172,7 @@
         </div>
       </div> -->
       <button
+        id="domainCheckBut"
         @click.prevent="changeStep()"
         class="loginButton"
         :class="loading ? 'sendData' : ''"
@@ -277,6 +278,7 @@
         </ProgressBar>
       </div>
       <button
+        id="connectPozBut"
         v-if="myColor == '#558b6e'"
         @click.prevent="changeStep()"
         class="loginButton"
@@ -288,6 +290,7 @@
       </button>
       <button
         v-else
+        id="retryConnPozBut"
         @click.prevent="createConnection()"
         class="loginButton"
         :class="loading ? 'sendData' : ''"
