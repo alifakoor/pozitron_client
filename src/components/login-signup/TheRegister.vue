@@ -43,15 +43,7 @@
       >
     </div>
   </div>
-  <!-- <div class="container-fluid">
-    <br /><br />
-    <ul class="list-unstyled multi-steps">
-      <li>Start</li>
-      <li>First Step</li>
-      <li class="is-active">Middle Stage</li>
-      <li>Finish</li>
-    </ul>
-  </div> -->
+
   <div
     v-if="step == 0"
     class="innerBox innerBox1 p-d-flex p-ai-start p-jc-start p-flex-column"
@@ -181,6 +173,7 @@
         <i v-show="loading" class="pi pi-spin pi-spinner p-m-1"></i>
         <p>تایید و ادامه</p>
       </button>
+      <a class="demoLink" href="">ورود به سایت و پنل ورود به پوزیترون</a>
     </form>
   </div>
   <!-- step 3 form -->
@@ -298,6 +291,7 @@
         <i v-show="loading" class="pi pi-spin pi-spinner p-m-1"></i>
         <p>تلاش مجدد</p>
       </button>
+      <a class="demoLink" href="">ورود به سایت و پنل ورود به پوزیترون</a>
     </form>
   </div>
 
@@ -818,6 +812,20 @@ export default {
 
 <style lang="scss">
 @import "../../assets/styles/variablesOfLogin";
+
+.demoLink {
+  display: inline-block;
+  text-underline-offset: 3px;
+  font-family: "VazirFD";
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 168%;
+  text-align: right;
+  text-decoration-line: underline;
+  color: #49527e;
+  margin: 16px 0px;
+}
 
 @media (max-width: 1008px) {
   .stepLine {

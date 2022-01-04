@@ -21,19 +21,33 @@
       </div>
     </div>
     <!-- selected product message -->
-    <div
-			class="selectMessage p-d-flex p-jc-center p-ai-center"
+		<div
+			class="selectMessage p-d-flex p-jc-center"
 			v-if="selections.length > 0"
 		>
 			<p>
 				{{
 					selections.length == products.length
 						? `همه‌ی ${products.length} محصول انتخاب شدند.`
-						: `${selections.length} محصول از ${products.length} محصول انتخاب شد .`
+						: `${selections.length} محصول از ${products.length} محصول موجود در انبار انتخاب شد .`
 				}}
 			</p>
 
-			
+			<Button
+				v-show="
+					selections.length > 0 &&
+					selections.length != products.length
+				"
+				label="انتخاب همه  محصولات"
+				class="p-button-text p-mx-1"
+				@click="addSelections(products)"
+			/>
+			<Button
+				v-show="selections.length == products.length"
+				label="از انتخاب خارج کردن محصولات"
+				class="p-button-text p-mx-1"
+				@click="() => (selectedProducts = [])"
+			/>
 		</div>
     <div v-if="loadingTable" class="table-loading">
       <div class="lds-hourglass"></div>
@@ -67,25 +81,25 @@
                 : null,
             ]"
             :rowspan="2"
-            selectionMode="multiple"
           >
-            <!-- <template #header>
-							<TriStateCheckbox v-model="value" /> </template
-					> -->
+           <template #header>
+							<TriStateCheckbox v-model="selectValue" />
+						</template>
           </Column>
           <Column header="عکس" headerClass="zi-table-header" :rowspan="2" />
           <Column
             headerClass="zi-table-header zi-table-header-lg zi-table-justify-flex-start"
             :rowspan="2"
             :colspan="2"
-            :sortable="true"
-            field="name"
           >
             <template #header>
-              <div class="zi-table-header-has-sub firstSort">
-                <p>نام محصول</p>
+              <div class="zi-table-header-has-sub firstSort sortTable" @click="sortProducts(['name'])">
+                <p class="sortCursor">نام محصول</p>
                 <p class="zi-table-header-sub">ویژگی</p>
               </div>
+              <i @click="sortProducts(['name'])" v-if="nameSort==null" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-alt p-mr-1" style="color: #6c757d;"></i>
+                <i @click="sortProducts(['name'])" v-else-if="!nameSort" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-up-alt" style="color: #048ba8;"></i>
+                <i @click="sortProducts(['name'])" v-else-if="nameSort" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-down" style="color: #048ba8;"></i>
             </template>
           </Column>
           <Column
@@ -109,8 +123,8 @@
             
           >
             <template #header>
-              <div class="zi-table-header-has-sub p-d-flex p-ai-center"  @click="sortProducts(['onlineStock'])" >
-                <p>موجودی (تعداد)</p>
+              <div class="zi-table-header-has-sub table-sort p-d-flex p-ai-center"  @click="sortProducts(['onlineStock'])" >
+                <p  class="sortCursor">موجودی (تعداد)</p>
                 <i v-if="stockSort==null" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-alt p-mr-1" style="color: #6c757d;"></i>
                 <i v-else-if="!stockSort" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-up-alt" style="color: #048ba8;"></i>
                 <i v-else-if="stockSort" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-down" style="color: #048ba8;"></i>
@@ -123,8 +137,8 @@
             :rowspan="2"
           >
             <template #header>
-              <div class="zi-table-header-has-sub p-d-flex p-ai-center" @click="sortProducts(['onlinePrice'])">
-                <p >قیمت (تومان)</p>
+              <div class="zi-table-header-has-sub table-sort p-d-flex p-ai-center" @click="sortProducts(['onlinePrice'])">
+                <p class="sortCursor">قیمت (تومان)</p>
                  <i v-if="priceSort==null" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-alt p-mr-1" style="color: #6c757d;"></i>
                 <i v-else-if="!priceSort" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-up-alt" style="color: #048ba8;"></i>
                 <i v-else-if="priceSort" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-down" style="color: #048ba8;"></i>
@@ -336,12 +350,15 @@ export default {
   data() {
     return {
       width: "38.372093023255813953488372093023%",
-      selectedProducts: null,
-      value: null,
+			selectedProducts: [],
+			selectValue: null,
+			showPage: 1,
+			showPerPage: 5,
+			pageProduct: [],
     };
   },
   computed: {
-    ...mapState(["products", "selections", "loadingTable","notValidSearch" ,"stockSort","priceSort"]),
+    ...mapState(["products", "selections", "loadingTable","notValidSearch" ,"stockSort","priceSort","nameSort"]),
   },
   methods: {
     ...mapMutations([
@@ -352,20 +369,101 @@ export default {
       "multiDeleteProduct",
       "setProducts",
       "changeUserToken",
+			"emptySelection",
+			"deSelectItem",
     ]),
+    checkState() {
+			let trueSelection = 0;
+			this.pageProduct.forEach((product) => {
+				this.selectedProducts.find((select) => {
+					if (select.id == product.id) {
+						trueSelection++;
+						return;
+					}
+				});
+			});
+			return trueSelection;
+		},
+    setPageProducts(){
+      let start = (this.showPage - 1) * this.showPerPage;
+			this.pageProduct = this.products.slice(
+				start,
+				start + this.showPerPage
+			);
+			let trueSelection = this.checkState();
+			trueSelection == 0
+				? (this.selectValue = null)
+				: (this.selectValue = trueSelection == this.showPerPage);
+    }
   },
   watch: {
     selectedProducts: function () {
-      this.addSelections(this.selectedProducts);
-    },
-    selections: function () {
-      this.selectedProducts = this.selections;
-    },
+			this.addSelections(this.selectedProducts);
+			let trueSelection = this.checkState();
+			trueSelection == 0
+				? (this.selectValue = null)
+				: (this.selectValue = trueSelection == this.showPerPage);
+		},
+		selectValue: function (newVal, oldVal) {
+			let trueSelection = this.checkState();
+			if (
+				newVal === false &&
+				oldVal === true &&
+				trueSelection == this.showPerPage
+			) {
+				this.selectValue = null;
+			} else if (newVal === null) {
+				this.pageProduct.forEach((product) => {
+					this.deSelectItem(product.id);
+				});
+			} else if (newVal === true && trueSelection != this.showPerPage) {
+				let newSelection = this.selectedProducts;
+				this.selectedProducts = newSelection.concat(this.pageProduct);
+			}
+		},
+		showPage: function () {
+			this.setPageProducts()
+		},
+		showPerPage: function () {
+	  	this.setPageProducts()
+		},
+		selections: function () {
+			this.selectedProducts = this.selections;
+		},
   },
   created() {
     this.changeUserToken();
     this.setProducts();
   },
+  updated() {
+		let start = (this.showPage - 1) * this.showPerPage;
+		this.pageProduct = this.products.slice(start, start + this.showPerPage);
+
+		document
+			.querySelectorAll(".p-paginator-page.p-paginator-element.p-link")
+			.forEach((element) => {
+				element.addEventListener("click", () => {
+					this.showPage = parseInt(element.innerHTML);
+				});
+			});
+
+
+    document.querySelectorAll(".table-sort").forEach((element)=>{
+     	element.addEventListener("click", () => {
+					this.setPageProducts()
+				});
+    })
+
+
+		document
+			.querySelector(".p-dropdown-label.p-inputtext")
+			.addEventListener("DOMCharacterDataModified", () => {
+				this.showPerPage = parseInt(
+					document.querySelector(".p-dropdown-label.p-inputtext")
+						.innerHTML
+				);
+			});
+	},
 };
 </script>
 

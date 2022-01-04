@@ -1,7 +1,6 @@
 // prime vue
 import Breadcrumb from "primevue/breadcrumb";
 import BreadcrumbItem from "primevue/breadcrumb/BreadcrumbItem.vue";
-import InputText from "primevue/inputtext/InputText.vue";
 import Button from "primevue/button/Button.vue";
 import Dialog from "primevue/dialog/Dialog.vue";
 import DataTable from "primevue/datatable/DataTable.vue";
@@ -11,8 +10,6 @@ import Row from "primevue/row/Row.vue";
 import Chip from "primevue/chip/Chip.vue";
 import Tag from "primevue/tag/Tag.vue";
 import Badge from "primevue/badge/Badge.vue";
-import InputSwitch from "primevue/inputswitch/InputSwitch.vue";
-import Checkbox from "primevue/checkbox/Checkbox.vue";
 import TriStateCheckbox from "primevue/tristatecheckbox";
 import Galleria from "primevue/galleria";
 import ProgressBar from "primevue/progressbar";
@@ -21,6 +18,10 @@ import Tooltip from "primevue/tooltip";
 import Divider from "primevue/divider";
 import Textarea from "primevue/textarea";
 import Menu from "primevue/menu";
+import InputText from "primevue/inputtext";
+import Dropdown from "primevue/dropdown";
+import InputSwitch from "primevue/inputswitch";
+import Checkbox from "primevue/checkbox";
 
 // zi
 import RTLBreadcrumb from "./components/panel/TheRTLBreadcrumb.vue";
@@ -32,6 +33,8 @@ import BulkEdit from "./components/common/components/BulkEdit.vue";
 //mine
 import InputHasIcon from "./components/common/components/InputHasIcon.vue";
 import InputHasInfo from "./components/common/components/InputHasInfo.vue";
+import ImageInput from "./components/common/components/ImageInput.vue";
+import SelectOption from "./components/common/components/SelectOption.vue";
 
 export default {
   install(app) {
@@ -58,10 +61,13 @@ export default {
     app.component("Menu", Menu);
     app.directive("badge", BadgeDirective);
     app.directive("tooltip", Tooltip);
+    app.component("Dropdown", Dropdown);
+    app.component("SelectOption", SelectOption);
 
     //mine
     app.component("InputHasIcon", InputHasIcon);
     app.component("InputHasInfo", InputHasInfo);
+    app.component("ImageInput", ImageInput);
 
     // zi
     app.component("zi-rtl-breadcrumb", RTLBreadcrumb);

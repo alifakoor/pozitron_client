@@ -11,7 +11,7 @@ export default createStore({
     products: [],
     selections: [],
     priceSort: null,
-    titleSort: null,
+    nameSort: null,
     stockSort: null,
     loadingTable: true,
     notValidSearch: false,
@@ -21,6 +21,12 @@ export default createStore({
     deSelectItem(state, id) {
       const removeSelected = state.selections.filter((item) => item.id != id);
       state.selections = removeSelected;
+    },
+    emptySelection(state, ids) {
+      ids.forEach((id) => {
+        const removeSelected = state.selections;
+        state.selections = removeSelected.filter((item) => item.id != id);
+      });
     },
     addSelections(state, items) {
       state.selections = items;
@@ -34,19 +40,24 @@ export default createStore({
     },
     sortProducts(state, data) {
       switch (data[0]) {
-        case "title":
+        case "name":
           {
+            state.stockSort = null;
+            state.priceSort = null;
+            state.nameSort == null
+              ? (state.nameSort = false)
+              : (state.nameSort = !state.nameSort);
             state.products.sort((a, b) => {
-              return state.titleSort
-                ? b.title.localeCompare(a.title)
-                : a.title.localeCompare(b.title);
+              return state.nameSort
+                ? b.name.localeCompare(a.name)
+                : a.name.localeCompare(b.name);
             });
-            state.titleSort = !state.titleSort;
           }
           break;
         case "onlinePrice":
           {
             state.stockSort = null;
+            state.nameSort = null;
             state.priceSort == null
               ? (state.priceSort = false)
               : (state.priceSort = !state.priceSort);
@@ -74,6 +85,7 @@ export default createStore({
         case "onlineStock":
           {
             state.priceSort = null;
+            state.nameSort = null;
             state.stockSort == null
               ? (state.stockSort = false)
               : (state.stockSort = !state.stockSort);

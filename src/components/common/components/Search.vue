@@ -99,7 +99,7 @@ export default {
 
   .p-inputtext {
     text-align: right;
-    font-family: Vazir;
+    font-family: "Vazir";
   }
 }
 </style>

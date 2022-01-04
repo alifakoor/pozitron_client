@@ -138,7 +138,7 @@ export default {
     padding: 0px 8px;
     position: absolute;
     top: 0;
-    right: 5%;
+    right: 10%;
     transform: translateY(-10%);
     background-color: #fff;
     font-size: 12px;

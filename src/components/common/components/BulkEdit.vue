@@ -138,7 +138,7 @@
 					</div> -->
           <div class="p-d-flex p-jc-around p-col-12 p-flex-column">
             <p class="p-text-right p-mx-5 p-d-flex p-ai-center p-jc-end">
-              <InputSwitch v-model="allOnlineSell" class="zi-switch-input" /> فروش
+              <InputSwitch v-model="onlineSell" class="zi-switch-input" :class="{'input-switch-unchecked' : onlineSell==false}" /> فروش
               آنلاین
             </p>
 
@@ -190,7 +190,6 @@ export default {
       onlinePrice: null,
       OnlineDiscountPercent: null,
       onlineStock: null,
-      allOnlineSell:false,
       onlineSell: null,
     };
   },
@@ -234,7 +233,6 @@ export default {
           this.display = false;
           this.sendEdit = false;
         }, 3000);
-        this.allOnlineSell=false;
         this.onlinePrice= null;
         this.OnlineDiscountPercent= null;
         this.onlineStock= null;
@@ -252,8 +250,10 @@ export default {
     },
   },
   watch:{
-    allOnlineSell:function(){
-      this.onlineSell=this.allOnlineSell
+    onlineSell:function(newVal,oldVal){
+      if(newVal===true && oldVal===false){
+        this.onlineSell=null
+      }
     }
   }
 };
@@ -343,29 +343,29 @@ export default {
 
 // Switch input
 .zi-switch-input {
-  width: 1.5rem;
-  height: 1rem;
+  width: 30px;
+  height: 18px;
   margin-right: 5px;
 }
 ::v-deep(.zi-switch-input.p-inputswitch) {
   .p-inputswitch-slider {
-    border: solid 0.125rem #6c6c6c;
-    background: transparent;
+    border: solid 0.125rem #90C8D4;
+    background: #90C8D4;
   }
   .p-inputswitch-slider:before {
-    background: transparent;
-    border: solid 0.125rem #6c6c6c;
-    width: 0.75rem;
-    height: 0.75rem;
-    top: 0.4rem;
-    left: -0.1rem;
-    margin-top: -0.5rem;
+    background: #fff;
+    border: solid 0.125rem #fff;
+    width: 14px;
+    height: 14px;
+    top: 8px;
+    left: 4px;
+    // margin-top: -0.5rem;
     border-radius: 50%;
     transition-duration: 0.2s;
   }
   .p-inputswitch-slider:hover {
-    background: transparent !important;
-    border: solid 0.125rem #6c6c6c;
+    background: #90C8D4 !important;
+    border: solid 0.125rem #90C8D4;
   }
 
   .p-inputswitch-slider:focus {
@@ -383,10 +383,27 @@ export default {
     border-color: #048ba8;
   }
   .p-inputswitch-slider:before {
-    left: 1.3rem;
-    transform: translateX(-95%) scale(0.8);
+    left: 18px;
+    transform: translateX(-50%) ;
     background: #fff;
-    border-color: #fff;
+   border: solid 0.1rem #fff;
+  }
+}
+
+::v-deep(.zi-switch-input.input-switch-unchecked) {
+  .p-inputswitch-slider {
+    border-color: #048BA8;
+    background: transparent;
+  }
+  .p-inputswitch-slider:hover {
+    background: transparent !important;
+    border-color: #048BA8;
+  }
+  .p-inputswitch-slider:before {
+    left: -10px;
+    transform: translateX(50%) ;
+    background: #fff;
+   border: solid 0.1rem #048BA8;
   }
 }
 ::v-deep(.zi-switch-input.p-focus) {
