@@ -5,17 +5,18 @@
 <script>
 import { useRouter } from "vue-router";
 import { useCookies } from "vue3-cookies";
-import { mapMutations } from "vuex";
 export default {
   setup() {
     const router = useRouter();
     const { cookies } = useCookies();
 
     if (cookies.get("uToken")) {
-      router.push({
-        name: "products",
-        params: { userId: cookies.get("uzit") },
-      });
+      if (window.location.pathname === "/") {
+        router.push({
+          name: "products",
+          params: { userId: cookies.get("uzit") },
+        });
+      }
     } else {
       router.push({
         name: "SignUp",

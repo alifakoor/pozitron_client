@@ -9,6 +9,8 @@
             inType="number"
             InGrid="p-col-6"
             InHeight="32px"
+            inputName="length"
+            @changeInputValue="setData"
           ></InputHasInfo>
           <InputHasInfo
             inputText="عرض"
@@ -16,6 +18,8 @@
             inType="number"
             InGrid="p-col-6"
             InHeight="32px"
+            inputName="width"
+            @changeInputValue="setData"
           ></InputHasInfo>
         </div>
         <div class="p-col-12 p-d-flex p-jc-between">
@@ -25,6 +29,8 @@
             inType="number"
             InGrid="p-col-6"
             InHeight="32px"
+            inputName="height"
+            @changeInputValue="setData"
           ></InputHasInfo>
           <InputHasInfo
             inputText="وزن"
@@ -32,6 +38,8 @@
             inType="number"
             InGrid="p-col-6"
             InHeight="32px"
+            inputName="weight"
+            @changeInputValue="setData"
           ></InputHasInfo>
         </div>
       </div>
@@ -41,9 +49,16 @@
 
 <script>
 import { defineAsyncComponent } from "vue";
+import { mapMutations } from "vuex";
 export default {
   components: {
     GeneralBox: defineAsyncComponent(() => import("./GeneralBox.vue")),
+  },
+  methods: {
+    ...mapMutations(["addFeatureToNewProduct"]),
+    setData(value) {
+      this.addFeatureToNewProduct(value);
+    },
   },
 };
 </script>

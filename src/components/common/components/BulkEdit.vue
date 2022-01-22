@@ -1,6 +1,6 @@
 <template>
   <div class="zi-bulk-edit">
-    <Button
+    <!-- <Button
       v-if="selections.length == 0"
       class="p-button-outlined p-button-secondary"
       label="ویرایش"
@@ -15,9 +15,9 @@
       "
       iconPos="left"
       @click="showEdit()"
-    />
+    /> -->
     <Button
-      v-else
+    v-show="selections.length>0"
       class="p-button-outlined p-button-secondary"
       label="ویرایش"
       :icon="
@@ -43,7 +43,7 @@
               <Button
                 class="p-button-outlined p-button-secondary"
                 label="ویرایش"
-                :icon="sendEdit ? 'pi pi-spin pi-spinner zi-button-icon' : ''"
+                :icon="sendEdit ? 'pi pi-spin pi-spinner zi-button-icon' : 'ri-checkbox-circle-line zi-button-icon'"
                 @click="edit()"
               />
             </div>
@@ -137,7 +137,7 @@
 						</div>
 					</div> -->
           <div class="p-d-flex p-jc-around p-col-12 p-flex-column">
-            <p class="p-text-right p-mx-5 p-d-flex p-ai-center p-jc-end">
+            <p class="p-text-right p-mx-5 p-d-flex p-ai-center p-jc-end sellTxt">
               <InputSwitch v-model="onlineSell" class="zi-switch-input" :class="{'input-switch-unchecked' : onlineSell==false}" /> فروش
               آنلاین
             </p>
@@ -184,7 +184,6 @@ import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
-      display: false,
       editLoading: false,
       sendEdit: false,
       onlinePrice: null,
@@ -194,17 +193,17 @@ export default {
     };
   },
   computed: {
-    ...mapState(["products", "selections"]),
+    ...mapState(["products", "selections","editDisplay"]),
     editData: function () {
       return {
         onlinePrice:
-          this.onlinePrice == null ? null : parseInt(this.onlinePrice),
+          this.onlinePrice == null  || this.onlinePrice=="" ? null : parseInt(this.onlinePrice),
         onlineDiscount:
-          this.OnlineDiscountPercent == null
+          this.OnlineDiscountPercent == null || this.OnlineDiscountPercent == ""
             ? null
             : parseInt(this.OnlineDiscountPercent),
         onlineStock:
-          this.onlineStock == null ? null : parseInt(this.onlineStock),
+          this.onlineStock == null ||  this.onlineStock == "" ? null : parseInt(this.onlineStock),
         onlineSell: this.onlineSell,
       };
     },
@@ -229,14 +228,6 @@ export default {
       if (Object.keys(lastEdit).length != 0) {
         this.sendEdit = true;
         this.editSelections(lastEdit);
-        setTimeout(() => {
-          this.display = false;
-          this.sendEdit = false;
-        }, 3000);
-        this.onlinePrice= null;
-        this.OnlineDiscountPercent= null;
-        this.onlineStock= null;
-        this.onlineSell= null;
       }
     },
     setOnlinePrice(inputValue) {
@@ -254,6 +245,16 @@ export default {
       if(newVal===true && oldVal===false){
         this.onlineSell=null
       }
+    },
+    editDisplay:function(newVal){
+         if(!newVal){
+            this.display = false;
+            this.sendEdit = false;
+            this.onlinePrice= null;
+            this.OnlineDiscountPercent= null;
+            this.onlineStock= null;
+            this.onlineSell= null;
+         }
     }
   }
 };
@@ -270,20 +271,19 @@ export default {
 }
 .zi-bulk-edit {
   background: #048ba8;
-  border-radius: 8px;
+  border-radius: 4px;
   text-align: center;
 
-  ::v-deep(.p-button) {
+  ::v-deep(.p-button.p-button-secondary) {
     width: 77px;
     height: 32px;
-    border-radius: 8px;
+    border-radius: 4px;
     padding: 8px;
     border: none !important;
+    box-shadow: none !important;
 
-    .p-button-secondary:enabled:focus {
-      border: none !important;
-      outline: none !important;
-      box-shadow: none !important;
+    .p-button-icon{
+      order:1;
     }
 
     .p-button-label {
@@ -296,6 +296,14 @@ export default {
 
 .zi-bulk-edit:hover {
   background: #023a46;
+}
+
+.sellTxt{
+  font-weight: 500;
+font-size: 12px;
+line-height: 150%;
+text-align: right;
+color: #49527E;
 }
 
 .p-dialog-mask {
@@ -338,6 +346,7 @@ export default {
   i {
     color: #7b84b2;
     cursor: pointer;
+    margin: 0px 0px 0px 8px;
   }
 }
 
@@ -417,10 +426,5 @@ export default {
   border: 1px solid #e1e3e5;
   background: #e1e3e5;
 }
-// .modalBox {
-// 	background: #ffffff;
-// 	border-radius: 32px;
-// 	width: 504px;
-// 	padding: 40px 0px;
-// }
+
 </style>

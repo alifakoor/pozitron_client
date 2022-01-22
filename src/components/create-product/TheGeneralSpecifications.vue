@@ -14,12 +14,16 @@
             validation="true"
             buttonIcon="true"
             validationErr="نام محصول نمی‌تواند خالی باشد."
+            inputName="name"
+            @changeInputValue="setData"
           ></InputHasIcon>
           <InputHasInfo
             inputText="توضیحات"
             inType="textarea"
             InHeight="80px"
             InGrid="p-col-12"
+            inputName="description"
+            @changeInputValue="setData"
           ></InputHasInfo>
         </div>
         <div class="p-sm-6 p-col-12">
@@ -32,9 +36,16 @@
 
 <script>
 import { defineAsyncComponent } from "vue";
+import { mapMutations } from "vuex";
 export default {
   components: {
     GeneralBox: defineAsyncComponent(() => import("./GeneralBox.vue")),
+  },
+  methods: {
+    ...mapMutations(["addFeatureToNewProduct"]),
+    setData(value) {
+      this.addFeatureToNewProduct(value);
+    },
   },
 };
 </script>

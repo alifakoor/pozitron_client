@@ -5,23 +5,9 @@
         <zi-search  :width="width" />
         <zi-bulk-edit  />
       </div>
-      <div @click="createProduct()">
-        <div
-          class="addMessage"
-          v-tooltip.bottom="{
-            value: 'این ویژگی به زودی فعال می‌گردد.',
-            class: 'myTooltip',
-          }"
-        >
-          <p class="message">افزودن محصول</p>
-          <div class="buttonAdd">
-            <i class="ri-add-line"></i>
-          </div>
-        </div>
-      </div>
     </div>
     <!-- selected product message -->
-		<div
+		<!-- <div
 			class="selectMessage p-d-flex p-jc-center"
 			v-if="selections.length > 0"
 		>
@@ -48,7 +34,7 @@
 				class="p-button-text p-mx-1"
 				@click="() => (selectedProducts = [])"
 			/>
-		</div>
+		</div> -->
     <div v-if="loadingTable" class="table-loading">
       <div class="lds-hourglass"></div>
     </div>
@@ -86,7 +72,7 @@
 							<TriStateCheckbox v-model="selectValue" />
 						</template>
           </Column>
-          <Column header="عکس" headerClass="zi-table-header" :rowspan="2" />
+          <Column header="مرجع فاکتور" headerClass="zi-table-header" :rowspan="2" />
           <Column
             headerClass="zi-table-header zi-table-header-lg zi-table-justify-flex-start"
             :rowspan="2"
@@ -94,8 +80,8 @@
           >
             <template #header>
               <div class="zi-table-header-has-sub firstSort sortTable" @click="sortProducts(['name'])">
-                <p class="sortCursor">نام محصول</p>
-                <p class="zi-table-header-sub">ویژگی</p>
+                <p class="sortCursor">نام خریدار</p>
+                <p class="zi-table-header-sub">شماره فاکتور</p>
               </div>
               <i @click="sortProducts(['name'])" v-if="nameSort==null" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-alt p-mr-1" ></i>
                 <i @click="sortProducts(['name'])" v-else-if="!nameSort" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-up-alt" style="color: #048ba8;"></i>
@@ -103,50 +89,23 @@
             </template>
           </Column>
           <Column
-            header="بارکد"
+            header="وضعیت"
             headerClass="zi-table-header zi-table-header-lg"
             :rowspan="2"
           ></Column>
-          <!-- <Column
-						header="موجودی (تعداد)"
+          <Column
+						header="زمان ثبت فاکتور"
 						headerClass="zi-table-header zi-table-header-lg"
 						:colspan="2"
-					/>
-					<Column
-						header="قیمت (تومان)"
+		  />
+		  <Column
+						header="زمان ارسال"
 						headerClass="zi-table-header zi-table-header-lg"
 						:colspan="2"
-					/> -->
+	       />
+          
           <Column
-            headerClass="zi-table-header zi-table-header-lg"
-            :rowspan="2"
-            
-          >
-            <template #header>
-              <div class="zi-table-header-has-sub table-sort p-d-flex p-ai-center"  @click="sortProducts(['onlineStock'])" >
-                <p  class="sortCursor">موجودی (تعداد)</p>
-                <i v-if="stockSort==null" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-alt p-mr-1"></i>
-                <i v-else-if="!stockSort" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-up-alt" style="color: #048ba8;"></i>
-                <i v-else-if="stockSort" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-down" style="color: #048ba8;"></i>
-              </div>
-            </template>
-          </Column>
-          <Column
-            headerClass="zi-table-header
-					zi-table-header-lg"
-            :rowspan="2"
-          >
-            <template #header>
-              <div class="zi-table-header-has-sub table-sort p-d-flex p-ai-center" @click="sortProducts(['onlinePrice'])">
-                <p class="sortCursor">قیمت (تومان)</p>
-                 <i v-if="priceSort==null" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-alt p-mr-1" ></i>
-                <i v-else-if="!priceSort" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-up-alt" style="color: #048ba8;"></i>
-                <i v-else-if="priceSort" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-down" style="color: #048ba8;"></i>
-              </div>
-            </template>
-          </Column>
-          <Column
-            header="فروش آنلاین"
+            header="مبلغ فاکتور  (تومان)"
             headerClass="zi-table-header"
             :rowspan="2"
           />
@@ -168,27 +127,25 @@
           </Column>
         </Row>
         <Row>
-          <!-- <Column
-						header="کل"
+          <Column
+						header="تاریخ"
 						headerClass="zi-table-header zi-table-header-second-row zi-direction-ltr"
 						:sortable="true"
 					>
 					</Column>
 					<Column
-						header="آنلاین"
+						header="ساعت"
 						headerClass="zi-table-header zi-table-header-second-row"
-						:sortable="true"
 					/>
 					<Column
-						header="حضوری"
+						header="تاریخ"
 						headerClass="zi-table-header zi-table-header-second-row zi-direction-ltr"
 						:sortable="true"
-					/> -->
-          <!-- <Column
-						header="آنلاین"
+					/>
+          <Column
+						header="ساعت"
 						headerClass="zi-table-header zi-table-header-second-row"
-						:sortable="true"
-					/> -->
+					/>
         </Row>
       </ColumnGroup>
       <Column
@@ -258,7 +215,7 @@
       </Column>
       <Column
         field="onlineStock"
-        bodyClass="zi-table-body zi-table-body-lg"
+        bodyClass="zi-table-body "
         :sortable="true"
       >
         <template #body="slotProps">
@@ -270,10 +227,10 @@
           </div>
         </template>
       </Column>
-      <!-- <Column field="onlineStock" bodyClass="zi-table-body"></Column> -->
+      <Column field="onlineStock" bodyClass="zi-table-body"></Column>
       <Column
         field="onlinePrice"
-        bodyClass="zi-table-body zi-table-body-lg"
+        bodyClass="zi-table-body"
         bodyStyle="padding-right: 0;"
         :sortable="true"
       >
@@ -295,7 +252,7 @@
           </div>
         </template>
       </Column>
-      <!-- <Column
+      <Column
 				field="onlinePrice"
 				bodyClass="zi-table-body"
 				bodyStyle="padding-right: 0;"
@@ -312,13 +269,10 @@
 						<p>{{ slotProps.data.onlinePrice.toLocaleString() }}</p>
 						<p v-if="slotProps.data.onlineDiscount">
 							{{ slotProps.data.onlinePrice.toLocaleString() }}
-							<Tag
-								:value="`${slotProps.data.onlineDiscount}%`"
-							></Tag>
 						</p>
 					</div>
 				</template>
-			</Column> -->
+			</Column>
       <Column  bodyClass="zi-table-body">
         <template #body="slotProps">
           <div class="zi-table-content">

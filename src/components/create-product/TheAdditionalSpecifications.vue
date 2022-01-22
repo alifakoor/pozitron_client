@@ -7,11 +7,13 @@
       >
         <div class="p-d-flex p-jc-between p-col-12">
           <InputHasIcon
-            iconClass="ri-link"
+            iconClass="ri-barcode-line"
             inputText="بارکد "
             InPlaceholder="تایپ بارکد یا استفاده از بارکد خوان"
             inType="text"
             InGrid="p-sm-6 p-col-8"
+            inputName="barcode"
+            @changeInputValue="setData"
           ></InputHasIcon>
         </div>
         <div class="p-d-flex p-jc-start p-ai-start p-col-12">
@@ -22,6 +24,8 @@
             inType="number"
             InGrid="p-col-4 p-sm-3"
             InHeight="32px"
+            inputName="price"
+            @changeInputValue="setData"
           ></InputHasInfo>
           <InputHasInfo
             inputText="موجودی کل"
@@ -31,13 +35,15 @@
             InHeight="32px"
             :disabled="limitations"
             @InvertoryUpdate="totalInventoryUpdate"
+            inputName="stock"
+            @changeInputValue="setData"
           ></InputHasInfo>
           <div class="p-field-checkbox p-mt-4">
             <Checkbox
               id="limitations"
               v-model="limitations"
               :binary="true"
-              class="p-mx-2"
+              class="p-mx-2 purpleCheckBox"
             />
             <label class="limitLabel" for="limitations"
               >محدودیتی در موجودی ندارم.</label
@@ -57,6 +63,8 @@
             InGrid="p-sm-3 p-col-4"
             InHeight="32px"
             :disabled="!checked"
+            inputName="onlinePrice"
+            @changeInputValue="setData"
           ></InputHasInfo>
           <InputHasInfo
             inputText="موجودی آنلاین"
@@ -69,6 +77,8 @@
             :sameInventory="sameInventory"
             validation="true"
             validationErr="موجودی آنلاین نمی‌تواند از موجودی کل بیشتر باشد."
+            inputName="onlineStock"
+            @changeInputValue="setData"
           ></InputHasInfo>
         </div>
       </div>
@@ -78,6 +88,7 @@
 
 <script>
 import { defineAsyncComponent } from "vue";
+import { mapMutations } from "vuex";
 export default {
   data() {
     return {
@@ -92,6 +103,7 @@ export default {
     GeneralBox: defineAsyncComponent(() => import("./GeneralBox.vue")),
   },
   methods: {
+    ...mapMutations(["addFeatureToNewProduct"]),
     totalInventoryUpdate(value) {
       this.totalInventory = value;
     },
@@ -104,6 +116,9 @@ export default {
       } else {
         this.sameInventory = false;
       }
+    },
+    setData(value) {
+      this.addFeatureToNewProduct(value);
     },
   },
   watch: {
@@ -123,15 +138,49 @@ export default {
         ? (this.sameInventory = this.checked && this.limitations)
         : "";
     },
+    limitations: function () {
+      this.addFeatureToNewProduct({
+        name: "infiniteStock",
+        inValue: this.limitations,
+      });
+    },
+    checked: function () {
+      this.addFeatureToNewProduct({
+        name: "onlineSell",
+        inValue: this.checked,
+      });
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+::v-deep(.p-checkbox) {
+  .p-checkbox-box {
+    border: 2px solid #7b84b2;
+    border-radius: 5px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .p-checkbox-box.p-highlight,
+  .p-checkbox-box.p-highlight:hover {
+    background: #7b84b2;
+    border-color: #727cb1;
+  }
+  .p-checkbox-box:hover {
+    border-color: #727cb1;
+  }
+
+  .p-checkbox-box.p-focus {
+    box-shadow: none;
+    border-color: #727cb1;
+  }
+}
 .limitLabel {
   font-size: 14px;
   font-weight: 400;
-  color: #202223;
+  color: #49527e;
 }
 .MySwitchInput {
   width: 24px;
@@ -140,12 +189,12 @@ export default {
 
 ::v-deep(.MySwitchInput.p-inputswitch) {
   .p-inputswitch-slider {
-    border: solid 2px #6c6c6c;
+    border: solid 2px #49527e;
     background: transparent;
   }
   .p-inputswitch-slider:before {
     background: transparent;
-    border: solid 2px #6c6c6c;
+    border: solid 2px #49527e;
     width: 15px;
     height: 15px;
     left: -0.1rem;
@@ -155,12 +204,12 @@ export default {
   }
   .p-inputswitch-slider:hover {
     background: transparent !important;
-    border: solid 2px #6c6c6c;
+    border: solid 2px#49527E;
   }
 
   .p-inputswitch-slider:focus {
     background: transparent;
-    border: solid 2px #6c6c6c;
+    border: solid 2px #49527e;
   }
 }
 ::v-deep(.MySwitchInput.p-inputswitch-checked) {

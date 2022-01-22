@@ -50,76 +50,12 @@
     </div>
 
     <!-- enter code of login -->
-    <div
-      class="innerBox p-d-flex p-ai-start p-jc-start p-flex-column"
+    <Login
       v-else-if="userExist"
-    >
-      <p class="title">ورود به پنل کاربری پوزیترون</p>
-      <form
-        @submit.prevent="timerCounter > 0 ? checkKey() : sendToken()"
-        class="p-mt-5"
-      >
-        <p class="formTitle p-mb-5">
-          کد ارسال شده به شماره {{ userTelOut }} را وارد کنید.
-        </p>
-        <div class="middleBox">
-          <div class="inputContainer p-d-flex p-jc-between p-flex-row-reverse">
-            <input
-              type="text"
-              v-for="(key, i) in activationKeyFields"
-              :key="i"
-              :data-length="key.length"
-              :data-index="i"
-              :ref="
-                (el) => {
-                  if (el) inputs[i] = el;
-                }
-              "
-              v-model="key.value"
-              @input="handleActivationInput($event)"
-              @keydown="clearInput($event)"
-              class="codeTokenInput"
-              :maxlength="key.length"
-            />
-          </div>
-          <p class="errText" v-show="wrongKey">
-            لطفا کد تایید را صحیح وارد کنید.
-          </p>
-        </div>
-        <p class="counter">
-          0{{ Math.trunc(timerCounter / 60) }}:{{
-            Math.ceil((timerCounter % (60 * 60)) % 60) > 9
-              ? Math.ceil((timerCounter % (60 * 60)) % 60)
-              : "0" + Math.ceil((timerCounter % (60 * 60)) % 60)
-          }}
-        </p>
-        <button
-          id="loginBut"
-          class="loginButton"
-          :class="loading ? 'sendData' : ''"
-        >
-          <i v-show="!loading" class="pi pi-clock p-ml-1"></i>
-          <i v-show="loading" class="pi pi-spin pi-spinner p-m-1"></i>
-          <p v-show="timerCounter > 0">تایید و ادامه</p>
-          <p v-show="timerCounter == 0">ارسال مجدد کد</p>
-        </button>
-        <p class="signUp p-mr-2">
-          <a
-            @click.prevent="
-              () => {
-                changeNumber = true;
-                loading = false;
-                timerCounter = 180;
-              }
-            "
-            class="linkSignUp p-mr-1"
-            href="#"
-            >تغییر شماره موبایل</a
-          >
-          <i class="ri-arrow-left-line"></i>
-        </p>
-      </form>
-    </div>
+      :userTelOut="userTelOut"
+      @changingNumber="changingNumber"
+      @sendCode="sendToken"
+    ></Login>
 
     <!-- enter sign up information -->
     <Register
@@ -137,6 +73,7 @@ import { useCookies } from "vue3-cookies";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import Register from "./TheRegister.vue";
+import Login from "./TheLogin.vue";
 import axios from "axios";
 
 export default defineComponent({
@@ -146,11 +83,11 @@ export default defineComponent({
     const { cookies } = useCookies();
     // userToken
     const userToken = ref(null);
-    // timerCounte
+
+    //timerCounter
     const timerCounter = ref(180);
 
     const regex = new RegExp("^(\\+98|0)?9\\d{9}$");
-    const inputs = ref([]);
     const userTel = ref("");
     const notValidData = ref(false);
     const correctPhone = ref(false);
@@ -158,26 +95,16 @@ export default defineComponent({
     const sendCode = ref(false);
     const changeNumber = ref(false);
     const userExist = ref(false);
-    const wrongKey = ref(false);
-    const activationKeyFields = ref([
-      { length: 1, value: "" },
-      { length: 1, value: "" },
-      { length: 1, value: "" },
-      { length: 1, value: "" },
-    ]);
-    const activationKey = computed(() => {
-      let value = "";
-      for (let field of activationKeyFields.value) {
-        value += field.value;
-      }
-      return value;
-    });
     const userTelOut = computed(() => {
       return userTel.value.replace(/\s/g, "");
     });
-    //function from vuex store
-    function changeUserToken(token) {
-      store.commit("changeUserToken", token);
+    //check cookie
+    if (cookies.get("keepU") === "rrrr") {
+      sendCode.value = true;
+      userExist.value = false;
+    } else if (cookies.get("keepU") === "llll") {
+      sendCode.value = true;
+      userExist.value = true;
     }
     //functions
     function validData() {
@@ -239,148 +166,6 @@ export default defineComponent({
       }
     }
 
-    watch(userExist, () => {
-      if (userExist.value) {
-        let interval = setInterval(() => {
-          if (timerCounter.value > 0) {
-            timerCounter.value -= 1;
-          }
-        }, 1000);
-        watchEffect(
-          () => {
-            inputs.value[0].focus();
-          },
-          {
-            flush: "post",
-          }
-        );
-      }
-    });
-
-    function checkKey() {
-      if (activationKey.value != "" && timerCounter.value > 0) {
-        loading.value = true;
-        axios
-          .post(`${store.state.apiURL}/auth/verify`, {
-            phone: userTelOut.value,
-            code: parseInt(activationKey.value),
-          })
-          .then((response) => {
-            if (response.status == 200 && response.data.success) {
-              userToken.value = response.data.data.token;
-              loading.value = false;
-              wrongKey.value = false;
-              cookies.set("uToken", userToken.value, "1d");
-              cookies.set("uzit", response.data.data.id, "1d");
-              router.push({
-                name: "products",
-                params: { userId: response.data.data.id },
-              });
-            } else {
-              wrongKey.value = true;
-              loading.value = false;
-              activationKeyFields.value.forEach((input) => {
-                input.value = "";
-              });
-              inputs.value[0].focus();
-            }
-          })
-          .catch((err) => {
-            console.log(err);
-            wrongKey.value = true;
-            loading.value = false;
-            activationKeyFields.value.forEach((input) => {
-              input.value = "";
-            });
-            inputs.value[0].focus();
-          });
-      } else {
-        wrongKey.value = true;
-      }
-    }
-
-    function clearInput(e) {
-      let index = parseInt(e.target.dataset.index);
-      if (e.code == "Backspace" && e.target.value.length == 0) {
-        if (typeof activationKeyFields.value[index - 1] == "undefined") {
-          e.preventDefault();
-          return;
-        }
-        watchEffect(
-          () => {
-            inputs.value[index - 1].focus();
-          },
-          {
-            flush: "post",
-          }
-        );
-        e.preventDefault();
-      } else if (e.target.value.length > 1) {
-        if (typeof activationKeyFields.value[index + 1] == "undefined") {
-          e.preventDefault();
-          return;
-        }
-        watchEffect(
-          () => {
-            inputs.value[index + 1].focus();
-          },
-          {
-            flush: "post",
-          }
-        );
-        e.preventDefault();
-      }
-    }
-    function handleActivationInput(e) {
-      // Grab input's value
-      let value = e.target.value;
-      // Grab data-index value
-      let index = parseInt(e.target.dataset.index);
-      // Grab data-length value
-      let maxlength = e.target.dataset.length;
-      // Shift focus to next input field if max length reached
-      if (value.length >= maxlength) {
-        if (typeof activationKeyFields.value[index + 1] == "undefined") {
-          watchEffect(
-            () => {
-              inputs.value[index].blur();
-            },
-            {
-              flush: "post",
-            }
-          );
-          checkKey();
-          e.preventDefault();
-          return;
-        }
-        watchEffect(
-          () => {
-            inputs.value[index + 1].focus();
-          },
-          {
-            flush: "post",
-          }
-        );
-        e.preventDefault();
-      }
-      // Shift focus to prev input field if input clear
-      else if (value.length < maxlength) {
-        if (typeof activationKeyFields.value[index - 1] == "undefined") {
-          e.preventDefault();
-          return;
-        }
-        watchEffect(
-          () => {
-            inputs.value[index - 1].focus();
-          },
-          {
-            flush: "post",
-          }
-        );
-        e.preventDefault();
-      }
-    }
-
     function changingNumber() {
       changeNumber.value = true;
       sendCode.value = false;
@@ -398,20 +183,13 @@ export default defineComponent({
       phoneIsCorrect,
       sendToken,
       loading,
-      inputs,
       sendCode,
-      activationKeyFields,
-      handleActivationInput,
-      clearInput,
       changingNumber,
-      checkKey,
-      wrongKey,
-      activationKey,
       changeNumber,
       userExist,
     };
   },
-  components: { Register },
+  components: { Register, Login },
 });
 </script>
 

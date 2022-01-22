@@ -1,6 +1,4 @@
 // prime vue
-import Breadcrumb from "primevue/breadcrumb";
-import BreadcrumbItem from "primevue/breadcrumb/BreadcrumbItem.vue";
 import Button from "primevue/button/Button.vue";
 import Dialog from "primevue/dialog/Dialog.vue";
 import DataTable from "primevue/datatable/DataTable.vue";
@@ -22,10 +20,10 @@ import InputText from "primevue/inputtext";
 import Dropdown from "primevue/dropdown";
 import InputSwitch from "primevue/inputswitch";
 import Checkbox from "primevue/checkbox";
+import FileUpload from "primevue/fileupload";
 
 // zi
 import RTLBreadcrumb from "./components/panel/TheRTLBreadcrumb.vue";
-import Navbar from "./components/panel/TheNavbar.vue";
 import Sidebar from "./components/panel/TheSidebar.vue";
 import Search from "./components/common/components/Search.vue";
 import BulkEdit from "./components/common/components/BulkEdit.vue";
@@ -35,12 +33,11 @@ import InputHasIcon from "./components/common/components/InputHasIcon.vue";
 import InputHasInfo from "./components/common/components/InputHasInfo.vue";
 import ImageInput from "./components/common/components/ImageInput.vue";
 import SelectOption from "./components/common/components/SelectOption.vue";
+import DomainCard from "./components/common/components/DomainCard.vue";
 
 export default {
   install(app) {
     // primevue
-    app.component("Breadcrumb", Breadcrumb);
-    app.component("BreadcrumbItem", BreadcrumbItem);
     app.component("InputText", InputText);
     app.component("Button", Button);
     app.component("Dialog", Dialog);
@@ -63,6 +60,8 @@ export default {
     app.directive("tooltip", Tooltip);
     app.component("Dropdown", Dropdown);
     app.component("SelectOption", SelectOption);
+    app.component("DomainCard", DomainCard);
+    app.component("FileUpload", FileUpload);
 
     //mine
     app.component("InputHasIcon", InputHasIcon);
@@ -71,7 +70,6 @@ export default {
 
     // zi
     app.component("zi-rtl-breadcrumb", RTLBreadcrumb);
-    app.component("zi-navbar", Navbar);
     app.component("zi-sidebar", Sidebar);
     app.component("zi-search", Search);
     app.component("zi-bulk-edit", BulkEdit);

@@ -59,10 +59,6 @@ export default {
     width: 182px;
   }
 }
-.p-inputtext::placeholder {
-  font-size: 12px;
-  color: #b4b4b4;
-}
 
 .p-inputtext:focus {
   border: 0;
@@ -100,6 +96,11 @@ export default {
   .p-inputtext {
     text-align: right;
     font-family: "Vazir";
+  }
+
+  .p-inputtext::placeholder {
+    font-size: 12px;
+    color: #bbc0d8;
   }
 }
 </style>

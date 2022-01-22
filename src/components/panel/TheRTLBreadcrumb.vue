@@ -3,23 +3,6 @@
     <div class="pozitronBrand">
       <p>POZITRON</p>
     </div>
-    <!-- <ul>
-			<BreadcrumbItem
-				v-if="home"
-				:item="home"
-				class="p-breadcrumb-home"
-				:template="$slots.item"
-				:exact="exact"
-			/>
-			<template v-for="item of model" :key="item.label">
-				<li class="p-breadcrumb-chevron pi pi-chevron-left"></li>
-				<BreadcrumbItem
-					:item="item"
-					:template="$slots.item"
-					:exact="exact"
-				/>
-			</template>
-		</ul> -->
     <div class="p-d-flex p-ai-center p-jc-between navbarBox">
       <div class="p-d-flex p-ai-center p-jc-around navbarInfo">
         <div class="navbarBurger">
@@ -53,6 +36,7 @@
           class="pi pi-bell"
         ></i>
         <a href="#">انبار محصولات</a>
+        <a href="#" v-show="createTab">محصول</a>
 
         <div class="notif p-ai-center p-jc-center" v-show="showNotif">
           <div class="triangle2"></div>
@@ -76,8 +60,11 @@
           </p>
         </div>
       </div>
-
-      <div class="p-d-flex p-ai-center p-jc-around userInfo">
+      <!-- show user website -->
+      <div
+        class="p-ai-center p-jc-around userInfo"
+        :class="!createTab ? 'p-d-flex' : 'p-d-none'"
+      >
         <div class="welcomeText p-d-flex">
           <span>شماره پشتیبانی&nbsp;:&nbsp;&nbsp;</span>
           <a
@@ -86,51 +73,33 @@
             ><p class="call-button">0901-0922-933</p>
           </a>
         </div>
-        <div class="userImg">
-          <img
-            @click="
-              () => {
-                exitBox = !exitBox;
-              }
-            "
-            src="../../assets/images/usersImg/Group-12584.jpg"
-            alt="عکس کاربر"
-          />
-          <div v-show="exitBox" class="triangle"></div>
-          <div
-            :class="exitBox ? 'p-d-flex' : 'p-d-none'"
-            class="exitAccount p-ai-center p-jc-center"
-            @click="logOut()"
-          >
-            <i class="ri-logout-box-r-line"></i>
-            <p class="exitText">خروج از پوزیترون</p>
-          </div>
-        </div>
+        <a
+          :href="userDomain"
+          target="_blank"
+          class="p-d-flex p-ai-center p-jc-between showSiteBtn"
+          ><i class="pi pi-eye"></i> مشاهده سایت</a
+        >
+      </div>
+      <!-- button for save product -->
+      <div
+        class="p-ai-center p-jc-around userInfo p-pl-3"
+        :class="createTab ? 'p-d-flex' : 'p-d-none'"
+      >
+        <button class="productBtnCancel" @click="backToTable">لغو</button>
+        <button class="productBtnSave" @click="createProduct('simple')">
+          <i class="ri-checkbox-circle-line p-mx-1"></i>ذخیره
+        </button>
       </div>
     </div>
   </nav>
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapMutations, mapState } from "vuex";
 import { useCookies } from "vue3-cookies";
 
 export default {
   name: "zi-rtl-breadcrumb",
-  props: {
-    model: {
-      type: Array,
-      default: null,
-    },
-    home: {
-      type: null,
-      default: null,
-    },
-    exact: {
-      type: Boolean,
-      default: true,
-    },
-  },
   data() {
     return {
       cookies: useCookies(),
@@ -139,30 +108,62 @@ export default {
       exitBox: false,
       items: [
         {
+          label: "فروش حضوری",
           icon: "ri-store-2-line",
+          class: "p-disabled",
           // to: "/panel",
         },
         {
+          label: "انبار محصولات",
           icon: "pi pi-box",
           to: "/panel/1/products",
         },
         {
+          label: "لیست فاکتورها",
           icon: "ri-file-list-line",
+          class: "p-disabled",
           // to: "/panel",
         },
         {
+          label: "مشتریان",
           icon: "ri-group-line",
+          class: "p-disabled",
           // to: "/panel",
         },
         {
+          label: "تنظیمات",
           icon: "ri-settings-3-line",
+          class: "p-disabled",
           // to: "/panel/1",
         },
+        {
+          label: "خروج از پوزیترون",
+          icon: "ri-logout-box-r-line",
+          command: (event) => {
+            this.logOut();
+          },
+        },
       ],
+      createTab: false,
     };
   },
+  computed: {
+    ...mapState(["userDomain"]),
+    createTab: function () {
+      return (
+        this.$route.fullPath ==
+        `/panel/${this.cookies.cookies.get("uzit")}/create`
+      );
+    },
+  },
+  watch: {
+    $route(to, from) {
+      this.createTab =
+        to.fullPath == `/panel/${this.cookies.cookies.get("uzit")}/create`;
+    },
+  },
   methods: {
-    ...mapMutations(["changeUserToken"]),
+    ...mapMutations(["changeUserToken", "createProduct", "createProduct"]),
     toggle(event) {
       this.$refs.menu.toggle(event);
     },
@@ -171,6 +172,12 @@ export default {
       this.cookies.cookies.remove("uToken");
       this.cookies.cookies.remove("uzit");
       window.location.reload();
+    },
+    backToTable() {
+      this.$router.push({
+        name: "products",
+        params: { userId: this.cookies.cookies.get("uzit") },
+      });
     },
   },
 };
@@ -245,7 +252,9 @@ export default {
   }
   a {
     color: #036378;
+    font-weight: bold;
     font-size: 16px;
+    line-height: 153%;
     text-decoration: none;
   }
 }
@@ -269,41 +278,58 @@ export default {
   }
 }
 
-.userImg {
-  width: 50px;
-  height: 50px;
-  cursor: pointer;
-  position: relative;
-  img {
-    width: 100%;
-    height: 100%;
-    margin-top: 2.5px;
-  }
+.showSiteBtn {
+  background: #363d5d;
+  border-radius: 4px;
+  padding: 8px;
+  margin: 0px 4px;
+  width: 117px;
+  height: 32px;
+  color: #fff;
+  font-family: "VazirFD";
+  text-decoration: none;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 168%;
+  text-align: right;
+}
+.showSiteBtn:hover {
+  background: #49527e;
 }
 
-.exitAccount {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 190px;
-  height: 58.33px;
-  background: #fff;
-  border-radius: 7px;
-  z-index: 9999999999999;
-  transform: translateX(-20%);
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0px 3.35593px 1.67797px rgba(0, 0, 0, 0.05),
-    0px 0px 1.67797px rgba(0, 0, 0, 0.25);
-  .exitText {
-    font-size: 17px;
-    line-height: 164%;
-    text-align: right;
-    color: #5c679e;
-  }
-  i {
-    color: #5c679e;
-    font-size: 17px;
-  }
+.productBtnSave,
+.productBtnCancel {
+  cursor: pointer;
+  width: 140px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 0px;
+  background: #048ba8;
+  border-radius: 4px;
+  margin: 0px 0px;
+  outline: none;
+  box-shadow: none;
+  border: 0;
+  color: #fff;
+  margin: 0px 8px;
+  font-family: "VazirFD";
+  text-decoration: none;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+}
+.productBtnCancel {
+  width: 80px;
+  background: #ffffff;
+  border: 1px solid #048ba8;
+  color: #036378;
+}
+
+.productBtnSave:hover {
+  background-color: #036378;
 }
 
 .notif {
@@ -347,42 +373,10 @@ export default {
   transition: all 0.3s ease-in-out;
 }
 
-.triangle {
-  display: block;
-  height: 0px;
-  width: 0px;
-  border: 15px solid transparent;
-  border-bottom-color: #fff;
-  border-radius: 4px;
-  position: absolute;
-  top: 50%;
-  left: calc(50% - 15px);
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0px 3.35593px 1.67797px rgba(0, 0, 0, 0.05);
-}
-
-// .userImg:hover .exitAccount,
-// .userImg:hover .triangle {
-//   visibility: visible;
-// }
-
-// .userImg:hover .exitAccount,
-// .userImg:hover .triangle {
-// 	visibility: visible;
-// }
-
-// .p-badge-dot {
-// 	padding: 0.5rem !important;
-// }
-
 .p-badge-dot {
   width: 1.5rem !important;
   line-height: 1.25rem !important;
   height: inherit !important;
-  // min-width: 0.5rem;
-  // height: 0.5rem;
-  // border-radius: 50%;
-  // padding: 0;
 }
 
 .p-badge {
@@ -415,15 +409,18 @@ export default {
 }
 
 .p-menu-overlay {
-  z-index: 999999999999999999999999999999999999999999999 !important;
+  z-index: 99999999999999999999999999999999999999999999999999999999 !important;
   width: fit-content !important;
+  direction: rtl;
+
   .p-menuitem-link:not(.p-disabled):hover {
     background: transparent !important;
     outline: none;
     border: none;
   }
 
-  .p-menuitem-link:not(.p-disabled):hover .p-menuitem-icon {
+  .p-menuitem-link:not(.p-disabled):hover .p-menuitem-icon,
+  .p-menuitem-link:not(.p-disabled):hover .p-menuitem-text {
     color: #048ba8 !important;
   }
   .p-menuitem-link:focus {

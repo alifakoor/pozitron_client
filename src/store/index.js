@@ -16,6 +16,9 @@ export default createStore({
     loadingTable: true,
     notValidSearch: false,
     userToken: "",
+    userDomain: "",
+    editDisplay: null,
+    newProduct: {},
   },
   mutations: {
     deSelectItem(state, id) {
@@ -199,7 +202,7 @@ export default createStore({
             customClass: {
               htmlContainer: "bottomZero",
             },
-            timer: 5000,
+            timer: 3000,
           });
         }
       });
@@ -254,7 +257,7 @@ export default createStore({
             customClass: {
               htmlContainer: "bottomZero",
             },
-            timer: 5000,
+            timer: 3000,
           });
         }
       });
@@ -264,6 +267,7 @@ export default createStore({
       state.selections.forEach((element) => {
         editData.push(element.id);
       });
+      console.log(fields);
       await axios
         .put(
           `${state.apiURL}/products/edit`,
@@ -315,6 +319,7 @@ export default createStore({
             });
             state.mainProducts = state.products;
             state.selections = [];
+            state.editDisplay = false;
             Swal.fire({
               icon: "success",
               title: "تغییرات با موفقیت اعمال شد.",
@@ -329,6 +334,8 @@ export default createStore({
               timer: 4000,
               timerProgressBar: true,
               showCloseButton: true,
+            }).then(() => {
+              state.editDisplay = null;
             });
           }
         })
@@ -378,6 +385,7 @@ export default createStore({
         })
         .then((response) => {
           if (response.status == 200 && response.data.success) {
+            state.userDomain = "https://" + response.data.domain;
             setTimeout(() => {
               state.loadingTable = false;
               state.products = response.data.data;
@@ -398,6 +406,32 @@ export default createStore({
               state.loadingTable = false;
             }, 1000);
           }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+
+    addFeatureToNewProduct(state, feature) {
+      state.newProduct[feature.name] = feature.inValue;
+    },
+    createProduct(state, type) {
+      state.newProduct["type"] = type;
+      let Product = Object.entries(state.newProduct).reduce(
+        (a, [k, v]) => (v === null ? a : ((a[k] = v), a)),
+        {}
+      );
+      console.log(Product);
+      axios
+        .post(
+          `${state.apiURL}/products/create`,
+          {
+            Product,
+          },
+          { headers: { "zi-access-token": state.userToken } }
+        )
+        .then((response) => {
+          console.log(response);
         })
         .catch((err) => {
           console.log(err);

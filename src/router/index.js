@@ -46,23 +46,12 @@ const routes = [
       {
         path: "products",
         name: "products",
-        component: () => import("../views/products/TheProductTable.vue"),
-        children: [
-          {
-            path: "create",
-            name: "product.create",
-            component: () => {},
-          },
-          // {
-          //   path: ":id/update",
-          //   name: "product.update",
-          //   component: () => {},
-          // },
-          // {
-          //   path: ":id/delete",
-          //   name: "product.delete",
-          // },
-        ],
+        component: () => import("../views/products/TheFactorList.vue"),
+      },
+      {
+        path: "create",
+        name: "createProduct",
+        component: () => import("../views/products/TheCreateProduct.vue"),
       },
     ],
   },

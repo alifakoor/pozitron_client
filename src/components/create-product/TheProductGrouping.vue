@@ -1,18 +1,16 @@
 <template>
   <GeneralBox title="دسته‌بندی و برچسب‌گذاری" InHeight="100%" InGrid="p-md-4">
     <template #InnerHtml>
-      <div class="p-d-flex p-col-12 p-flex-column p-jc-between p-ai-center">
-        <SelectOption
-          iconClass="ri-apps-line"
-          InPlaceholder="انتخاب یا ساخت دسته"
+      <div class="p-d-flex p-col-12 p-flex-column p-jc-around p-ai-center">
+        <SelectDropDown
+          InPlaceholder="انتخاب دسته"
           InGrid="p-col-12"
-        ></SelectOption>
+        ></SelectDropDown>
 
-        <SelectOption
-          iconClass="pi pi-tags"
-          InPlaceholder="انتخاب یا ساخت برچسب"
+        <SelectDropDown
+          InPlaceholder="انتخاب برچسب"
           InGrid="p-col-12"
-        ></SelectOption>
+        ></SelectDropDown>
       </div>
     </template>
   </GeneralBox>
@@ -20,9 +18,11 @@
 
 <script>
 import { defineAsyncComponent } from "vue";
+import SelectDropDown from "../common/components/SelectDropDown.vue";
 export default {
   components: {
     GeneralBox: defineAsyncComponent(() => import("./GeneralBox.vue")),
+    SelectDropDown,
   },
 };
 </script>

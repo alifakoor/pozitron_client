@@ -39,6 +39,9 @@ export default {
       default: "40px",
     },
   },
+  data() {
+    return {};
+  },
 };
 </script>
 
@@ -74,6 +77,7 @@ export default {
       margin-right: 15px;
       font-size: 14px;
       color: $textMuted;
+      text-align: right;
     }
     .pi-chevron-down {
       color: $textMuted;

@@ -54,6 +54,10 @@ export default {
     };
   },
   props: {
+    inputName: {
+      type: String,
+      default: "",
+    },
     iconClass: {
       type: String,
       default: "",
@@ -111,7 +115,14 @@ export default {
   },
   watch: {
     inputValue: function () {
-      this.$emit("changeInputValue", this.inputValue);
+      if (this.inputName != "") {
+        this.$emit("changeInputValue", {
+          name: this.inputName,
+          inValue: this.inputValue,
+        });
+      } else {
+        this.$emit("changeInputValue", this.inputValue);
+      }
     },
   },
 };
@@ -128,30 +139,37 @@ export default {
     padding: 0px 4px;
     position: absolute;
     top: 0;
-    right: 5%;
-    transform: translateY(-10%);
+    right: 10%;
+    transform: translateY(-15%);
     background-color: #fff;
     font-size: 12px;
+    color: #7b84b2;
   }
   .iconInput {
-    width: 50px;
-    height: 40px;
+    width: v-bind(InHeight);
+    height: v-bind(InHeight);
     left: 0 !important;
     margin-top: 0;
     top: 0;
-    background-color: var(--color);
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 4px 0px 0px 4px;
-    border: 1px solid #a7acb1;
     border-right: none;
+    transform: scale(0.9);
+    font-size: 20px;
+  }
+
+  .iconInput:focus {
+    background: #7b84b2;
   }
   .bgIconGray {
     background-color: $iconGray;
+    color: #7b84b2;
   }
   .bgButtonGray {
     background-color: $buttonGray;
+    color: #fff;
   }
 
   .bgButtonGray:hover {
@@ -169,16 +187,32 @@ export default {
   }
   .inputStyle {
     width: 100%;
-    font-size: 12px;
+    font-size: 14px;
     color: $textMuted;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
-    border: 1px solid #a7acb1;
+    border: 1px solid #bbc0d8;
     border-radius: 4px;
     height: 40px;
     padding-right: 10px !important;
+  }
+
+  .inputStyle::placeholder {
+    color: #bbc0d8;
+    font-size: 12px;
+    font-family: "VazirFD";
+  }
+
+  .inputStyle:hover {
+    border: 1px solid #bbc0d8;
+  }
+
+  .inputStyle:focus,
+  .inputStyle:focus .iconInput {
+    box-shadow: none;
+    border: 2px solid #7b84b2;
   }
   .p-inputtext.p-invalid.p-component {
     border-color: $errorBorder;

@@ -3,14 +3,10 @@
     <TheGeneralSpecifications></TheGeneralSpecifications>
     <TheProductGrouping></TheProductGrouping>
   </div>
-  <div class="p-grid p-m-0">
+  <div class="p-grid p-m-2">
     <div class="middleWrapper p-ai-center p-jc-center p-d-flex p-col-12 p-mt-2">
       <div
-        class="
-          p-d-flex p-jc-between p-px-3 p-ai-center
-          middleBoxWrapper
-          p-col-12
-        "
+        class="p-d-flex p-jc-between p-px-3 p-ai-center middleBoxWrapper p-col-12"
       >
         <div class="p-field-checkbox p-mb-0">
           <Checkbox
@@ -86,7 +82,6 @@ input {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  text-align: right;
   direction: rtl;
 }
 body {
