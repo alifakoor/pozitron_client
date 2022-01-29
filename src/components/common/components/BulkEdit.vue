@@ -77,8 +77,10 @@
                     })
                     .indexOf('attributes')
                 ].metaValue"
+                 
                 v-if="selectedItem.type == 'variation'"
                 style="display: inline"
+                v-bind="selectedItem.id"
               >
                 {{  pMeta.name + ":" + pMeta.option }}
                 <p v-if="key != selectedItem.meta[
@@ -184,6 +186,7 @@ import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
+      display:false,
       editLoading: false,
       sendEdit: false,
       onlinePrice: null,

@@ -21,18 +21,22 @@ import Dropdown from "primevue/dropdown";
 import InputSwitch from "primevue/inputswitch";
 import Checkbox from "primevue/checkbox";
 import FileUpload from "primevue/fileupload";
+import TabView from "primevue/tabview";
+import TabPanel from "primevue/tabpanel";
 
 // zi
 import RTLBreadcrumb from "./components/panel/TheRTLBreadcrumb.vue";
 import Sidebar from "./components/panel/TheSidebar.vue";
 import Search from "./components/common/components/Search.vue";
 import BulkEdit from "./components/common/components/BulkEdit.vue";
+import ShowDetail from "./components/panel/ShowFactorDetail.vue";
 
 //mine
 import InputHasIcon from "./components/common/components/InputHasIcon.vue";
 import InputHasInfo from "./components/common/components/InputHasInfo.vue";
 import ImageInput from "./components/common/components/ImageInput.vue";
 import SelectOption from "./components/common/components/SelectOption.vue";
+import CahangeFactorStatus from "./components/common/components/CahangeFactorStatus.vue";
 import DomainCard from "./components/common/components/DomainCard.vue";
 
 export default {
@@ -62,16 +66,20 @@ export default {
     app.component("SelectOption", SelectOption);
     app.component("DomainCard", DomainCard);
     app.component("FileUpload", FileUpload);
+    app.component("TabView", TabView);
+    app.component("TabPanel", TabPanel);
 
     //mine
     app.component("InputHasIcon", InputHasIcon);
     app.component("InputHasInfo", InputHasInfo);
     app.component("ImageInput", ImageInput);
+    app.component("CahangeFactorStatus", CahangeFactorStatus);
 
     // zi
     app.component("zi-rtl-breadcrumb", RTLBreadcrumb);
     app.component("zi-sidebar", Sidebar);
     app.component("zi-search", Search);
     app.component("zi-bulk-edit", BulkEdit);
+    app.component("showDetail", ShowDetail);
   },
 };

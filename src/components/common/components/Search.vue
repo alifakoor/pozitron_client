@@ -4,9 +4,9 @@
       <i class="pi pi-search" />
       <InputText
         type="text"
-        v-model="searchData"
+        v-model="search"
         placeholder="با بارکد، نام، ویژگی، دسته و برچسب دنبالش بگرد"
-        @input="searchProduct(searchData)"
+        @input="searchData({ searchValue: search, searchType: searchType })"
       />
     </span>
   </div>
@@ -22,14 +22,17 @@ export default {
       type: String,
       default: "50%",
     },
+    searchType: {
+      type: String,
+    },
   },
   data() {
     return {
-      searchData: "",
+      search: "",
     };
   },
   methods: {
-    ...mapMutations(["searchProduct"]),
+    ...mapMutations(["searchData"]),
   },
 };
 </script>

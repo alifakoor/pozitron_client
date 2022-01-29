@@ -289,7 +289,7 @@ export default createStore({
               state.products.map((product) => {
                 if (product.id == editID) {
                   //add changing for onlineSell changing
-                  fields.onlineSell
+                  fields.onlineSell === false || fields.onlineSell === true
                     ? (product.onlineSell = fields.onlineSell)
                     : "";
                   // add changing for onlineStock changing
@@ -344,35 +344,46 @@ export default createStore({
         });
     },
 
-    searchProduct(state, searchData) {
-      if (searchData == "") {
-        state.products = state.mainProducts;
-        state.notValidSearch = false;
-      } else {
-        let searchDataProduct = state.mainProducts;
-        state.products = searchDataProduct.filter((product) => {
-          let option = "";
-          if (product.type == "variation") {
-            option = JSON.stringify(
-              product.meta[
-                product.meta
-                  .map(function (e) {
-                    return e.metaKey;
-                  })
-                  .indexOf("attributes")
-              ].metaValue
-            );
+    searchData(state, data) {
+      let searchValue = data.searchValue;
+      let type = data.searchType;
+      console.log(data);
+      switch (type) {
+        case "product":
+          {
+            if (searchValue == "") {
+              state.products = state.mainProducts;
+              state.notValidSearch = false;
+            } else {
+              let searchDataProduct = state.mainProducts;
+              state.products = searchDataProduct.filter((product) => {
+                let option = "";
+                if (product.type == "variation") {
+                  option = JSON.stringify(
+                    product.meta[
+                      product.meta
+                        .map(function (e) {
+                          return e.metaKey;
+                        })
+                        .indexOf("attributes")
+                    ].metaValue
+                  );
+                }
+                return (
+                  product.barcode
+                    .toLowerCase()
+                    .search(searchValue.toLowerCase()) > -1 ||
+                  product.name.toLowerCase().search(searchValue.toLowerCase()) >
+                    -1 ||
+                  option.toLowerCase().search(searchValue.toLowerCase()) > -1
+                );
+              });
+              state.products.length == 0
+                ? (state.notValidSearch = true)
+                : (state.notValidSearch = false);
+            }
           }
-          return (
-            product.barcode.toLowerCase().search(searchData.toLowerCase()) >
-              -1 ||
-            product.name.toLowerCase().search(searchData.toLowerCase()) > -1 ||
-            option.toLowerCase().search(searchData.toLowerCase()) > -1
-          );
-        });
-        state.products.length == 0
-          ? (state.notValidSearch = true)
-          : (state.notValidSearch = false);
+          break;
       }
     },
 

@@ -2,59 +2,37 @@
   <div class="zi-panel-products-list">
     <div class="p-d-flex p-jc-between">
       <div class="actions p-d-flex">
-        <zi-search  :width="width" />
-        <zi-bulk-edit  />
+        <zi-search :width="width" searchType="product" />
+        <CahangeFactorStatus />
+        <showDetail
+          :Fid="showDetailFlag"
+          :showDetail="showDetailFlag != null"
+        />
       </div>
     </div>
-    <!-- selected product message -->
-		<!-- <div
-			class="selectMessage p-d-flex p-jc-center"
-			v-if="selections.length > 0"
-		>
-			<p>
-				{{
-					selections.length == products.length
-						? `همه‌ی ${products.length} محصول انتخاب شدند.`
-						: `${selections.length} محصول از ${products.length} محصول موجود در انبار انتخاب شد .`
-				}}
-			</p>
-
-			<Button
-				v-show="
-					selections.length > 0 &&
-					selections.length != products.length
-				"
-				label="انتخاب همه  محصولات"
-				class="p-button-text p-mx-1"
-				@click="addSelections(products)"
-			/>
-			<Button
-				v-show="selections.length == products.length"
-				label="از انتخاب خارج کردن محصولات"
-				class="p-button-text p-mx-1"
-				@click="() => (selectedProducts = [])"
-			/>
-		</div> -->
     <div v-if="loadingTable" class="table-loading">
       <div class="lds-hourglass"></div>
     </div>
     <DataTable
-      :rows="5"
+      :rows="6"
       :value="products"
       :rowHover="true"
       :paginator="true"
       :scrollable="true"
-      :rowsPerPageOptions="[5, 10, 15, 20]"
+      :rowsPerPageOptions="[6, 12, 18, 24]"
       v-model:selection="selectedProducts"
       dataKey="id"
       tableClass="zi-table "
-      scrollHeight="27rem"
+      scrollHeight="29rem"
       responsiveLayout="scroll"
       :globalFilterFields="['name', 'barcode']"
     >
-     <template #empty >
-          <p  v-show="notValidSearch" >محصولی با این مشخصات یافت نشد.</p>
-          <p  v-show="products.length==0 && !loadingTable" >محصولی برای نماش وجود ندارد.لطفا از پنل سایت خود،محصولات را تعریف کنید.</p>
+      <template #empty>
+        <p v-show="notValidSearch">محصولی با این مشخصات یافت نشد.</p>
+        <p v-show="products.length == 0 && !loadingTable">
+          محصولی برای نماش وجود ندارد.لطفا از پنل سایت خود،محصولات را تعریف
+          کنید.
+        </p>
       </template>
 
       <ColumnGroup type="header">
@@ -68,24 +46,25 @@
             ]"
             :rowspan="2"
           >
-           <template #header>
-							<TriStateCheckbox v-model="selectValue" />
-						</template>
+            <template #header>
+              <TriStateCheckbox v-model="selectValue" />
+            </template>
           </Column>
-          <Column header="مرجع فاکتور" headerClass="zi-table-header" :rowspan="2" />
+          <Column
+            header="مرجع فاکتور"
+            headerClass="zi-table-header"
+            :rowspan="2"
+          />
           <Column
             headerClass="zi-table-header zi-table-header-lg zi-table-justify-flex-start"
             :rowspan="2"
             :colspan="2"
           >
             <template #header>
-              <div class="zi-table-header-has-sub firstSort sortTable" @click="sortProducts(['name'])">
+              <div class="zi-table-header-has-sub firstSort sortTable">
                 <p class="sortCursor">نام خریدار</p>
                 <p class="zi-table-header-sub">شماره فاکتور</p>
               </div>
-              <i @click="sortProducts(['name'])" v-if="nameSort==null" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-alt p-mr-1" ></i>
-                <i @click="sortProducts(['name'])" v-else-if="!nameSort" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-up-alt" style="color: #048ba8;"></i>
-                <i @click="sortProducts(['name'])" v-else-if="nameSort" class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-down" style="color: #048ba8;"></i>
             </template>
           </Column>
           <Column
@@ -94,16 +73,16 @@
             :rowspan="2"
           ></Column>
           <Column
-						header="زمان ثبت فاکتور"
-						headerClass="zi-table-header zi-table-header-lg"
-						:colspan="2"
-		  />
-		  <Column
-						header="زمان ارسال"
-						headerClass="zi-table-header zi-table-header-lg"
-						:colspan="2"
-	       />
-          
+            header="زمان ثبت فاکتور"
+            headerClass="zi-table-header zi-table-header-lg"
+            :colspan="2"
+          />
+          <Column
+            header="زمان ارسال"
+            headerClass="zi-table-header zi-table-header-lg"
+            :colspan="2"
+          />
+
           <Column
             header="مبلغ فاکتور  (تومان)"
             headerClass="zi-table-header"
@@ -128,24 +107,24 @@
         </Row>
         <Row>
           <Column
-						header="تاریخ"
-						headerClass="zi-table-header zi-table-header-second-row zi-direction-ltr"
-						:sortable="true"
-					>
-					</Column>
-					<Column
-						header="ساعت"
-						headerClass="zi-table-header zi-table-header-second-row"
-					/>
-					<Column
-						header="تاریخ"
-						headerClass="zi-table-header zi-table-header-second-row zi-direction-ltr"
-						:sortable="true"
-					/>
+            header="تاریخ"
+            headerClass="zi-table-header zi-table-header-second-row zi-direction-ltr"
+            :sortable="true"
+          >
+          </Column>
           <Column
-						header="ساعت"
-						headerClass="zi-table-header zi-table-header-second-row"
-					/>
+            header="ساعت"
+            headerClass="zi-table-header zi-table-header-second-row"
+          />
+          <Column
+            header="تاریخ"
+            headerClass="zi-table-header zi-table-header-second-row zi-direction-ltr"
+            :sortable="true"
+          />
+          <Column
+            header="ساعت"
+            headerClass="zi-table-header zi-table-header-second-row"
+          />
         </Row>
       </ColumnGroup>
       <Column
@@ -154,16 +133,9 @@
       >
       </Column>
       <Column field="image" bodyClass="zi-table-body" :rowspan="2">
-      
-        <template #body="slotProps">
+        <template #body>
           <div class="zi-table-content">
-            <img v-if="slotProps.data.images == ''" src="../../assets/images/usersImg/DefaultImage.jpg" class="product-image"
-              :alt="slotProps.data.name">
-            <img v-else
-              :src="slotProps.data.images[0].src"
-              class="product-image"
-              :alt="slotProps.data.name"
-            />
+            <i class="ri-global-line sourceFactor"></i>
           </div>
         </template>
       </Column>
@@ -171,34 +143,12 @@
         field="name"
         bodyClass="zi-table-body zi-table-body-lg zi-table-justify-flex-start"
         :colspan="2"
-        :sortable="true"
       >
         <template #body="slotProps">
           <div class="zi-table-content">
             <div class="zi-table-content-has-sub">
-              <p>
+              <p class="factorName" @click="showDetail(slotProps.data.id)">
                 {{ slotProps.data.name }}
-              </p>
-              <p
-                class="zi-table-product-prop"
-                v-for="(pMeta,key) in slotProps.data.meta[
-                  slotProps.data.meta
-                    .map(function (e) {
-                      return e.metaKey;
-                    })
-                    .indexOf('attributes')
-                ].metaValue"
-                v-if="slotProps.data.type == 'variation'"
-                style="display: inline"
-              >
-                {{  pMeta.name + ":" + pMeta.option }}
-                <p v-if="key != slotProps.data.meta[
-                  slotProps.data.meta
-                    .map(function (e) {
-                      return e.metaKey;
-                    })
-                    .indexOf('attributes')
-                ].metaValue.length-1" style="display: inline;">{{ "/" }}</p>
               </p>
             </div>
           </div>
@@ -207,17 +157,13 @@
       <Column field="barcode" bodyClass="zi-table-body zi-table-body-lg">
         <template #body="slotProps">
           <div class="zi-table-content">
-            <div class="zi-bracode">
+            <div class="zi-status">
               <Chip :label="slotProps.data.barcode" />
             </div>
           </div>
         </template>
       </Column>
-      <Column
-        field="onlineStock"
-        bodyClass="zi-table-body "
-        :sortable="true"
-      >
+      <Column field="onlineStock" bodyClass="zi-table-body " :sortable="true">
         <template #body="slotProps">
           <div v-if="slotProps.data.infiniteStock">
             <i class="fas fa-infinity" style="color: #048ba8"></i>
@@ -228,12 +174,7 @@
         </template>
       </Column>
       <Column field="onlineStock" bodyClass="zi-table-body"></Column>
-      <Column
-        field="onlinePrice"
-        bodyClass="zi-table-body"
-        bodyStyle="padding-right: 0;"
-        :sortable="true"
-      >
+      <Column field="onlinePrice" bodyClass="zi-table-body" :sortable="true">
         <template #body="slotProps">
           <div class="zi-table-content">
             <div
@@ -252,34 +193,28 @@
           </div>
         </template>
       </Column>
-      <Column
-				field="onlinePrice"
-				bodyClass="zi-table-body"
-				bodyStyle="padding-right: 0;"
-			>
-				<template #body="slotProps">
-					<div
-						:class="[
-							'zi-table-content-has-sub',
-							slotProps.data.onlineDiscount
-								? 'zi-has-discount'
-								: null,
-						]"
-					>
-						<p>{{ slotProps.data.onlinePrice.toLocaleString() }}</p>
-						<p v-if="slotProps.data.onlineDiscount">
-							{{ slotProps.data.onlinePrice.toLocaleString() }}
-						</p>
-					</div>
-				</template>
-			</Column>
-      <Column  bodyClass="zi-table-body">
+      <Column field="onlinePrice" bodyClass="zi-table-body">
+        <template #body="slotProps">
+          <div
+            :class="[
+              'zi-table-content-has-sub',
+              slotProps.data.onlineDiscount ? 'zi-has-discount' : null,
+            ]"
+          >
+            <p>{{ slotProps.data.onlinePrice.toLocaleString() }}</p>
+            <p v-if="slotProps.data.onlineDiscount">
+              {{ slotProps.data.onlinePrice.toLocaleString() }}
+            </p>
+          </div>
+        </template>
+      </Column>
+      <Column bodyClass="zi-table-body">
         <template #body="slotProps">
           <div class="zi-table-content">
             <InputSwitch
               class="zi-switch-input"
               @click="onlineSell([slotProps.data.id])"
-               v-model="slotProps.data.onlineSell"
+              v-model="slotProps.data.onlineSell"
             />
           </div>
         </template>
@@ -304,15 +239,24 @@ export default {
   data() {
     return {
       width: "38.372093023255813953488372093023%",
-			selectedProducts: [],
-			selectValue: null,
-			showPage: 1,
-			showPerPage: 5,
-			pageProduct: [],
+      selectedProducts: [],
+      selectValue: null,
+      showPage: 1,
+      showPerPage: 5,
+      pageProduct: [],
+      showDetailFlag: null,
     };
   },
   computed: {
-    ...mapState(["products", "selections", "loadingTable","notValidSearch" ,"stockSort","priceSort","nameSort"]),
+    ...mapState([
+      "products",
+      "selections",
+      "loadingTable",
+      "notValidSearch",
+      "stockSort",
+      "priceSort",
+      "nameSort",
+    ]),
   },
   methods: {
     ...mapMutations([
@@ -323,114 +267,110 @@ export default {
       "multiDeleteProduct",
       "setProducts",
       "changeUserToken",
-			"emptySelection",
-			"deSelectItem",
+      "emptySelection",
+      "deSelectItem",
     ]),
-    checkState() {
-			let trueSelection = 0;
-			this.pageProduct.forEach((product) => {
-				this.selectedProducts.find((select) => {
-					if (select.id == product.id) {
-						trueSelection++;
-						return;
-					}
-				});
-			});
-			return trueSelection;
-		},
-    setPageProducts(){
-      let start = (this.showPage - 1) * this.showPerPage;
-			this.pageProduct = this.products.slice(
-				start,
-				start + this.showPerPage
-			);
-			let trueSelection = this.checkState();
-			trueSelection == 0
-				? (this.selectValue = null)
-				: (this.selectValue = trueSelection == this.showPerPage);
+    showDetail(Fid) {
+      this.showDetailFlag = Fid;
     },
-    createProduct(){
-       this.$router.push({
+    checkState() {
+      let trueSelection = 0;
+      this.pageProduct.forEach((product) => {
+        this.selectedProducts.find((select) => {
+          if (select.id == product.id) {
+            trueSelection++;
+            return;
+          }
+        });
+      });
+      return trueSelection;
+    },
+    setPageProducts() {
+      let start = (this.showPage - 1) * this.showPerPage;
+      this.pageProduct = this.products.slice(start, start + this.showPerPage);
+      let trueSelection = this.checkState();
+      trueSelection == 0
+        ? (this.selectValue = null)
+        : (this.selectValue = trueSelection == this.showPerPage);
+    },
+    createProduct() {
+      this.$router.push({
         name: "createProduct",
         params: { userId: this.$cookies.get("uzit") },
-      })
-    }
+      });
+    },
   },
   watch: {
     selectedProducts: function () {
-			this.addSelections(this.selectedProducts);
-			let trueSelection = this.checkState();
-			trueSelection == 0
-				? (this.selectValue = null)
-				: (this.selectValue = trueSelection == this.showPerPage);
-		},
-		selectValue: function (newVal, oldVal) {
-			let trueSelection = this.checkState();
-			if (
-				newVal === false &&
-				oldVal === true &&
-				trueSelection == this.showPerPage
-			) {
-				this.selectValue = null;
-			} else if (newVal === null) {
-				this.pageProduct.forEach((product) => {
-					this.deSelectItem(product.id);
-				});
-			} else if (newVal === true && trueSelection != this.showPerPage) {
-				let newSelection = this.selectedProducts;
-				this.selectedProducts = newSelection.concat(this.pageProduct);
-			}
-		},
-		showPage: function () {
-			this.setPageProducts()
-		},
-		showPerPage: function () {
-	  	this.setPageProducts()
-		},
-		selections: function () {
-			this.selectedProducts = this.selections;
-		},
+      this.addSelections(this.selectedProducts);
+      let trueSelection = this.checkState();
+      trueSelection == 0
+        ? (this.selectValue = null)
+        : (this.selectValue = trueSelection == this.showPerPage);
+    },
+    selectValue: function (newVal, oldVal) {
+      let trueSelection = this.checkState();
+      if (
+        newVal === false &&
+        oldVal === true &&
+        trueSelection == this.showPerPage
+      ) {
+        this.selectValue = null;
+      } else if (newVal === null) {
+        this.pageProduct.forEach((product) => {
+          this.deSelectItem(product.id);
+        });
+      } else if (newVal === true && trueSelection != this.showPerPage) {
+        let newSelection = this.selectedProducts;
+        this.selectedProducts = newSelection.concat(this.pageProduct);
+      }
+    },
+    showPage: function () {
+      this.setPageProducts();
+    },
+    showPerPage: function () {
+      this.setPageProducts();
+    },
+    selections: function () {
+      this.selectedProducts = this.selections;
+    },
   },
   created() {
-    if(this.products.length===0){
+    if (this.products.length === 0) {
       this.setProducts();
     }
   },
   updated() {
-		let start = (this.showPage - 1) * this.showPerPage;
-		this.pageProduct = this.products.slice(start, start + this.showPerPage);
+    let start = (this.showPage - 1) * this.showPerPage;
+    this.pageProduct = this.products.slice(start, start + this.showPerPage);
 
-		document
-			.querySelectorAll(".p-paginator-page.p-paginator-element.p-link")
-			.forEach((element) => {
-				element.addEventListener("click", () => {
-					this.showPage = parseInt(element.innerHTML);
-				});
-			});
+    document
+      .querySelectorAll(".p-paginator-page.p-paginator-element.p-link")
+      .forEach((element) => {
+        element.addEventListener("click", () => {
+          this.showPage = parseInt(element.innerHTML);
+        });
+      });
 
+    document.querySelectorAll(".table-sort").forEach((element) => {
+      element.addEventListener("click", () => {
+        this.setPageProducts();
+      });
+    });
 
-    document.querySelectorAll(".table-sort").forEach((element)=>{
-     	element.addEventListener("click", () => {
-					this.setPageProducts()
-				});
-    })
-
-
-		document
-			.querySelector(".p-dropdown-label.p-inputtext")
-			.addEventListener("DOMCharacterDataModified", () => {
-				this.showPerPage = parseInt(
-					document.querySelector(".p-dropdown-label.p-inputtext")
-						.innerHTML
-				);
-			});
-	},
+    document
+      .querySelector(".p-dropdown-label.p-inputtext")
+      .addEventListener("DOMCharacterDataModified", () => {
+        this.showPerPage = parseInt(
+          document.querySelector(".p-dropdown-label.p-inputtext").innerHTML
+        );
+      });
+  },
 };
 </script>
 
 <style lang="scss" scoped>
 @import "../../assets/styles/app.scss";
-
 
 .fa-trash {
   color: #7b84b2;
@@ -449,7 +389,7 @@ export default {
   .message {
     width: 0;
     visibility: hidden;
-    transition: width .1s linear;
+    transition: width 0.1s linear;
     font-weight: 500;
     font-size: 12px;
     line-height: 150%;
@@ -471,11 +411,11 @@ export default {
   cursor: pointer;
 }
 
-.addMessage:hover  .message{
+.addMessage:hover .message {
   padding-right: 7px;
   width: 114px;
   visibility: visible;
-  transition:width .5s linear, visibility .01s .5s ease-in;
+  transition: width 0.5s linear, visibility 0.01s 0.5s ease-in;
 }
 .zi-panel-products-list {
   width: 100%;
@@ -586,15 +526,15 @@ export default {
     width: 5.5rem;
     padding: 0.5rem 0.75rem;
     text-align: center;
-    background-color: #DCDEEA !important;
+    background-color: #dcdeea !important;
     position: sticky !important;
 
     .p-column-header-content {
       justify-content: center;
-      .p-column-title{
-        color: #49527E;
+      .p-column-title {
+        color: #49527e;
         font-weight: bold;
-        font-size: 12px;
+        font-size: 14px;
         line-height: 150%;
       }
     }
@@ -603,20 +543,15 @@ export default {
       text-align: right;
 
       .zi-table-header-sub {
-        color: #9BA2C5;
+        color: #9ba2c5;
+        font-size: 14px;
       }
     }
   }
-  // .zi-table-selection-all {
-  // 	.p-column-header-content {
-  // 		justify-content: right;
-  // 		margin-right: 16px;
-  // 	}
-  // }
 
   .zi-table-body {
     width: 5.5rem;
-    padding: 0.20rem;
+    padding: 0.2rem;
     display: table-cell;
     color: black;
     text-align: center;
@@ -628,24 +563,32 @@ export default {
       justify-content: center;
       align-items: center;
 
-      img{
+      img {
         border-radius: 4px;
       }
+      .sourceFactor {
+        color: #048ba8;
+        font-size: 20px;
+      }
 
-      .zi-bracode {
+      .zi-status {
         .p-chip {
-          padding: 0 0.375rem;
-          border: 1px solid #7b84b2;
-          border-radius: 0.25rem;
-          background: unset;
-
+          margin: 10px 0px;
+          background: #c5dacf;
+          border: 1px solid #065143;
+          box-sizing: border-box;
+          border-radius: 4px;
+          padding: 2px 12px;
+          width: 105px;
+          height: 24px;
           .p-chip-text {
             font-weight: 500;
             font-size: 12px;
             line-height: 20px;
-            color: #131520;
-            margin: unset;
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            color: #065143;
+            margin: 3px 0px;
+            text-align: center;
+            width: 100%;
           }
         }
       }
@@ -656,10 +599,13 @@ export default {
       }
     }
     .zi-table-content-has-sub {
-      text-align: right;
+      text-align: center;
+      .factorName {
+        cursor: pointer;
+      }
 
       .zi-table-product-prop {
-        color: #BBC0D8;
+        color: #bbc0d8;
       }
     }
     .zi-table-content-has-sub.zi-has-discount {
@@ -679,6 +625,8 @@ export default {
     .p-sortable-column-icon {
       margin-left: 0;
       margin-right: 0.5rem;
+      font-size: 14px;
+      color: #131520;
     }
   }
 
@@ -689,6 +637,7 @@ export default {
 
   .zi-table-header-second-row {
     width: 4.75rem;
+    border-top: 1px solid #7b84b2 !important;
   }
 
   .zi-table-justify-flex-start {
@@ -701,7 +650,6 @@ export default {
   .zi-table-selection-all,
   .zi-table-selection {
     width: 4.75rem;
-    // padding-right: 10px;
   }
 
   .zi-table-delete-all,
@@ -730,6 +678,10 @@ export default {
   .p-datatable-tbody > tr:not(.p-highlight):hover {
     background-color: #f6f6f7;
     transition: all 0.5s;
+  }
+
+  .p-datatable-thead > tr > th {
+    border: none;
   }
 
   .p-datatable-thead:hover .zi-table-selection-all:not(.p-highlight),
@@ -764,37 +716,15 @@ export default {
   .p-datatable-tbody {
     tr {
       display: inline-table !important;
-     height: 64px;
+      height: 64px;
     }
-    .p-datatable-emptymessage{
-      td{
+    .p-datatable-emptymessage {
+      td {
         justify-content: center;
       }
     }
   }
 }
-
-// Table container - hide scrollbar
-// ::v-deep(.p-datatable-wrapper) {
-//   &::-webkit-scrollbar {
-//     // display: none;
-//     // background-color: #23273c;
-//   }
-
-//   // &::-webkit-scrollbar-thumb {
-//   // 	background: #23273c;
-//   // }
-
-//   ::-webkit-scrollbar-thumb {
-//     background: blue;
-//     border-radius: 10px;
-//   }
-
-//   /* Handle on hover */
-//   ::-webkit-scrollbar-thumb:hover {
-//     background: blue;
-//   }
-// }
 
 // Paginator
 ::v-deep(.p-paginator) {
@@ -882,11 +812,10 @@ export default {
   }
 }
 
-.sortCursor{
-  cursor: pointer;
-  color: #49527E;
+.sortCursor {
+  color: #49527e;
   font-weight: bold;
-font-size: 12px;
-line-height: 150%;
+  font-size: 14px;
+  line-height: 150%;
 }
 </style>

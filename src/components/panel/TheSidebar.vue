@@ -35,9 +35,9 @@
           <p class="iconTxt">انبار محصولات</p>
         </router-link>
       </li>
-      <li class="notHand">
-        <router-link :to="{ name: 'home', params: { userId: userID } }">
-          <i class="notHand ri-file-list-line sideIcon"></i>
+      <li>
+        <router-link :to="{ name: 'factors', params: { userId: userID } }">
+          <i class="ri-file-list-line sideIcon"></i>
           <p class="iconTxt">لیست فاکتورها</p>
         </router-link>
       </li>
@@ -106,7 +106,6 @@ export default {
   font-size: 12px;
   line-height: 150%;
   text-align: center;
-  color: #7de6fc;
   margin: 4px 0px;
 }
 

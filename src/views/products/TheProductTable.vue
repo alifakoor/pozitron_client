@@ -2,7 +2,7 @@
   <div class="zi-panel-products-list">
     <div class="p-d-flex p-jc-between">
       <div class="actions p-d-flex">
-        <zi-search  :width="width" />
+        <zi-search  :width="width" searchType="product"/>
         <zi-bulk-edit  />
       </div>
       <div @click="createProduct()">

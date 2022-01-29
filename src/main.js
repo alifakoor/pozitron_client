@@ -21,12 +21,6 @@ import "primeflex/primeflex.css";
 //remix icon import
 import "remixicon/fonts/remixicon.css";
 
-// globalCookiesConfig({
-//   expireTimes: "60s",
-//   path: "/",
-//   domain: "",
-//   secure: true,
-// });
 
 const app = createApp(App)
   .use(Vuex)
