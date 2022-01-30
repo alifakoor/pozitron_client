@@ -14,16 +14,21 @@
       <div class="lds-hourglass"></div>
     </div>
     <DataTable
-      :rows="6"
+      :rows="showPageCount"
       :value="products"
       :rowHover="true"
       :paginator="true"
       :scrollable="true"
-      :rowsPerPageOptions="[6, 12, 18, 24]"
+      :rowsPerPageOptions="[
+        showPageCount,
+        showPageCount * 2,
+        showPageCount * 3,
+        showPageCount * 4,
+      ]"
       v-model:selection="selectedProducts"
       dataKey="id"
       tableClass="zi-table "
-      scrollHeight="29rem"
+      :scrollHeight="`${Math.ceil((showPageCount * 70 + 70) / 16)}rem`"
       responsiveLayout="scroll"
       :globalFilterFields="['name', 'barcode']"
     >
@@ -243,6 +248,7 @@ export default {
       selectValue: null,
       showPage: 1,
       showPerPage: 5,
+      pageShowCount: 5,
       pageProduct: [],
       showDetailFlag: null,
     };
@@ -339,6 +345,8 @@ export default {
     if (this.products.length === 0) {
       this.setProducts();
     }
+    this.showPerPage = Math.floor((window.innerHeight - 250) / 70);
+    this.showPageCount = Math.floor((window.innerHeight - 250) / 70);
   },
   updated() {
     let start = (this.showPage - 1) * this.showPerPage;
