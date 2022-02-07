@@ -1,8 +1,8 @@
 <template>
   <nav class="p-breadcrumb p-component" aria-label="Breadcrumb">
-    <div class="pozitronBrand">
+    <!-- <div class="pozitronBrand">
       <p>POZITRON</p>
-    </div>
+    </div> -->
     <div class="p-d-flex p-ai-center p-jc-between navbarBox">
       <div class="p-d-flex p-ai-center p-jc-around navbarInfo">
         <div class="navbarBurger">

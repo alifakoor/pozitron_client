@@ -14,7 +14,7 @@
       :class="display ? 'bgGreenDark' : ''"
     />
 
-    <div v-if="display" class="statusBox">
+    <div v-show="display" class="statusBox">
       <ul class="listBox">
         <li>
           <input

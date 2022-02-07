@@ -5,16 +5,19 @@ import axios from "axios";
 
 export default createStore({
   state: {
-    apiURL: "https://api-dev.pozitronet.ir",
+    // apiURL: "https://api-dev.pozitronet.ir",
+    apiURL: "https://api-demo.pozitronet.ir",
     cookies: useCookies(),
     mainProducts: [],
     products: [],
+    factorProducts: [],
     selections: [],
     priceSort: null,
     nameSort: null,
     stockSort: null,
     loadingTable: true,
     notValidSearch: false,
+    notValidFactorSearch: false,
     userToken: "",
     userDomain: "",
     editDisplay: null,
@@ -384,6 +387,42 @@ export default createStore({
             }
           }
           break;
+
+        case "factorProduct":
+          {
+            if (searchValue == "") {
+              state.factorProducts = state.mainProducts;
+              state.notValidFactorSearch = false;
+            } else {
+              let searchDataProduct = state.mainProducts;
+              state.factorProducts = searchDataProduct.filter((product) => {
+                let option = "";
+                if (product.type == "variation") {
+                  option = JSON.stringify(
+                    product.meta[
+                      product.meta
+                        .map(function (e) {
+                          return e.metaKey;
+                        })
+                        .indexOf("attributes")
+                    ].metaValue
+                  );
+                }
+                return (
+                  product.barcode
+                    .toLowerCase()
+                    .search(searchValue.toLowerCase()) > -1 ||
+                  product.name.toLowerCase().search(searchValue.toLowerCase()) >
+                    -1 ||
+                  option.toLowerCase().search(searchValue.toLowerCase()) > -1
+                );
+              });
+              state.factorProducts.length == 0
+                ? (state.notValidFactorSearch = true)
+                : (state.notValidFactorSearch = false);
+            }
+          }
+          break;
       }
     },
 
@@ -421,6 +460,47 @@ export default createStore({
         .catch((err) => {
           console.log(err);
         });
+    },
+
+    setFactorProduct(state) {
+      if (state.mainProducts.length > 0) {
+        state.factorProducts = state.mainProducts;
+      } else {
+        axios
+          .get(`${state.apiURL}/products`, {
+            headers: {
+              "zi-access-token": state.userToken,
+            },
+          })
+          .then((response) => {
+            if (response.status == 200 && response.data.success) {
+              state.userDomain = "https://" + response.data.domain;
+              setTimeout(() => {
+                state.loadingTable = false;
+                state.products = response.data.data;
+                state.products.map((product) => {
+                  product.name = product.name.split("-")[0];
+                  if (product.meta.length > 0) {
+                    product.meta.forEach((pMeta) => {
+                      if (pMeta.metaKey == "attributes") {
+                        pMeta.metaValue = JSON.parse(pMeta.metaValue);
+                      }
+                    });
+                  }
+                });
+                state.mainProducts = state.products;
+                state.factorProducts = state.mainProducts;
+              }, 1000);
+            } else if (response.status == 200 && !response.data.success) {
+              setTimeout(function () {
+                state.loadingTable = false;
+              }, 1000);
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
     },
 
     addFeatureToNewProduct(state, feature) {

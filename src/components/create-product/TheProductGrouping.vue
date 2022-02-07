@@ -18,11 +18,11 @@
 
 <script>
 import { defineAsyncComponent } from "vue";
-import SelectDropDown from "../common/components/SelectDropDown.vue";
 export default {
   components: {
-    GeneralBox: defineAsyncComponent(() => import("./GeneralBox.vue")),
-    SelectDropDown,
+    GeneralBox: defineAsyncComponent(() =>
+      import("../common/components/GeneralBox.vue")
+    ),
   },
 };
 </script>

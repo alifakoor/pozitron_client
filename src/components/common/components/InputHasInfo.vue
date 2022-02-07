@@ -22,7 +22,7 @@
         }"
         :disabled="disabled"
         :min="inType == 'number' ? 0 : ''"
-        @blur="$emit('InvertoryUpdate', parseInt(inputValue))"
+        @blur="isValidData()"
         @click="() => (notValidData = false)"
         :class="{ 'p-invalid': notValidData || sameInventory }"
         aria-describedby="onlinePrice-help"
@@ -111,6 +111,18 @@ export default {
   methods: {
     changeNumToPersian(num) {
       return Num2persian(num);
+    },
+    isValidData() {
+      if (this.$props.validation == "true") {
+        if (this.inputValue === "" || this.inputValue === null) {
+          this.notValidData = true;
+        } else {
+          this.notValidData = false;
+          this.$emit("InvertoryUpdate", parseInt(this.inputValue));
+        }
+      } else {
+        this.$emit("InvertoryUpdate", parseInt(this.inputValue));
+      }
     },
     // addComma(newValue, oldValue) {
     //   let nf = new Intl.NumberFormat("en-US");

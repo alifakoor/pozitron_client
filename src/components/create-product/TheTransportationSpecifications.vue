@@ -52,7 +52,9 @@ import { defineAsyncComponent } from "vue";
 import { mapMutations } from "vuex";
 export default {
   components: {
-    GeneralBox: defineAsyncComponent(() => import("./GeneralBox.vue")),
+    GeneralBox: defineAsyncComponent(() =>
+      import("../common/components/GeneralBox.vue")
+    ),
   },
   methods: {
     ...mapMutations(["addFeatureToNewProduct"]),

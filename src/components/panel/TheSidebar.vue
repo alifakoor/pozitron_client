@@ -23,9 +23,9 @@
       </div>
     </div>
     <ul>
-      <li class="notHand">
+      <li>
         <router-link :to="{ name: 'dashboard', params: { userId: userID } }">
-          <i class="notHand ri-store-2-line sideIcon"></i>
+          <i class="ri-store-2-line sideIcon"></i>
           <p class="iconTxt">فروش حضوری</p>
         </router-link>
       </li>
@@ -126,14 +126,15 @@ export default {
 @media (min-width: 680px) {
   .zi-sidebar {
     min-height: 100vh;
-    position: sticky;
     background: #23273c;
     display: flex;
     flex-direction: column;
     justify-content: start;
     align-items: center;
-    padding: 29px 13px;
-    width: 96px;
+    padding: 50px 13px;
+    z-index: 99999999999999999999999999999999999999999999999999999999;
+    // width: 96px;
+    width: 101px;
     position: relative;
 
     ul {

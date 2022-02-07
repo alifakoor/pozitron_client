@@ -31,7 +31,6 @@
 
 <script>
 import { defineAsyncComponent } from "vue";
-import axios from "axios";
 
 export default {
   components: {
@@ -44,7 +43,7 @@ export default {
       )
     ),
     GeneralBox: defineAsyncComponent(() =>
-      import("../../components/create-product/GeneralBox.vue")
+      import("../../components/common/components/GeneralBox.vue")
     ),
     TheProductGrouping: defineAsyncComponent(() =>
       import("../../components/create-product/TheProductGrouping.vue")

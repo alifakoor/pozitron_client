@@ -18,9 +18,13 @@ import { mapMutations } from "vuex";
 export default {
   name: "zi-search",
   props: {
-    width: {
+    widthInput: {
       type: String,
-      default: "50%",
+      default: "282px",
+    },
+    mediaWidth: {
+      type: String,
+      default: "182px",
     },
     searchType: {
       type: String,
@@ -29,6 +33,8 @@ export default {
   data() {
     return {
       search: "",
+      widthInput: this.$props.widthInput,
+      mediaWidth: this.$props.mediaWidth,
     };
   },
   methods: {
@@ -47,11 +53,11 @@ export default {
 }
 .p-inputtext {
   padding: 16px;
-  padding-right: 40px !important;
+  padding-right: 2.5rem !important;
   background: #f9f9fb;
   border-radius: 16px;
   border: 0;
-  width: 282px;
+  width: v-bind(widthInput);
   height: 32px;
   font-size: 12px;
   margin: 0px 16px 0 8px;
@@ -59,7 +65,7 @@ export default {
 
 @media (max-width: 680px) {
   .p-inputtext {
-    width: 182px;
+    width: v-bind(mediaWidth);
   }
 }
 

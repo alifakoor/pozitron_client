@@ -1,11 +1,12 @@
 <template>
   <div
     class="generalWrapper p-mt-2 p-col-12"
-    :class="InGrid"
+    :class="InGrid + ' ' + AddClass"
     :style="{ minHeight: InHeight }"
   >
     <div
       class="p-d-flex p-flex-column p-jc-start p-ai-start generalBoxWrapper"
+      :class="innerBoxClass"
       :style="{ minHeight: InHeight }"
     >
       <p class="p-px-3 p-py-2">{{ title }}</p>
@@ -35,6 +36,14 @@ export default {
     InGrid: {
       type: String,
       default: "p-col-6",
+    },
+    AddClass: {
+      type: String,
+      default: "",
+    },
+    innerBoxClass: {
+      type: String,
+      default: "",
     },
   },
 };
