@@ -123,6 +123,12 @@
         <div class="btnWrapper">
           <div
             :class="product.onlineStock > 0 ? 'addPRoduct' : 'notAddProduct'"
+            @click="
+              $emit('addProductToFactor', {
+                product: product,
+                customerData: {},
+              })
+            "
           >
             افزودن
           </div>
@@ -231,6 +237,7 @@
 import { mapState, mapMutations } from "vuex";
 import { defineAsyncComponent } from "vue";
 export default {
+  emits: ["addProductToFactor"],
   data() {
     return {
       displayFilter: false,
@@ -256,7 +263,7 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(["setFactorProduct", "emptySelection"]),
+    ...mapMutations(["setFactorProduct"]),
     changeShowProductStyle(code) {
       switch (code) {
         case 0:

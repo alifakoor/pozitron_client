@@ -22,8 +22,12 @@ export default createStore({
     userDomain: "",
     editDisplay: null,
     newProduct: {},
+    factorIndex: 0,
+    factorId: 1,
+    onHoldFactors: [],
   },
   mutations: {
+    // products function
     deSelectItem(state, id) {
       const removeSelected = state.selections.filter((item) => item.id != id);
       state.selections = removeSelected;
@@ -527,6 +531,22 @@ export default createStore({
         .catch((err) => {
           console.log(err);
         });
+    },
+
+    // factors product
+    addProductToFactor(state, data) {
+      let index = state.onHoldFactors.findIndex((factor) => {
+        return factor.id === state.factorIndex;
+      });
+      if (index === -1) {
+        state.onHoldFactors.push({ ...data });
+        state.factorId++;
+      } else {
+        state.onHoldFactors[index] = { ...data };
+      }
+    },
+    chageFactorIndex(state, index) {
+      state.factorIndex = index;
     },
   },
   actions: {},

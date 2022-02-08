@@ -5,7 +5,9 @@
     <div
       class="p-col-12 p-lg-4 p-d-flex p-flex-column p-ai-center p-jc-center p-pt-3"
     >
-      <TheProductList></TheProductList>
+      <TheProductList
+        @addProductToFactor="addProductToFactors"
+      ></TheProductList>
     </div>
 
     <!-- fator box -->
@@ -20,17 +22,21 @@
     >
       <header class="headerFactor p-col-12">
         <i class="pi pi-plus" @click="addFactor()"></i>
-        <TabView
-          v-model:activeIndex="active"
-          class="tabview-custom"
-          :scrollable="true"
-        >
+        <TabView v-model:activeIndex="active" class="tabview-custom">
           <TabPanel v-for="(factor, index) in factors" :key="index">
             <template #header>
-              <span>بهار</span>
+              <span></span>
               <i class="pi pi-times"></i>
             </template>
-            <TheNewFactor></TheNewFactor>
+            <div
+              class="p-col-12 p-d-flex p-flex-column p-flex-md-row p-ai-start p-jc-center p-px-0"
+            >
+              <TheFactorCart
+                :selectedFactorProducts="factor.selectedFactorProducts"
+                @changeCountProduct="changeCountProduct"
+              ></TheFactorCart>
+              <TheCustomerData></TheCustomerData>
+            </div>
           </TabPanel>
         </TabView>
       </header>
@@ -43,6 +49,7 @@
 <script>
 import { defineAsyncComponent } from "vue";
 import { mapState, mapMutations } from "vuex";
+import { T } from "../../../dist/assets/vendor.b532806b";
 
 export default {
   components: {
@@ -55,21 +62,72 @@ export default {
     TheProductList: defineAsyncComponent(() =>
       import("../../components/create-factor/TheProductListBox.vue")
     ),
-    TheNewFactor: defineAsyncComponent(() =>
-      import("../../components/create-factor/TheNewFactor.vue")
+    TheCustomerData: defineAsyncComponent(() =>
+      import("../../components/create-factor/TheCustomerData.vue")
+    ),
+    TheFactorCart: defineAsyncComponent(() =>
+      import("../../components/create-factor/TheFactorCart.vue")
     ),
   },
   data() {
     return {
       active: 0,
+      factorIndex: -1,
       factors: [],
     };
   },
+  computed: {
+    ...mapState(["onHoldFactors", "factorId"]),
+  },
   methods: {
-    // ...mapMutations["addNewFactor"],
+    ...mapMutations(["addProductToFactor", "chageFactorIndex"]),
     addFactor() {
-      // console.log("Fvdfv");
-      this.factors.push({ id: "", data: {} });
+      this.factors.push({
+        id: null,
+        customerData: {},
+        selectedFactorProducts: [],
+      });
+    },
+    changeCountProduct(data) {
+      let remove = null;
+      this.factors[this.active].selectedFactorProducts.map((product, index) => {
+        if (product.data.id == data.id) {
+          product.count += data.count;
+          product.count == 0 ? (remove = index) : "";
+        }
+      });
+      remove !== null
+        ? this.factors[this.active].selectedFactorProducts.splice(remove, 1)
+        : "";
+    },
+    addProductToFactors(dataFactor) {
+      let exist = null;
+      this.factors[this.active].selectedFactorProducts.forEach(
+        (product, index) => {
+          if (product.data.id == dataFactor.product.id) {
+            exist = index;
+          }
+        }
+      );
+      if (exist !== null) {
+        this.factors[this.active].selectedFactorProducts[exist].count++;
+      } else {
+        this.factors[this.active].selectedFactorProducts.push({
+          count: 1,
+          data: dataFactor.product,
+        });
+      }
+      this.updateOnHoldFactor();
+    },
+    updateOnHoldFactor() {
+      if (this.factors[this.active].id === null) {
+        this.factors[this.active].id = this.factorId;
+        this.factorIndex = -1;
+      } else {
+        this.factorIndex = this.factors[this.active].id;
+      }
+      this.chageFactorIndex(this.factorIndex);
+      this.addProductToFactor(this.factors[this.active]);
     },
   },
 };
