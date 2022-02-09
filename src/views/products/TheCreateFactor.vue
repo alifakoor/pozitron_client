@@ -20,11 +20,16 @@
       v-else
       class="p-col-12 p-lg-8 p-d-flex p-flex-column p-ai-center p-jc-center factorDataBox"
     >
+      <!-- <i class="pi pi-plus" @click="addFactor()"></i> -->
       <header class="headerFactor p-col-12">
-        <i class="pi pi-plus" @click="addFactor()"></i>
         <TabView v-model:activeIndex="active" class="tabview-custom">
           <TabPanel v-for="(factor, index) in factors" :key="index">
-            <template #header>
+            <template v-if="index === factors.length - 1" #header>
+              <span></span>
+              <i class="pi pi-times" @click="removerFactor(index)"></i>
+              <i class="pi pi-plus" @click="addFactor()"></i>
+            </template>
+            <template v-else #header>
               <span></span>
               <i class="pi pi-times" @click="removerFactor(index)"></i>
             </template>
@@ -43,8 +48,6 @@
           </TabPanel>
         </TabView>
       </header>
-
-      <!-- <TheNewFactor></TheNewFactor> -->
     </div>
   </div>
 </template>
@@ -52,8 +55,6 @@
 <script>
 import { defineAsyncComponent } from "vue";
 import { mapState, mapMutations } from "vuex";
-import { T } from "../../../dist/assets/vendor.b532806b";
-
 export default {
   components: {
     TheCustomerData: defineAsyncComponent(() =>
@@ -143,10 +144,10 @@ export default {
       this.addProductToFactor(this.factors[this.active]);
     },
     //
-    // removerFactor(index) {
-    //   this.active--;
-    //   // this.factors.splice(index, 1);
-    // },
+    removerFactor(index) {
+      this.active > 0 ? this.active-- : "";
+      this.factors.splice(index, 1);
+    },
   },
 };
 </script>
@@ -169,6 +170,8 @@ export default {
     .pi.pi-plus {
       position: absolute;
       bottom: 5px;
+      left: 0;
+      transform: translateX(-150%);
       z-index: 99999999999999999999999;
     }
   }
@@ -215,6 +218,7 @@ export default {
 
     .p-tabview-nav-content {
       width: 100%;
+      overflow: visible;
     }
 
     .p-tabview-nav {
@@ -223,6 +227,7 @@ export default {
       height: 26px;
       background-color: transparent;
       color: #49527e;
+      overflow: visible;
 
       li {
         height: 26px;
@@ -231,6 +236,7 @@ export default {
         background: #bbc0d8;
         border-radius: 10px 10px 0px 0px;
         margin: 0 2px;
+        overflow: visible;
       }
 
       li:hover {
@@ -262,6 +268,7 @@ export default {
         align-items: center;
         border: 0;
         margin: 0;
+        overflow: visible;
       }
     }
   }
