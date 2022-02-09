@@ -10,18 +10,18 @@ export default {
     const router = useRouter();
     const { cookies } = useCookies();
 
-    // if (cookies.get("uToken")) {
-    //   if (window.location.pathname === "/") {
-    //     router.push({
-    //       name: "products",
-    //       params: { userId: cookies.get("uzit") },
-    //     });
-    //   }
-    // } else {
-    //   router.push({
-    //     name: "SignUp",
-    //   });
-    // }
+    if (cookies.get("uToken")) {
+      if (window.location.pathname === "/") {
+        router.push({
+          name: "products",
+          params: { userId: cookies.get("uzit") },
+        });
+      }
+    } else {
+      router.push({
+        name: "SignUp",
+      });
+    }
   },
 };
 </script>

@@ -11,8 +11,8 @@
     </div>
 
     <!-- fator box -->
-    <div class="addNewFactor" @click="addFactor()" v-if="factors.length == 0">
-      <button>
+    <div class="addNewFactor" v-if="factors.length == 0">
+      <button @click="addFactor()">
         <i class="ri-checkbox-circle-line p-mx-1"></i>افزودن فاکتور جدید
       </button>
     </div>
@@ -26,7 +26,7 @@
           <TabPanel v-for="(factor, index) in factors" :key="index">
             <template #header>
               <span></span>
-              <i class="pi pi-times"></i>
+              <i class="pi pi-times" @click="removerFactor(index)"></i>
             </template>
             <div
               class="p-col-12 p-d-flex p-flex-column p-flex-md-row p-ai-start p-jc-center p-px-0"
@@ -35,7 +35,10 @@
                 :selectedFactorProducts="factor.selectedFactorProducts"
                 @changeCountProduct="changeCountProduct"
               ></TheFactorCart>
-              <TheCustomerData></TheCustomerData>
+              <TheCustomerData
+                @addDataToFactor="addDataToFactor"
+                :factorIndex="active"
+              ></TheCustomerData>
             </div>
           </TabPanel>
         </TabView>
@@ -81,6 +84,7 @@ export default {
   },
   methods: {
     ...mapMutations(["addProductToFactor", "chageFactorIndex"]),
+    // add new empty factor
     addFactor() {
       this.factors.push({
         id: null,
@@ -88,6 +92,7 @@ export default {
         selectedFactorProducts: [],
       });
     },
+    // change count of selectedProduct in factor
     changeCountProduct(data) {
       let remove = null;
       this.factors[this.active].selectedFactorProducts.map((product, index) => {
@@ -100,6 +105,7 @@ export default {
         ? this.factors[this.active].selectedFactorProducts.splice(remove, 1)
         : "";
     },
+    // add a product to factor
     addProductToFactors(dataFactor) {
       let exist = null;
       this.factors[this.active].selectedFactorProducts.forEach(
@@ -119,6 +125,13 @@ export default {
       }
       this.updateOnHoldFactor();
     },
+    // add customer data to factor
+    addDataToFactor(customerData) {
+      this.factors[customerData.index].customerData[customerData.data.name] =
+        customerData.data.inValue;
+      this.updateOnHoldFactor();
+    },
+    // sync factors variable of component with vuex
     updateOnHoldFactor() {
       if (this.factors[this.active].id === null) {
         this.factors[this.active].id = this.factorId;
@@ -129,6 +142,11 @@ export default {
       this.chageFactorIndex(this.factorIndex);
       this.addProductToFactor(this.factors[this.active]);
     },
+    //
+    // removerFactor(index) {
+    //   this.active--;
+    //   // this.factors.splice(index, 1);
+    // },
   },
 };
 </script>

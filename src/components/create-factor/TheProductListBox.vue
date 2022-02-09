@@ -80,36 +80,22 @@
           />
         </div>
         <p class="productName">{{ product.name }}</p>
-        <p
-          class="productFeature"
-          v-for="(pMeta, key) in product.meta[
-            product.meta
-              .map(function (e) {
-                return e.metaKey;
-              })
-              .indexOf('attributes')
-          ].metaValue"
-          v-if="product.type == 'variation'"
-          style="display: inline"
-        >
-          {{ pMeta.name + ":" + pMeta.option }}
-          <span
-            v-if="
-              key !=
-              product.meta[
-                product.meta
-                  .map(function (e) {
-                    return e.metaKey;
-                  })
-                  .indexOf('attributes')
-              ].metaValue.length -
-                1
-            "
+        <div class="p-d-flex p-ai-center p-jc-start featureWrapper">
+          <p
+            class="productFeature"
+            v-for="(pMeta, key) in product.meta[
+              product.meta
+                .map(function (e) {
+                  return e.metaKey;
+                })
+                .indexOf('attributes')
+            ].metaValue"
+            v-if="product.type == 'variation'"
             style="display: inline"
           >
-            {{ "/" }}
-          </span>
-        </p>
+            {{ pMeta.name + ":" + pMeta.option }}
+          </p>
+        </div>
 
         <p :class="product.onlineDiscount > 0 ? 'delPrice' : 'productPrice'">
           {{ product.onlinePrice.toLocaleString() }}
@@ -173,36 +159,22 @@
             </div>
             <div class="nameBox">
               <p class="productName">{{ product.name }}</p>
-              <p
-                class="productFeature"
-                v-for="(pMeta, key) in product.meta[
-                  product.meta
-                    .map(function (e) {
-                      return e.metaKey;
-                    })
-                    .indexOf('attributes')
-                ].metaValue"
-                v-if="product.type == 'variation'"
-                style="display: inline"
-              >
-                {{ pMeta.name + ":" + pMeta.option }}
-                <span
-                  v-if="
-                    key !=
-                    product.meta[
-                      product.meta
-                        .map(function (e) {
-                          return e.metaKey;
-                        })
-                        .indexOf('attributes')
-                    ].metaValue.length -
-                      1
-                  "
+              <div class="p-d-flex">
+                <p
+                  class="productFeature"
+                  v-for="(pMeta, key) in product.meta[
+                    product.meta
+                      .map(function (e) {
+                        return e.metaKey;
+                      })
+                      .indexOf('attributes')
+                  ].metaValue"
+                  v-if="product.type == 'variation'"
                   style="display: inline"
                 >
-                  {{ "/" }}
-                </span>
-              </p>
+                  {{ pMeta.name + ":" + pMeta.option }}
+                </p>
+              </div>
             </div>
 
             <div class="priceBox">
@@ -507,9 +479,11 @@ export default {
         color: #363d5d;
         margin: 5px 10px;
       }
+      .featureWrapper {
+        width: 100%;
+      }
 
       .productFeature {
-        width: 100%;
         padding: 0px 8px 0px 0px;
         font-style: normal;
         font-weight: 700;
@@ -517,7 +491,7 @@ export default {
         line-height: 150%;
         text-align: right;
         color: #7b84b2;
-        margin: 5px 10px;
+        margin: 5px 0px;
       }
 
       .productPrice,
@@ -705,15 +679,14 @@ export default {
       .nameBox {
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        align-items: flex-end;
+        justify-content: space-between;
+        align-items: flex-start;
         padding: 0px;
         width: 96px;
         height: 48px;
         margin: 0px 4px;
         .productName {
           width: 100%;
-          padding: 0px 8px 0px 0px;
           font-style: normal;
           font-weight: 500;
           font-size: 14px;
@@ -723,19 +696,16 @@ export default {
           justify-content: flex-start;
           text-align: right;
           color: #363d5d;
-          margin: 5px 10px;
         }
 
         .productFeature {
           width: 100%;
-          padding: 0px 8px 0px 0px;
           font-style: normal;
           font-weight: 700;
           font-size: 12px;
           line-height: 150%;
           text-align: right;
           color: #7b84b2;
-          margin: 5px 10px;
         }
       }
 

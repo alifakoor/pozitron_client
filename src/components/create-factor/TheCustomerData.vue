@@ -15,12 +15,14 @@
           InGrid="p-col-12"
           InHeight="32px"
           inputName="customerNum"
+          @changeInputValue="addDataTofactor"
         ></InputHasInfo>
         <InputHasInfo
           inputText="نام و نام خانوادگی"
           InGrid="p-col-12"
           InHeight="32px"
-          inputName="customerNum"
+          inputName="customerName"
+          @changeInputValue="addDataTofactor"
         ></InputHasInfo>
         <InputHasInfo
           inputText="آدرس"
@@ -28,6 +30,7 @@
           InHeight="60px"
           inputName="customerAddress"
           inType="textarea"
+          @changeInputValue="addDataTofactor"
         ></InputHasInfo>
         <InputHasInfo
           inputText="توضیحات"
@@ -35,6 +38,7 @@
           InHeight="60px"
           inputName="customerExplainayion"
           inType="textarea"
+          @changeInputValue="addDataTofactor"
         ></InputHasInfo>
       </div>
     </template>
@@ -44,10 +48,22 @@
 <script>
 import { defineAsyncComponent } from "vue";
 export default {
+  emits: ["addDataToFactor"],
+  props: {
+    factorIndex: {
+      required: true,
+    },
+  },
   components: {
     GeneralBox: defineAsyncComponent(() =>
       import("../common/components/GeneralBox.vue")
     ),
+  },
+  methods: {
+    addDataTofactor(value) {
+      console.log(value);
+      this.$emit("addDataToFactor", { index: this.factorIndex, data: value });
+    },
   },
 };
 </script>
