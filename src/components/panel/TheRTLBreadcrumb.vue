@@ -110,19 +110,32 @@ export default {
         {
           label: "فروش حضوری",
           icon: "ri-store-2-line",
-          class: "p-disabled",
-          // to: "/panel",
+          command: (event) => {
+            this.$router.push({
+              name: "dashboard",
+              params: { userId: this.cookies.cookies.get("uzit") },
+            });
+          },
         },
         {
           label: "انبار محصولات",
           icon: "pi pi-box",
-          to: "/panel/1/products",
+          command: (event) => {
+            this.$router.push({
+              name: "products",
+              params: { userId: this.cookies.cookies.get("uzit") },
+            });
+          },
         },
         {
           label: "لیست فاکتورها",
           icon: "ri-file-list-line",
-          class: "p-disabled",
-          // to: "/panel",
+          command: (event) => {
+            this.$router.push({
+              name: "factors",
+              params: { userId: this.cookies.cookies.get("uzit") },
+            });
+          },
         },
         {
           label: "مشتریان",
