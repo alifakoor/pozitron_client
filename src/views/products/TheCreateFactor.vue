@@ -84,7 +84,11 @@ export default {
     ...mapState(["onHoldFactors", "factorId"]),
   },
   methods: {
-    ...mapMutations(["addProductToFactor", "chageFactorIndex"]),
+    ...mapMutations([
+      "addProductToFactor",
+      "chageFactorIndex",
+      "removeAnFactor",
+    ]),
     // add new empty factor
     addFactor() {
       this.factors.push({
@@ -143,10 +147,11 @@ export default {
       this.chageFactorIndex(this.factorIndex);
       this.addProductToFactor(this.factors[this.active]);
     },
-    //
+    // remove an factor
     removerFactor(index) {
       this.active > 0 ? this.active-- : "";
       this.factors.splice(index, 1);
+      this.removeAnFactor(index);
     },
   },
 };

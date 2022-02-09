@@ -548,6 +548,9 @@ export default createStore({
     chageFactorIndex(state, index) {
       state.factorIndex = index;
     },
+    removeAnFactor(state, index) {
+      state.onHoldFactors.splice(index, 1);
+    },
   },
   actions: {},
   modules: {},
