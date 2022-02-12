@@ -9,21 +9,43 @@
     <template #InnerHtml>
       <div class="p-d-flex p-col-12 p-flex-column p-jc-around p-ai-center">
         <InputHasInfo
-          inputText="شماره موبایل(ضروری)"
-          validation="true"
-          validationErr="این فیلد نمی تواند خالی باشد."
+          inputText="شماره موبایل"
           InGrid="p-col-12"
-          InHeight="32px"
+          InHeight="40px"
           inputName="customerNum"
           @changeInputValue="addDataTofactor"
         ></InputHasInfo>
         <InputHasInfo
           inputText="نام و نام خانوادگی"
           InGrid="p-col-12"
-          InHeight="32px"
+          InHeight="40px"
           inputName="customerName"
           @changeInputValue="addDataTofactor"
         ></InputHasInfo>
+        <CustomDatePicker
+          inputText="تاریخ ارسال"
+          InGrid="p-col-12"
+          InHeight="40px"
+          inputName="customerName"
+          @changeInputValue="addDataTofactor"
+        ></CustomDatePicker>
+        <SelectOption
+          inputText="ُساعت ارسال"
+          InGrid="p-col-12"
+          InHeight="40px"
+          inputName="customerName"
+          @changeInputValue="addDataTofactor"
+          :dataOtion="[
+            '8-10',
+            '10-12',
+            '12-14',
+            '14-16',
+            '16-18',
+            '18-20',
+            '20-22',
+            '22-24',
+          ]"
+        ></SelectOption>
         <InputHasInfo
           inputText="آدرس"
           InGrid="p-col-12"
@@ -47,6 +69,8 @@
 
 <script>
 import { defineAsyncComponent } from "vue";
+import DatePicker from "../common/components/CustomDatePicker.vue";
+import CustomDatePicker from "../common/components/CustomDatePicker.vue";
 export default {
   emits: ["addDataToFactor"],
   props: {
@@ -54,10 +78,17 @@ export default {
       required: true,
     },
   },
+  data() {
+    return {
+      date: "",
+    };
+  },
   components: {
     GeneralBox: defineAsyncComponent(() =>
       import("../common/components/GeneralBox.vue")
     ),
+    DatePicker,
+    CustomDatePicker,
   },
   methods: {
     addDataTofactor(value) {

@@ -4,14 +4,14 @@
       <i :class="iconClass" class="iconSelect p-mr-1"></i>
 
       <Dropdown
-        v-model="selectedGroupedCity"
-        :options="groupedCities"
+        v-model="selected"
+        :options="dataOption"
         optionLabel="label"
         optionGroupLabel="label"
         optionGroupChildren="items"
         class="inputSelectStyle"
         :placeholder="InPlaceholder"
-        :style="{ width: InWidth, height: InHeight }"
+        :style="{ height: InHeight }"
       >
       </Dropdown>
     </span>
@@ -38,9 +38,14 @@ export default {
       type: String,
       default: "40px",
     },
+    dataOption: {
+      required: true,
+    },
   },
   data() {
-    return {};
+    return {
+      selected: "",
+    };
   },
 };
 </script>
@@ -63,6 +68,7 @@ export default {
     align-items: center;
   }
   .inputSelectStyle {
+    width: 100%;
     direction: rtl;
     color: $textMuted;
     display: flex;

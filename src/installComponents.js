@@ -40,6 +40,7 @@ import SelectOption from "./components/common/components/SelectOption.vue";
 import SelectDropDown from "./components/common/components/SelectDropDown.vue";
 import CahangeFactorStatus from "./components/common/components/CahangeFactorStatus.vue";
 import DomainCard from "./components/common/components/DomainCard.vue";
+import CustomDatePicker from "./components/common/components/CustomDatePicker.vue";
 
 export default {
   install(app) {
@@ -85,5 +86,6 @@ export default {
     app.component("Search", Search);
     app.component("zi-bulk-edit", BulkEdit);
     app.component("showDetail", ShowDetail);
+    app.component("CustomDatePicker", CustomDatePicker);
   },
 };
