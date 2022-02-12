@@ -25,12 +25,14 @@
         <TabView v-model:activeIndex="active" class="tabview-custom">
           <TabPanel v-for="(factor, index) in factors" :key="index">
             <template v-if="index === factors.length - 1" #header>
-              <span></span>
+              <span v-if="factor.customerData.customerName">{{factor.customerData.customerName}}</span>
+              <span v-else-if="factor.id!=null">{{factor.id}}</span>
               <i class="pi pi-times" @click="removerFactor(index)"></i>
               <i class="pi pi-plus" @click="addFactor()"></i>
             </template>
             <template v-else #header>
-              <span></span>
+              <span v-if="factor.customerData.customerName">{{factor.customerData.customerName}}</span>
+              <span v-else-if="factor.id!=null">{{factor.id}}</span>
               <i class="pi pi-times" @click="removerFactor(index)"></i>
             </template>
             <div
