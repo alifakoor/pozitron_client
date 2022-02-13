@@ -40,6 +40,7 @@
         display-format="jYYYY-jMM-jDD"
         custom-input=".custom-input"
         popover="bottom-left"
+        auto-submit
       />
     </span>
     <small

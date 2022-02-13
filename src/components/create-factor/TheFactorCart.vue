@@ -1,12 +1,14 @@
 <template>
-  <GeneralBox
-    title="سبد خرید"
-    InHeight="584px"
-    InGrid="p-md-7"
-    AddClass="p-m-0 p-pr-md-0"
-    innerBoxClass="p-mr-md-0"
+  <div
+    class="generalWrapper p-mt-2 p-col-12 p-m-0 p-pr-md-0 p-md-7"
+    style="min-height: 584px"
   >
-    <template #InnerHtml>
+    <div
+      class="p-d-flex p-flex-column p-jc-start p-ai-start generalBoxWrapper p-mr-md-0"
+      style="min-height: 584px"
+    >
+      <p class="p-px-3 p-py-2">سبد خرید</p>
+      <Divider class="p-m-0 p-p-0" type="solid" />
       <div class="productsList">
         <div class="productBox" v-for="product in selectedFactorProducts">
           <div class="productImg">
@@ -103,8 +105,8 @@
           </div>
         </div>
       </div>
-    </template>
-  </GeneralBox>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -262,6 +264,31 @@ export default {
         }
       }
     }
+  }
+}
+
+.generalWrapper {
+  direction: rtl;
+}
+.generalBoxWrapper {
+  margin: 0px 10px;
+  background: #fff;
+  box-shadow: 0px 0px 5px rgba(23, 24, 24, 0.05);
+  border-radius: 8px;
+  > p {
+    width: 100%;
+    background: #dcdeea;
+    border-radius: 8px 8px 0px 0px;
+    color: #49527e;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 150%;
+    text-align: right;
+  }
+  .p-divider {
+    width: 100%;
+    border: 1px solid #e1e3e5;
+    background: #e1e3e5;
   }
 }
 </style>

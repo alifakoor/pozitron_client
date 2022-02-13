@@ -26,14 +26,14 @@
           inputText="تاریخ ارسال"
           InGrid="p-col-12"
           InHeight="40px"
-          inputName="customerName"
+          inputName="sendDate"
           @changeInputValue="addDataTofactor"
         ></CustomDatePicker>
         <SelectOption
-          inputText="ُساعت ارسال"
+          inputText="ساعت ارسال"
           InGrid="p-col-12"
           InHeight="40px"
-          inputName="customerName"
+          inputName="sendTime"
           @changeInputValue="addDataTofactor"
           :dataOption="[
             '8-10',

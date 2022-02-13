@@ -20,19 +20,22 @@
       v-else
       class="p-col-12 p-lg-8 p-d-flex p-flex-column p-ai-center p-jc-center factorDataBox"
     >
-      <!-- <i class="pi pi-plus" @click="addFactor()"></i> -->
       <header class="headerFactor p-col-12">
         <TabView v-model:activeIndex="active" class="tabview-custom">
           <TabPanel v-for="(factor, index) in factors" :key="index">
             <template v-if="index === factors.length - 1" #header>
-              <span v-if="factor.customerData.customerName">{{factor.customerData.customerName}}</span>
-              <span v-else-if="factor.id!=null">{{factor.id}}</span>
+              <span v-if="factor.customerData.customerName">{{
+                factor.customerData.customerName
+              }}</span>
+              <span v-else-if="factor.id != null">{{ factor.id }}</span>
               <i class="pi pi-times" @click="removerFactor(index)"></i>
               <i class="pi pi-plus" @click="addFactor()"></i>
             </template>
             <template v-else #header>
-              <span v-if="factor.customerData.customerName">{{factor.customerData.customerName}}</span>
-              <span v-else-if="factor.id!=null">{{factor.id}}</span>
+              <span v-if="factor.customerData.customerName">{{
+                factor.customerData.customerName
+              }}</span>
+              <span v-else-if="factor.id != null">{{ factor.id }}</span>
               <i class="pi pi-times" @click="removerFactor(index)"></i>
             </template>
             <div
@@ -219,13 +222,12 @@ export default {
     background-color: transparent;
     width: 100%;
     height: 42px;
-    display: flex;
+    display: grid;
     align-items: flex-end;
     padding: 0 5px;
 
     .p-tabview-nav-content {
       width: 100%;
-      overflow: visible;
     }
 
     .p-tabview-nav {
@@ -235,10 +237,14 @@ export default {
       background-color: transparent;
       color: #49527e;
       overflow: visible;
+      display: flex;
+      width: 95%;
 
       li {
         height: 26px;
         width: 166px;
+        max-width: 166px;
+        min-width: 20px;
         padding: 0;
         background: #bbc0d8;
         border-radius: 10px 10px 0px 0px;

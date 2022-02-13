@@ -1,8 +1,7 @@
 <template>
-  <div class="iconicSelectInput p-mt-3" :class="InGrid">
-    <span class="p-input-icon-right p-col-12">
+  <div class="iconicSelectInput" :class="InGrid">
+    <span class="p-input-icon-right p-col-12 p-p-0">
       <i :class="iconClass" class="iconSelect p-mr-1"></i>
-
       <Dropdown
         v-model="selected"
         :options="dataOption"
@@ -38,6 +37,13 @@ export default {
     dataOption: {
       required: true,
     },
+    inputText: {
+      type: String,
+    },
+    inputName: {
+      type: String,
+      required: true,
+    },
   },
   data() {
     return {
@@ -56,6 +62,18 @@ export default {
 .iconicSelectInput {
   position: relative;
   direction: rtl;
+
+  .inputInfo {
+    height: fit-content;
+    padding: 0px 8px;
+    position: absolute;
+    top: 0;
+    right: 10%;
+    transform: translateY(-10%);
+    background-color: #fff;
+    font-size: 12px;
+    color: #7b84b2;
+  }
   .iconSelect {
     z-index: 5;
     width: fit-content;
@@ -79,6 +97,7 @@ export default {
     border-radius: 4px;
     height: 40px;
     padding-right: 10px !important;
+
     .p-placeholder {
       margin-right: 15px;
       font-size: 14px;
@@ -90,14 +109,17 @@ export default {
       font-size: 12px;
     }
   }
-}
 
-// .p-dropdown {
-//   .p-dropdown-items-wrapper {
-//     direction: rtl;
-//     text-align: left;
-//   }
-// }
+  .inputSelectStyle:hover {
+    border: 1px solid #bbc0d8;
+  }
+
+  .inputSelectStyle.p-focus:focus {
+    box-shadow: none;
+    border: 2px solid #7b84b2;
+    outline: none;
+  }
+}
 
 .hiddenElement {
   visibility: hidden !important;
