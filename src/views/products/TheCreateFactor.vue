@@ -29,7 +29,14 @@
               }}</span>
               <span v-else-if="factor.id != null">{{ factor.id }}</span>
               <i class="pi pi-times" @click="removerFactor(index)"></i>
-              <i class="pi pi-plus" @click="addFactor()"></i>
+              <i
+                class="pi pi-plus"
+                v-tooltip.bottom="{
+                  value: 'فاکتور جدید',
+                  class: 'customizeTootip',
+                }"
+                @click="addFactor()"
+              ></i>
             </template>
             <template v-else #header>
               <span v-if="factor.customerData.customerName">{{

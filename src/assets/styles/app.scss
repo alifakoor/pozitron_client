@@ -298,3 +298,15 @@ body::-webkit-scrollbar-thumb:hover {
     }
   }
 }
+
+.customizeTootip .p-tooltip-text {
+  background-color: #fff;
+  color: #49527e;
+  border-radius: 4px;
+  font-size: 12px;
+  line-height: 20px;
+}
+
+.customizeTootip .p-tooltip-arrow {
+  border-bottom-color: #fff !important;
+}
