@@ -315,30 +315,6 @@ export default {
       }
     }
   }
-
-  /* Track */
-  .multiselect__content-wrapper::-webkit-scrollbar {
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    box-sizing: border-box;
-    border-radius: 8px;
-    width: 4px !important;
-  }
-
-  /* Handle */
-  .multiselect__content-wrapper::-webkit-scrollbar-thumb {
-    background: #49527e;
-    border-radius: 8px;
-    width: 4px;
-    height: 34px;
-  }
-
-  /* Handle on hover */
-  .multiselect__content-wrapper::-webkit-scrollbar-thumb:hover {
-    background: #49527e;
-    border-radius: 8px;
-    width: 4px;
-    height: 34px;
-  }
 }
 
 // .multiselect::after {

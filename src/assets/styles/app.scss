@@ -28,6 +28,46 @@ input[type="text"] {
   direction: rtl !important;
 }
 
+*::-webkit-scrollbar {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  border-radius: 8px;
+  width: 4px !important;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #5d40f1;
+  border-radius: 8px;
+  width: 4px;
+  height: 34px;
+}
+
+/* Handle on hover */
+*::-webkit-scrollbar-thumb:hover {
+  background: #5d40f1;
+  border-radius: 8px;
+  width: 4px;
+  height: 34px;
+}
+
+body::-webkit-scrollbar {
+  box-sizing: border-box;
+  width: 15px !important;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: #acacac;
+  border-radius: 0;
+  width: 15px;
+}
+
+/* Handle on hover */
+body::-webkit-scrollbar-thumb:hover {
+  background: #888888;
+  border-radius: 0;
+  width: 15px;
+}
+
 /*
 ** Zi
 */

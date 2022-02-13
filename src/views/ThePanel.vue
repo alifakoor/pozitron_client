@@ -1,6 +1,6 @@
 <template>
   <TheNavbar></TheNavbar>
-  <div class="p-d-flex" style="background: #f6f6f7">
+  <div class="p-d-flex bx" style="background: #f6f6f7">
     <zi-sidebar />
     <div class="zi-main">
       <div class="content">

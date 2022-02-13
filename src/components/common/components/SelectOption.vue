@@ -6,9 +6,6 @@
       <Dropdown
         v-model="selected"
         :options="dataOption"
-        optionLabel="label"
-        optionGroupLabel="label"
-        optionGroupChildren="items"
         class="inputSelectStyle"
         :placeholder="InPlaceholder"
         :style="{ height: InHeight }"
@@ -47,10 +44,13 @@ export default {
       selected: "",
     };
   },
+  created() {
+    console.log(this.dataOption);
+  },
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import "../../../assets/styles/variablesOfCreateProduct";
 
 .iconicSelectInput {
@@ -90,5 +90,16 @@ export default {
       font-size: 12px;
     }
   }
+}
+
+// .p-dropdown {
+//   .p-dropdown-items-wrapper {
+//     direction: rtl;
+//     text-align: left;
+//   }
+// }
+
+.hiddenElement {
+  visibility: hidden !important;
 }
 </style>

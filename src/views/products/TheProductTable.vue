@@ -1080,28 +1080,6 @@ export default {
   }
 }
 
-// Table container - hide scrollbar
-// ::v-deep(.p-datatable-wrapper) {
-//   &::-webkit-scrollbar {
-//     // display: none;
-//     // background-color: #23273c;
-//   }
-
-//   // &::-webkit-scrollbar-thumb {
-//   // 	background: #23273c;
-//   // }
-
-//   ::-webkit-scrollbar-thumb {
-//     background: blue;
-//     border-radius: 10px;
-//   }
-
-//   /* Handle on hover */
-//   ::-webkit-scrollbar-thumb:hover {
-//     background: blue;
-//   }
-// }
-
 // Paginator
 ::v-deep(.p-paginator) {
   direction: ltr;

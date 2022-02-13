@@ -35,7 +35,7 @@
           InHeight="40px"
           inputName="customerName"
           @changeInputValue="addDataTofactor"
-          :dataOtion="[
+          :dataOption="[
             '8-10',
             '10-12',
             '12-14',

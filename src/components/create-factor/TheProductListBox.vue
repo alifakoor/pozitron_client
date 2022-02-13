@@ -803,28 +803,5 @@ export default {
       }
     }
   }
-
-  .productList::-webkit-scrollbar {
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    box-sizing: border-box;
-    border-radius: 8px;
-    width: 4px !important;
-  }
-
-  /* Handle */
-  .productList::-webkit-scrollbar-thumb {
-    background: #5d40f1;
-    border-radius: 8px;
-    width: 4px;
-    height: 34px;
-  }
-
-  /* Handle on hover */
-  .productList::-webkit-scrollbar-thumb:hover {
-    background: #5d40f1;
-    border-radius: 8px;
-    width: 4px;
-    height: 34px;
-  }
 }
 </style>
