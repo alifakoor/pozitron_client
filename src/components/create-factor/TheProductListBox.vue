@@ -98,7 +98,7 @@
         </div>
 
         <p :class="product.onlineDiscount > 0 ? 'delPrice' : 'productPrice'">
-          {{ product.onlinePrice.toLocaleString() }}
+          {{ product.price.toLocaleString() }}
         </p>
         <p v-if="product.onlineDiscount > 0" class="productPrice">
           {{ product.onlineSalePrice.toLocaleString() }}
@@ -140,7 +140,7 @@
         <div class="listBody">
           <div
             v-for="product in showFactorProducts"
-            key="product.id"
+            :key="product.id"
             class="productListWrapper"
           >
             <div class="imgBox">
@@ -178,19 +178,15 @@
             </div>
 
             <div class="priceBox">
-              <p
-                :class="
-                  product.onlineDiscount > 0 ? 'delPrice' : 'productPrice'
-                "
-              >
-                {{ product.onlinePrice.toLocaleString() }}
+              <p :class="product.discount > 0 ? 'delPrice' : 'productPrice'">
+                {{ product.price.toLocaleString() }}
               </p>
-              <p v-if="product.onlineDiscount > 0" class="productPrice">
-                {{ product.onlineSalePrice.toLocaleString() }}
+              <p v-if="product.discount > 0" class="productPrice">
+                {{ product.salePrice.toLocaleString() }}
               </p>
             </div>
-            <p :class="product.onlineStock > 0 ? 'productStock' : 'outOfStock'">
-              {{ product.onlineStock }}
+            <p :class="product.stock > 0 ? 'productStock' : 'outOfStock'">
+              {{ product.stock }}
             </p>
             <div class="btnWrapper">
               <div class="editBtn"><i class="fa fa-edit"></i></div>

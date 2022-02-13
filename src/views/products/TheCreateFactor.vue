@@ -51,6 +51,7 @@
               <TheFactorCart
                 :selectedFactorProducts="factor.selectedFactorProducts"
                 @changeCountProduct="changeCountProduct"
+                :factorPrice="factor.price"
               ></TheFactorCart>
               <TheCustomerData
                 @addDataToFactor="addDataToFactor"
@@ -107,6 +108,7 @@ export default {
         id: null,
         customerData: {},
         selectedFactorProducts: [],
+        price: null,
       });
     },
     // change count of selectedProduct in factor
@@ -116,6 +118,11 @@ export default {
         if (product.data.id == data.id) {
           product.count += data.count;
           product.count == 0 ? (remove = index) : "";
+          product.discount > 0
+            ? (this.factors[this.active].price +=
+                data.count * product.data.salePrice)
+            : (this.factors[this.active].price +=
+                data.count * product.data.price);
         }
       });
       remove !== null
@@ -132,6 +139,9 @@ export default {
           }
         }
       );
+      dataFactor.discount > 0
+        ? (this.factors[this.active].price += dataFactor.product.salePrice)
+        : (this.factors[this.active].price += dataFactor.product.price);
       if (exist !== null) {
         this.factors[this.active].selectedFactorProducts[exist].count++;
       } else {

@@ -7,7 +7,50 @@
       class="p-d-flex p-flex-column p-jc-start p-ai-start generalBoxWrapper p-mr-md-0"
       style="min-height: 584px"
     >
-      <p class="p-px-3 p-py-2">سبد خرید</p>
+      <div class="p-px-3 p-py-2 headerBox">
+        <p>سبد خرید</p>
+        <i
+          class="pi pi-ellipsis-v"
+          @click="
+            () => {
+              showExtraDetail = !showExtraDetail;
+            }
+          "
+        ></i>
+        <div
+          class="extraDataBox"
+          :class="showExtraDetail ? 'p-d-flex' : 'p-d-none'"
+        >
+          <InputHasIcon
+            iconClass="ri-percent-line"
+            inputText="تخفیف"
+            InPlaceholder="درصد"
+            inType="number"
+            InGrid="p-col-12"
+            InHeight="32px"
+            :MaxValue="100"
+          ></InputHasIcon>
+          <InputHasInfo
+            inputText="حمل و نقل"
+            InGrid="p-col-12"
+            InHeight="32px"
+            inputName="shiping"
+            InPlaceholder="تومان"
+          ></InputHasInfo>
+          <InputHasInfo
+            inputText="اضافات"
+            InGrid="p-col-12"
+            InHeight="32px"
+            inputName="extraPayment"
+            InPlaceholder="تومان"
+          ></InputHasInfo>
+          <div class="setChangeBtn">
+            <i class="ri-checkbox-circle-line"></i>
+            <p>اعمال</p>
+          </div>
+        </div>
+      </div>
+
       <Divider class="p-m-0 p-p-0" type="solid" />
       <div class="productsList">
         <div class="productBox" v-for="product in selectedFactorProducts">
@@ -61,13 +104,11 @@
               </p>
             </div>
             <div class="productPrice">
-              <p v-if="product.data.onlineDiscount > 0" class="price">
-                {{ product.data.onlineSalePrice.toLocaleString() }} تومان
+              <p v-if="product.data.discount > 0" class="price">
+                {{ product.data.salePrice.toLocaleString() }} تومان
               </p>
-              <p
-                :class="product.data.onlineDiscount > 0 ? 'delPrice' : 'price'"
-              >
-                {{ product.data.onlinePrice.toLocaleString() }} تومان
+              <p :class="product.data.discount > 0 ? 'delPrice' : 'price'">
+                {{ product.data.price.toLocaleString() }} تومان
               </p>
             </div>
             <div class="counting">
@@ -105,6 +146,16 @@
           </div>
         </div>
       </div>
+
+      <div
+        class="factorPriceBox"
+        :class="selectedFactorProducts.length > 0 ? 'p-d-flex' : 'p-d-none'"
+      >
+        <p class="factorPrice">مبلغ قابل پرداخت :{{ factorPrice }} تومان</p>
+        <button class="recordFactor" @click="addChangestoFactor()">
+          <p>ادامه و پرداخت</p>
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -117,8 +168,13 @@ export default {
       import("../common/components/GeneralBox.vue")
     ),
   },
-  props: ["selectedFactorProducts"],
+  props: ["selectedFactorProducts", "factorPrice"],
   emits: ["changeCountProduct"],
+  data() {
+    return {
+      showExtraDetail: false,
+    };
+  },
 };
 </script>
 
@@ -275,7 +331,8 @@ export default {
   background: #fff;
   box-shadow: 0px 0px 5px rgba(23, 24, 24, 0.05);
   border-radius: 8px;
-  > p {
+  position: relative;
+  > .headerBox {
     width: 100%;
     background: #dcdeea;
     border-radius: 8px 8px 0px 0px;
@@ -284,11 +341,94 @@ export default {
     font-size: 14px;
     line-height: 150%;
     text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    i {
+      cursor: pointer;
+    }
+    .extraDataBox {
+      position: absolute;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      width: 152px;
+      height: 244px;
+      left: 35px;
+      top: 35%;
+      background: #ffffff;
+      box-shadow: 0px 0px 9.55556px rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      transition: all 0.5s;
+      z-index: 99999999999;
+      > div {
+        margin: 8px 0px;
+      }
+      .setChangeBtn {
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0px;
+        width: 71px;
+        height: 32px;
+        background: #048ba8;
+        border-radius: 4px;
+        color: #fff;
+        i {
+          margin-left: 4px;
+        }
+      }
+    }
   }
   .p-divider {
     width: 100%;
     border: 1px solid #e1e3e5;
     background: #e1e3e5;
+  }
+}
+
+.factorPriceBox {
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: absolute;
+  width: 100%;
+  bottom: 2.74%;
+  .factorPrice {
+    font-style: normal;
+    font-weight: 900;
+    font-size: 18px;
+    line-height: 25px;
+    text-align: right;
+    color: #49527e;
+    width: 100%;
+    text-align: right;
+    padding-right: 12%;
+  }
+  .recordFactor {
+    cursor: pointer;
+    width: 80%;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #048ba8;
+    border-radius: 5px;
+    outline: 0;
+    border: 0;
+    text-align: center;
+    p {
+      text-align: center;
+      letter-spacing: -0.32px;
+      color: #ffffff;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 18px;
+      line-height: 25px;
+    }
   }
 }
 </style>
