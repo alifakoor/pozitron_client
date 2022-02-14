@@ -108,7 +108,10 @@
 
       <Divider class="p-m-0 p-p-0" type="solid" />
       <div class="productsList">
-        <div class="productBox" v-for="product in selectedFactorProducts">
+        <div
+          class="productBox"
+          v-for="(product, index) in selectedFactorProducts"
+        >
           <div class="productImg">
             <img
               v-if="product.data.images[0]"
@@ -158,13 +161,53 @@
                 )
               </p>
             </div>
-            <div class="productPrice">
-              <p v-if="product.data.discount > 0" class="price">
-                {{ product.data.salePrice.toLocaleString() }} تومان
-              </p>
-              <p :class="product.data.discount > 0 ? 'delPrice' : 'price'">
-                {{ product.data.price.toLocaleString() }} تومان
-              </p>
+            <div class="priceBox">
+              <div class="productPrice" v-if="product.data.discount > 0">
+                <input
+                  v-if="product.data.discount > 0"
+                  class="price"
+                  type="text"
+                  :class="editablePrice == index ? 'editable' : ''"
+                  :readonly="editablePrice != index"
+                  @change="changePrice"
+                  :value="product.data.salePrice.toLocaleString()"
+                />
+                <p class="price">تومان</p>
+                <i
+                  class="fa fa-edit"
+                  v-show="editablePrice != index"
+                  @click="editableInput(index)"
+                ></i>
+                <i
+                  class="ri-checkbox-circle-line"
+                  v-show="editablePrice == index"
+                  @click="editPrice(index)"
+                ></i>
+                <p class="delPrice">
+                  {{ product.data.price.toLocaleString() }} تومان
+                </p>
+              </div>
+              <div v-else class="productPrice">
+                <input
+                  class="price"
+                  type="text"
+                  :class="editablePrice == index ? 'editable' : ''"
+                  :readonly="editablePrice != index"
+                  @change="changePrice"
+                  :value="product.data.price.toLocaleString()"
+                />
+                تومان
+                <i
+                  class="fa fa-edit"
+                  v-show="editablePrice != index"
+                  @click="editableInput(index)"
+                ></i>
+                <i
+                  class="ri-checkbox-circle-line"
+                  v-show="editablePrice == index"
+                  @click="editPrice(index)"
+                ></i>
+              </div>
             </div>
             <div class="counting">
               <i
@@ -229,6 +272,7 @@ export default {
     return {
       showExtraDetail: false,
       extraData: {},
+      editablePrice: -1,
     };
   },
   methods: {
@@ -238,6 +282,13 @@ export default {
     addExtraDataTofactor() {
       this.$emit("addExtraDataToFactor", this.extraData);
       this.showExtraDetail = false;
+    },
+    editableInput(index) {
+      this.editablePrice = index;
+      document.querySelectorAll(".price")[index].focus();
+    },
+    editPrice(index) {
+      this.editablePrice = -1;
     },
   },
 };
@@ -251,6 +302,7 @@ export default {
   padding: 20px 0px 0px;
   width: 100%;
   max-height: 338px;
+  overflow-y: auto;
   .productBox {
     display: flex;
     align-items: center;
@@ -312,7 +364,7 @@ export default {
         }
       }
 
-      .productPrice {
+      .priceBox {
         display: flex;
         flex-direction: row;
         justify-content: flex-start;
@@ -321,9 +373,23 @@ export default {
         width: 272px;
         height: 25px;
         margin: 8px 0px;
+      }
+
+      .productPrice {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        height: 25px;
+        margin: 0 0 0 16px;
+
+        i {
+          margin: 0px 8px;
+        }
+
         .delPrice,
         .price {
-          width: 79px;
+          width: 10px;
           height: 25px;
           font-style: normal;
           font-weight: bold;
@@ -332,8 +398,37 @@ export default {
           text-align: right;
           letter-spacing: -0.32px;
           color: #363d5d;
-          margin: 0 0 0 16px;
+          border: none;
+          outline: none;
         }
+
+        .delPrice:hover,
+        .price:hover {
+          cursor: auto;
+        }
+
+        .delPrice:focus,
+        .price:focus {
+          border: none;
+          outline: none;
+        }
+
+        .editable {
+          width: 20px;
+          border: none;
+          outline: none;
+          border-bottom: 1px solid #7b84b2;
+          background-color: transparent;
+          text-align: center;
+        }
+
+        .editable:focus {
+          border: none;
+          outline: none;
+          border-bottom: 1px solid #7b84b2;
+          background-color: transparent;
+        }
+
         .delPrice {
           color: #7b84b2;
           text-decoration: line-through;
