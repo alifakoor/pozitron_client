@@ -9,14 +9,65 @@
     >
       <div class="p-px-3 p-py-2 headerBox">
         <p>سبد خرید</p>
-        <i
-          class="pi pi-ellipsis-v"
-          @click="
-            () => {
-              showExtraDetail = !showExtraDetail;
-            }
-          "
-        ></i>
+        <div class="p-d-flex p-ai-center p-jc-center">
+          <div class="p-d-flex p-ai-center p-jc-center p-ml-4">
+            <p
+              class="extraDataText"
+              v-show="extraData.extraPayment && extraData.extraPayment != ''"
+              v-tooltip.bottom="{
+                value: `تومان${extraData.extraPayment}`,
+                class: 'customizeTootip',
+              }"
+            >
+              <i
+                class="ri-close-circle-line"
+                @click="$emit('modalHandle')"
+                style="cursor: pointer"
+              ></i>
+              اضافات
+            </p>
+            <p
+              class="extraDataText"
+              v-show="extraData.shiping && extraData.shiping != ''"
+              v-tooltip.bottom="{
+                value: `تومان${extraData.shiping}`,
+                class: 'customizeTootip',
+              }"
+            >
+              <i
+                class="ri-close-circle-line"
+                @click="$emit('modalHandle')"
+                style="cursor: pointer"
+              ></i>
+              حمل‌و‌نقل
+            </p>
+            <p
+              class="extraDataText"
+              v-show="extraData.discount && extraData.discount != ''"
+              v-tooltip.bottom="{
+                value: `درصد${extraData.discount}`,
+                class: 'customizeTootip',
+              }"
+            >
+              <i
+                class="ri-close-circle-line"
+                @click="$emit('modalHandle')"
+                style="cursor: pointer"
+              ></i>
+              تخفیف
+            </p>
+          </div>
+          <i
+            class="pi pi-ellipsis-v"
+            @click="
+              () => {
+                showExtraDetail =
+                  !showExtraDetail && selectedFactorProducts.length > 0;
+              }
+            "
+          ></i>
+        </div>
+
         <div
           class="extraDataBox"
           :class="showExtraDetail ? 'p-d-flex' : 'p-d-none'"
@@ -26,9 +77,11 @@
             inputText="تخفیف"
             InPlaceholder="درصد"
             inType="number"
+            inputName="discount"
             InGrid="p-col-12"
             InHeight="32px"
             :MaxValue="100"
+            @changeInputValue="setExtraData"
           ></InputHasIcon>
           <InputHasInfo
             inputText="حمل و نقل"
@@ -36,6 +89,7 @@
             InHeight="32px"
             inputName="shiping"
             InPlaceholder="تومان"
+            @changeInputValue="setExtraData"
           ></InputHasInfo>
           <InputHasInfo
             inputText="اضافات"
@@ -43,8 +97,9 @@
             InHeight="32px"
             inputName="extraPayment"
             InPlaceholder="تومان"
+            @changeInputValue="setExtraData"
           ></InputHasInfo>
-          <div class="setChangeBtn">
+          <div class="setChangeBtn" @click="addExtraDataTofactor">
             <i class="ri-checkbox-circle-line"></i>
             <p>اعمال</p>
           </div>
@@ -169,11 +224,21 @@ export default {
     ),
   },
   props: ["selectedFactorProducts", "factorPrice"],
-  emits: ["changeCountProduct"],
+  emits: ["changeCountProduct", "addExtraDataToFactor"],
   data() {
     return {
       showExtraDetail: false,
+      extraData: {},
     };
+  },
+  methods: {
+    setExtraData(data) {
+      this.extraData[data.name] = data.inValue;
+    },
+    addExtraDataTofactor() {
+      this.$emit("addExtraDataToFactor", this.extraData);
+      this.showExtraDetail = false;
+    },
   },
 };
 </script>
@@ -347,6 +412,25 @@ export default {
     position: relative;
     i {
       cursor: pointer;
+    }
+
+    .extraDataText {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0px 4px 0px 8px;
+      width: 70px;
+      height: 20px;
+      background: #5c679e;
+      border-radius: 4px;
+      margin: 0px 4px;
+      color: #fff;
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 150%;
+      i {
+        margin-left: 2px;
+      }
     }
     .extraDataBox {
       position: absolute;

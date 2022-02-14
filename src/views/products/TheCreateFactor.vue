@@ -51,7 +51,8 @@
               <TheFactorCart
                 :selectedFactorProducts="factor.selectedFactorProducts"
                 @changeCountProduct="changeCountProduct"
-                :factorPrice="factor.price"
+                @addExtraDataToFactor="addExtraDataToFactor"
+                :factorPrice="factor.discountPrice"
               ></TheFactorCart>
               <TheCustomerData
                 @addDataToFactor="addDataToFactor"
@@ -108,7 +109,9 @@ export default {
         id: null,
         customerData: {},
         selectedFactorProducts: [],
+        extraData: {},
         price: null,
+        discountPrice: null,
       });
     },
     // change count of selectedProduct in factor
@@ -123,6 +126,7 @@ export default {
                 data.count * product.data.salePrice)
             : (this.factors[this.active].price +=
                 data.count * product.data.price);
+          product.discountPrice = product.price;
         }
       });
       remove !== null
@@ -142,6 +146,7 @@ export default {
       dataFactor.discount > 0
         ? (this.factors[this.active].price += dataFactor.product.salePrice)
         : (this.factors[this.active].price += dataFactor.product.price);
+      this.factors[this.active].discountPrice = this.factors[this.active].price;
       if (exist !== null) {
         this.factors[this.active].selectedFactorProducts[exist].count++;
       } else {
@@ -156,6 +161,32 @@ export default {
     addDataToFactor(customerData) {
       this.factors[customerData.index].customerData[customerData.data.name] =
         customerData.data.inValue;
+      this.updateOnHoldFactor();
+    },
+    // add extra data to factor
+    addExtraDataToFactor(extraData) {
+      for (let newextra in extraData) {
+        if (extraData[newextra] != "") {
+          this.factors[this.active].extraData[newextra] = extraData[newextra];
+        } else {
+          delete this.factors[this.active].extraData[newextra];
+        }
+      }
+      this.factors[this.active].discountPrice = this.factors[this.active].price;
+      for (let extra in this.factors[this.active].extraData) {
+        if (extra === "discount") {
+          this.factors[this.active].discountPrice =
+            this.factors[this.active].discountPrice -
+            this.factors[this.active].price *
+              (parseInt(this.factors[this.active].extraData[extra]) / 100);
+          console.log(this.factors[this.active].discountPrice + "dd");
+        } else {
+          this.factors[this.active].discountPrice =
+            this.factors[this.active].discountPrice +
+            parseInt(this.factors[this.active].extraData[extra]);
+          console.log(this.factors[this.active].discountPrice + "ndd");
+        }
+      }
       this.updateOnHoldFactor();
     },
     // sync factors variable of component with vuex

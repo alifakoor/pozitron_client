@@ -97,15 +97,16 @@
           </p>
         </div>
 
-        <p :class="product.onlineDiscount > 0 ? 'delPrice' : 'productPrice'">
+        <p :class="product.discount > 0 ? 'delPrice' : 'productPrice'">
           {{ product.price.toLocaleString() }}
         </p>
-        <p v-if="product.onlineDiscount > 0" class="productPrice">
-          {{ product.onlineSalePrice.toLocaleString() }}
+        <p v-if="product.discount > 0" class="productPrice">
+          {{ product.salePrice.toLocaleString() }}
         </p>
-        <p :class="product.onlineStock > 0 ? 'productStock' : 'outOfStock'">
-          موجودی:{{ product.onlineStock }}عدد
+        <p v-if="product.stock > 0" class="productStock">
+          موجودی:{{ product.stock }}عدد
         </p>
+        <p v-else class="outOfStock">ناموجود</p>
         <div class="btnWrapper">
           <div
             :class="product.onlineStock > 0 ? 'addPRoduct' : 'notAddProduct'"
@@ -185,9 +186,10 @@
                 {{ product.salePrice.toLocaleString() }}
               </p>
             </div>
-            <p :class="product.stock > 0 ? 'productStock' : 'outOfStock'">
+            <p v-if="product.stock > 0" class="productStock">
               {{ product.stock }}
             </p>
+            <p v-else class="outOfStock">ناموجود</p>
             <div class="btnWrapper">
               <div class="editBtn"><i class="fa fa-edit"></i></div>
             </div>
@@ -247,7 +249,7 @@ export default {
         this.showFactorProducts = this.factorProducts;
       } else {
         this.showFactorProducts = this.factorProducts.filter(
-          (product) => product.onlineStock != 0
+          (product) => product.stock != 0
         );
       }
       this.GridShow = this.showProductAsGrid;
