@@ -306,6 +306,7 @@ export default {
 
       .p-highlight {
         background-color: #fff;
+        min-width: 166px;
       }
 
       li a:focus {
