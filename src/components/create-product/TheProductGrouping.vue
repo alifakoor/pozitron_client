@@ -5,11 +5,15 @@
         <SelectDropDown
           InPlaceholder="انتخاب دسته"
           InGrid="p-col-12"
+          :dataOption="produtCategories"
+          @addData="addCategory"
         ></SelectDropDown>
 
         <SelectDropDown
           InPlaceholder="انتخاب برچسب"
           InGrid="p-col-12"
+          :dataOption="productTags"
+          @addData="addTag"
         ></SelectDropDown>
       </div>
     </template>
@@ -18,7 +22,22 @@
 
 <script>
 import { defineAsyncComponent } from "vue";
+import { mapMutations, mapState } from "vuex";
 export default {
+  computed: {
+    ...mapState(["produtCategories", "productTags"]),
+  },
+  methods: {
+    ...mapMutations(["setCategories", "setTags", "addCategory", "addTag"]),
+  },
+  created() {
+    if (this.produtCategories.length == 0) {
+      this.setCategories();
+    }
+    if (this.productTags.length == 0) {
+      this.setTags();
+    }
+  },
   components: {
     GeneralBox: defineAsyncComponent(() =>
       import("../common/components/GeneralBox.vue")

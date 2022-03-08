@@ -67,6 +67,9 @@
 </template>
 
 <script>
+import axios from "axios";
+import { mapState } from "vuex";
+
 export default {
   data() {
     return {
@@ -75,6 +78,9 @@ export default {
       images: [],
       hasImage: false,
     };
+  },
+  computed: {
+    ...mapState(["apiURL", "userToken"]),
   },
   methods: {
     dragover(event) {
@@ -85,19 +91,24 @@ export default {
       let file = event.dataTransfer.files[0];
       this.addNewImg(file);
     },
-    addNewImg(file) {
+    async addNewImg(file) {
+      let makeImg = null;
       this.hasImage = true;
       let newImg = null;
       if (this.images.length === 0) {
         this.topPic = file;
         let image = document.getElementById("topPic");
         image.src = URL.createObjectURL(this.topPic);
-        setTimeout(function () {
+        makeImg = await this.sendImgToDB(file);
+        if (makeImg) {
           document
             .querySelector(".topPic .loadingBox")
             .classList.add("hiddenElement");
-        }, 1000);
-        newImg = { file: this.topPic, index: 0 };
+          newImg = { file: this.topPic, index: 0 };
+        } else {
+          this.topPic = null;
+          document.getElementById("topPic").remove();
+        }
       } else {
         let index = this.images.length;
         let boxImage = document.querySelector(".smallImages");
@@ -114,53 +125,56 @@ export default {
         let image = document.querySelector(`.smallImg > #smImg${index}`);
         this.newPic = file;
         image.src = URL.createObjectURL(this.newPic);
-        setTimeout(function () {
+        makeImg = await this.sendImgToDB(file);
+        if (makeImg) {
           document
             .querySelector(`.smallImg${index} > .loadingBox`)
             .classList.add("hiddenElement");
-        }, 1000);
-        document
-          .querySelector(`.smallImg${index} > .fa-trash`)
-          .addEventListener("click", () => {
-            Swal.fire({
-              title: "حذف عکس",
-              text: "این فرآیند غیرقابل‌برگشت است.",
-              showCloseButton: true,
-              showCancelButton: true,
-              confirmButtonColor: "#E61F10",
-              cancelButtonColor: " ",
-              cancelButtonText: "بازگشت",
-              confirmButtonText: "حذف",
-            }).then((result) => {
-              if (result.isConfirmed) {
-                const removeImg = this.images;
-                this.images = removeImg.filter((image) => {
-                  return image.index !== index;
-                });
-                document.querySelector(`.smallImg${index}`).remove();
-              }
+          document
+            .querySelector(`.smallImg${index} > .fa-trash`)
+            .addEventListener("click", () => {
+              Swal.fire({
+                title: "حذف عکس",
+                text: "این فرآیند غیرقابل‌برگشت است.",
+                showCloseButton: true,
+                showCancelButton: true,
+                confirmButtonColor: "#E61F10",
+                cancelButtonColor: " ",
+                cancelButtonText: "بازگشت",
+                confirmButtonText: "حذف",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  const removeImg = this.images;
+                  this.images = removeImg.filter((image) => {
+                    return image.index !== index;
+                  });
+                  document.querySelector(`.smallImg${index}`).remove();
+                }
+              });
             });
-          });
-        document
-          .querySelector(`.smallImg${index} > .pi-bookmark`)
-          .addEventListener("click", () => {
-            let lastTop = this.topPic;
-            this.topPic = this.images.filter((image) => {
-              return image.index == index;
-            })[0].file;
-            this.images.map((image) => {
-              if (image.index == index) {
-                image.file = lastTop;
-              }
+          document
+            .querySelector(`.smallImg${index} > .pi-bookmark`)
+            .addEventListener("click", () => {
+              let lastTop = this.topPic;
+              this.topPic = this.images.filter((image) => {
+                return image.index == index;
+              })[0].file;
+              this.images.map((image) => {
+                if (image.index == index) {
+                  image.file = lastTop;
+                }
+              });
+              let imageTop = document.getElementById("topPic");
+              imageTop.src = URL.createObjectURL(this.topPic);
+              let image = document.querySelector(`.smallImg${index} > img`);
+              image.src = URL.createObjectURL(lastTop);
             });
-            let imageTop = document.getElementById("topPic");
-            imageTop.src = URL.createObjectURL(this.topPic);
-            let image = document.querySelector(`.smallImg${index} > img`);
-            image.src = URL.createObjectURL(lastTop);
-          });
-        newImg = { file: this.newPic, index: index };
+          newImg = { file: this.newPic, index: index };
+        } else {
+          document.querySelector(`.smallImg${index}`).remove();
+        }
       }
-      this.images.push(newImg);
+      makeImg ? this.images.push(newImg) : "";
     },
     imageInput(event) {
       let file = event.target.files[0];
@@ -201,6 +215,30 @@ export default {
           }
         }
       });
+    },
+    async sendImgToDB(File) {
+      let formData = new FormData();
+      formData.append("image", File);
+      let result = null;
+      await axios
+        .post(`${this.apiURL}/products/upload`, formData, {
+          headers: {
+            "zi-access-token": this.userToken,
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          console.log(response);
+          if (response.data.success && response.status) {
+            result = true;
+          } else {
+            result = false;
+          }
+        })
+        .catch((err) => {
+          result = false;
+        });
+      return result;
     },
   },
 };

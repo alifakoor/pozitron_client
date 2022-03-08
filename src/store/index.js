@@ -10,6 +10,8 @@ export default createStore({
     cookies: useCookies(),
     mainProducts: [],
     products: [],
+    produtCategories: [],
+    productTags: [],
     factorProducts: [],
     selections: [],
     priceSort: null,
@@ -459,6 +461,95 @@ export default createStore({
             setTimeout(function () {
               state.loadingTable = false;
             }, 1000);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+
+    setCategories(state) {
+      axios
+        .get(`${state.apiURL}/categories`, {
+          headers: {
+            "zi-access-token": state.userToken,
+          },
+        })
+        .then((response) => {
+          if (response.data.success && response.status) {
+            state.produtCategories = response.data.data;
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+
+    setTags(state) {
+      axios
+        .get(`${state.apiURL}/tags`, {
+          headers: {
+            "zi-access-token": state.userToken,
+          },
+        })
+        .then((response) => {
+          if (response.data.success && response.status) {
+            state.productTags = response.data.data;
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+
+    addCategory(state, cat) {
+      axios
+        .post(
+          `${state.apiURL}/categories`,
+          {
+            name: cat,
+          },
+          {
+            headers: {
+              "zi-access-token": state.userToken,
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          if (response.data.success && response.status) {
+            const newCat = {
+              name: cat,
+              id: response.data.data.id,
+            };
+            state.produtCategories.push(newCat);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    addTag(state, tag) {
+      axios
+        .post(
+          `${state.apiURL}/tags`,
+          {
+            name: tag,
+          },
+          {
+            headers: {
+              "zi-access-token": state.userToken,
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          if (response.data.success && response.status) {
+            const newTag = {
+              name: tag,
+              id: response.data.data.id,
+            };
+            state.productTags.push(newTag);
           }
         })
         .catch((err) => {

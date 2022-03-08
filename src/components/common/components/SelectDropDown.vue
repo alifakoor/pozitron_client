@@ -1,14 +1,14 @@
 <template>
   <VueMultiselect
     v-model="selected"
-    :options="options"
+    :options="dataOption"
     :multiple="true"
     :taggable="true"
     @tag="addTag"
     tag-placeholder="افزودن"
     :placeholder="InPlaceholder"
     label="name"
-    track-by="code"
+    track-by="id"
     selectLabel=""
     deselectLabel=""
   />
@@ -39,60 +39,25 @@ export default {
       type: String,
       default: "40px",
     },
+    dataOption: {
+      default: [],
+    },
   },
+  emits: ["addData"],
   data() {
     return {
       selected: null,
-      options: [
-        { name: "بهار", code: 1 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-      ],
     };
   },
   methods: {
     addTag(newTag) {
-      const tag = {
-        name: newTag,
-        code: newTag.substring(0, 2) + Math.floor(Math.random() * 10000000),
-      };
-      this.options.push(tag);
-      this.selected.push(tag);
+      this.$emit("addData", newTag);
+      // const tag = {
+      //   name: newTag,
+      //   code: newTag.substring(0, 2) + Math.floor(Math.random() * 10000000),
+      // };
+      // this.options.push(tag);
+      // this.selected.push(tag);
     },
   },
   computed: {
