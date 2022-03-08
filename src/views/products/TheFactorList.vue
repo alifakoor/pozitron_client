@@ -205,7 +205,7 @@
     <DataTable
       v-else
       :rows="showPageCount"
-      :value="products"
+      :value="factors"
       :rowHover="true"
       :paginator="true"
       :scrollable="true"
@@ -224,7 +224,7 @@
     >
       <template #empty>
         <p v-show="notValidSearch">محصولی با این مشخصات یافت نشد.</p>
-        <p v-show="products.length == 0 && !loadingTable && !notValidSearch">
+        <p v-show="factors.length == 0 && !loadingTable && !notValidSearch">
           محصولی برای نماش وجود ندارد.لطفا از پنل سایت خود،محصولات را تعریف
           کنید.
         </p>
@@ -327,10 +327,13 @@
         bodyClass="zi-table-body zi-table-selection"
       >
       </Column>
-      <Column field="image" bodyClass="zi-table-body" :rowspan="2">
-        <template #body>
+      <Column field="src" bodyClass="zi-table-body" :rowspan="2">
+        <template #body="slotProps">
           <div class="zi-table-content">
-            <i class="ri-global-line sourceFactor"></i>
+            <i
+              v-if="slotProps.data.src == 'online'"
+              class="ri-global-line sourceFactor"
+            ></i>
           </div>
         </template>
       </Column>
@@ -343,74 +346,129 @@
           <div class="zi-table-content">
             <div class="zi-table-content-has-sub">
               <p class="factorName" @click="showDetail(slotProps.data.id)">
-                {{ slotProps.data.name }}
+                {{ slotProps.data.name || "نامشخص" }}
               </p>
+              <span class="zi-table-product-prop">
+                #{{ slotProps.data.id }}
+              </span>
             </div>
           </div>
         </template>
       </Column>
-      <Column field="barcode" bodyClass="zi-table-body zi-table-body-lg">
+      <Column field="status" bodyClass="zi-table-body zi-table-body-lg">
         <template #body="slotProps">
           <div class="zi-table-content">
             <div class="zi-status">
-              <Chip :label="slotProps.data.barcode" />
+              <Chip
+                v-if="slotProps.data.status == 'completed'"
+                label="کامل شده"
+                class="completed"
+              />
+              <Chip
+                v-if="slotProps.data.status == 'on-hold'"
+                label="در انتظار بررسی"
+                class="onHold"
+              />
+              <Chip
+                v-if="slotProps.data.status == 'cancelled'"
+                label="لغو شده"
+                class="cancelled"
+              />
+              <Chip
+                v-if="slotProps.data.status == 'processing'"
+                label="در حال انجام"
+                class="processing"
+              />
+              <Chip
+                v-if="slotProps.data.status == 'failed'"
+                label="ناموفق"
+                class="failed"
+              />
+              <Chip
+                v-if="slotProps.data.status == 'refunded'"
+                label="مرجوعی"
+                class="refunded"
+              />
             </div>
           </div>
         </template>
       </Column>
-      <Column field="onlineStock" bodyClass="zi-table-body " :sortable="true">
+      <Column field="createDate" bodyClass="zi-table-body " :sortable="true">
         <template #body="slotProps">
-          <div v-if="slotProps.data.infiniteStock">
-            <i class="fas fa-infinity" style="color: #048ba8"></i>
-          </div>
-          <div v-else>
-            <p>{{ slotProps.data.onlineStock }}</p>
+          <div>
+            <p>
+              {{
+                slotProps.data.createdAt
+                  ? new Date(
+                      new Date(slotProps.data.createdAt)
+                        .toISOString()
+                        .slice(0, 19)
+                        .split("T")[0]
+                    ).toLocaleDateString("fa-IR")
+                  : "----"
+              }}
+            </p>
           </div>
         </template>
       </Column>
-      <Column field="onlineStock" bodyClass="zi-table-body"></Column>
-      <Column field="onlinePrice" bodyClass="zi-table-body" :sortable="true">
+      <Column field="createTime" bodyClass="zi-table-body " :sortable="true">
+        <template #body="slotProps">
+          <div>
+            <p>
+              {{
+                slotProps.data.createdAt
+                  ? new Date(slotProps.data.createdAt)
+                      .toISOString()
+                      .slice(0, 19)
+                      .split("T")[1]
+                  : "----"
+              }}
+            </p>
+          </div>
+        </template>
+      </Column>
+      <Column field="deliveryDate" bodyClass="zi-table-body" :sortable="true">
         <template #body="slotProps">
           <div class="zi-table-content">
-            <div
-              :class="[
-                'zi-table-content-has-sub',
-                slotProps.data.onlineDiscount > 0 ? 'zi-has-discount' : null,
-              ]"
-            >
+            <div class="zi-table-content-has-sub">
               <p>
-                {{ slotProps.data.onlinePrice.toLocaleString() }}
-              </p>
-              <p v-if="slotProps.data.onlineDiscount > 0">
-                {{ slotProps.data.onlineSalePrice.toLocaleString() }}
+                {{
+                  slotProps.data.deliveryDate
+                    ? new Date(
+                        new Date(slotProps.data.deliveryDate)
+                          .toISOString()
+                          .slice(0, 19)
+                          .split("T")[0]
+                      ).toLocaleDateString("fa-IR")
+                    : "----"
+                }}
               </p>
             </div>
           </div>
         </template>
       </Column>
-      <Column field="onlinePrice" bodyClass="zi-table-body">
+      <Column field="deliveryTime" bodyClass="zi-table-body" :sortable="true">
         <template #body="slotProps">
-          <div
-            :class="[
-              'zi-table-content-has-sub',
-              slotProps.data.onlineDiscount ? 'zi-has-discount' : null,
-            ]"
-          >
-            <p>{{ slotProps.data.onlinePrice.toLocaleString() }}</p>
-            <p v-if="slotProps.data.onlineDiscount">
-              {{ slotProps.data.onlinePrice.toLocaleString() }}
-            </p>
+          <div class="zi-table-content">
+            <div class="zi-table-content-has-sub">
+              <p>
+                {{
+                  slotProps.data.deliveryDate
+                    ? new Date(slotProps.data.deliveryDate)
+                        .toISOString()
+                        .slice(0, 19)
+                        .split("T")[1]
+                    : "----"
+                }}
+              </p>
+            </div>
           </div>
         </template>
       </Column>
       <Column bodyClass="zi-table-body">
         <template #body="slotProps">
           <div class="zi-table-content">
-            <InputSwitch
-              class="zi-switch-input"
-              @click="onlineSell([slotProps.data.id])"
-              v-model="slotProps.data.onlineSell"
-            />
+            {{ slotProps.data.totalPrice }}
           </div>
         </template>
       </Column>
@@ -445,7 +503,7 @@ export default {
   },
   computed: {
     ...mapState([
-      "products",
+      "factors",
       "selections",
       "loadingTable",
       "notValidSearch",
@@ -461,7 +519,7 @@ export default {
       "onlineSell",
       "deleteProduct",
       "multiDeleteProduct",
-      "setProducts",
+      "setFactors",
       "changeUserToken",
       "emptySelection",
       "deSelectItem",
@@ -483,7 +541,7 @@ export default {
     },
     setPageProducts() {
       let start = (this.showPage - 1) * this.showPerPage;
-      this.pageProduct = this.products.slice(start, start + this.showPerPage);
+      this.pageProduct = this.factors.slice(start, start + this.showPerPage);
       let trueSelection = this.checkState();
       trueSelection == 0
         ? (this.selectValue = null)
@@ -532,15 +590,16 @@ export default {
     },
   },
   created() {
-    if (this.products.length === 0) {
-      this.setProducts();
-    }
+    // if (this.products.length === 0) {
+    //   this.setProducts();
+    // }
+    this.setFactors();
     this.showPerPage = Math.floor((window.innerHeight - 250) / 70);
     this.showPageCount = Math.floor((window.innerHeight - 250) / 70);
   },
   updated() {
     let start = (this.showPage - 1) * this.showPerPage;
-    this.pageProduct = this.products.slice(start, start + this.showPerPage);
+    this.pageProduct = this.factors.slice(start, start + this.showPerPage);
 
     document
       .querySelectorAll(".p-paginator-page.p-paginator-element.p-link")
@@ -776,8 +835,6 @@ export default {
       .zi-status {
         .p-chip {
           margin: 10px 0px;
-          background: #c5dacf;
-          border: 1px solid #065143;
           box-sizing: border-box;
           border-radius: 4px;
           padding: 2px 12px;
@@ -792,6 +849,30 @@ export default {
             text-align: center;
             width: 100%;
           }
+        }
+        .p-chip.completed {
+          background: #c5dacf;
+          border: 1px solid #065143;
+        }
+        .p-chip.onHold {
+          background: #fff1eb;
+          border: 1px solid #eb4b00;
+        }
+        .p-chip.cancelled {
+          background: #dcdeea;
+          border: 1px solid #7b84b2;
+        }
+        .p-chip.processing {
+          background: #bfd2ef;
+          border: 1px solid #2c6ecb;
+        }
+        .p-chip.failed {
+          background: #ecc2bf;
+          border: 1px solid #891a29;
+        }
+        .p-chip.refunded {
+          background: #d2d5d8;
+          border: 1px solid #6c6c6c;
         }
       }
 

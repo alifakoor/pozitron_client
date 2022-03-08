@@ -87,7 +87,7 @@
           </label>
         </li>
       </ul>
-      <div class="changeStatusBtn">
+      <div class="changeStatusBtn" @click="changeStatus">
         <i class="ri-checkbox-circle-line"></i>
         <p>اعمال</p>
       </div>
@@ -127,47 +127,19 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(["deSelectItem", "editSelections", "setProducts"]),
+    ...mapMutations([
+      "deSelectItem",
+      "editSelections",
+      "setProducts",
+      "changeFactorsStatus",
+    ]),
+    async changeStatus() {
+      await this.changeFactorsStatus(this.factorStatus);
+      this.display = false;
+    },
     showEdit() {
       if (this.selections.length > 0) {
-        this.display = !this.display;
-      }
-    },
-    edit() {
-      let lastEdit = Object.entries(this.editData).reduce(
-        (a, [k, v]) => (v === null ? a : ((a[k] = v), a)),
-        {}
-      );
-      this.allOnlineSell = false;
-      if (Object.keys(lastEdit).length != 0) {
-        this.sendEdit = true;
-        this.editSelections(lastEdit);
-      }
-    },
-    setOnlinePrice(inputValue) {
-      this.onlinePrice = inputValue;
-    },
-    setOnlineDiscountPercent(inputValue) {
-      this.OnlineDiscountPercent = inputValue;
-    },
-    setOnlineStock(inputValue) {
-      this.onlineStock = inputValue;
-    },
-  },
-  watch: {
-    onlineSell: function (newVal, oldVal) {
-      if (newVal === true && oldVal === false) {
-        this.onlineSell = null;
-      }
-    },
-    editDisplay: function (newVal) {
-      if (!newVal) {
-        this.display = false;
-        this.sendEdit = false;
-        this.onlinePrice = null;
-        this.OnlineDiscountPercent = null;
-        this.onlineStock = null;
-        this.onlineSell = null;
+        this.display = true;
       }
     },
   },

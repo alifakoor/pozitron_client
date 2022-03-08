@@ -13,6 +13,8 @@ export default createStore({
     produtCategories: [],
     productTags: [],
     factorProducts: [],
+    mainFactores: [],
+    factors: [],
     selections: [],
     priceSort: null,
     nameSort: null,
@@ -557,6 +559,56 @@ export default createStore({
         });
     },
 
+    addFeatureToNewProduct(state, feature) {
+      state.newProduct[feature.name] = feature.inValue;
+    },
+    createProduct(state, type) {
+      state.newProduct["type"] = type;
+      let Product = Object.entries(state.newProduct).reduce(
+        (a, [k, v]) => (v === null ? a : ((a[k] = v), a)),
+        {}
+      );
+      console.log(Product);
+      axios
+        .post(
+          `${state.apiURL}/products/create`,
+          {
+            Product,
+          },
+          { headers: { "zi-access-token": state.userToken } }
+        )
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+
+    // factors product
+    setFactors(state) {
+      axios
+        .get(`${state.apiURL}/orders`, {
+          headers: {
+            "zi-access-token": state.userToken,
+          },
+        })
+        .then((response) => {
+          console.log(response);
+          if (response.status == 200 && response.data.success) {
+            state.factors = response.data.data;
+            state.mainFactores = state.factors;
+            state.loadingTable = false;
+          } else if (response.status == 200 && !response.data.success) {
+            setTimeout(function () {
+              state.loadingTable = false;
+            }, 1000);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     setFactorProduct(state) {
       if (state.mainProducts.length > 0) {
         state.factorProducts = state.mainProducts;
@@ -597,34 +649,6 @@ export default createStore({
           });
       }
     },
-
-    addFeatureToNewProduct(state, feature) {
-      state.newProduct[feature.name] = feature.inValue;
-    },
-    createProduct(state, type) {
-      state.newProduct["type"] = type;
-      let Product = Object.entries(state.newProduct).reduce(
-        (a, [k, v]) => (v === null ? a : ((a[k] = v), a)),
-        {}
-      );
-      console.log(Product);
-      axios
-        .post(
-          `${state.apiURL}/products/create`,
-          {
-            Product,
-          },
-          { headers: { "zi-access-token": state.userToken } }
-        )
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-
-    // factors product
     addProductToFactor(state, data) {
       let index = state.onHoldFactors.findIndex((factor) => {
         return factor.id === state.factorIndex;
@@ -641,6 +665,12 @@ export default createStore({
     },
     removeAnFactor(state, index) {
       state.onHoldFactors.splice(index, 1);
+    },
+    changeFactorsStatus(state, statusSelection) {
+      // axios.put(`${state.apiURL}/orders/${}`,{} {
+      //   headers: {
+      //     "zi-access-token": state.userToken,
+      //   })
     },
   },
   actions: {},
