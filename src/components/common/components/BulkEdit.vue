@@ -91,13 +91,13 @@
                     .indexOf('attributes')
                 ].metaValue.length-1" style="display: inline;">{{ "," }}</p>
               </p>
-              <P v-if="selectedItem.type == 'variation' && selectedItem.meta[
+              <p v-if="selectedItem.type == 'variation' && selectedItem.meta[
                   selectedItem.meta
                     .map(function (e) {
                       return e.metaKey;
                     })
                     .indexOf('attributes')
-                ].metaValue.length>0">)</P>
+                ].metaValue.length>0">)</p>
               <p>{{ selectedItem.name }}</p>
 
               <i
