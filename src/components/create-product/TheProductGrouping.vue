@@ -25,10 +25,15 @@ import { defineAsyncComponent } from "vue";
 import { mapMutations, mapState } from "vuex";
 export default {
   computed: {
-    ...mapState(["produtCategories", "productTags"]),
+    ...mapState("products", ["produtCategories", "productTags"]),
   },
   methods: {
-    ...mapMutations(["setCategories", "setTags", "addCategory", "addTag"]),
+    ...mapMutations("products", [
+      "setCategories",
+      "setTags",
+      "addCategory",
+      "addTag",
+    ]),
   },
   created() {
     if (this.produtCategories.length == 0) {

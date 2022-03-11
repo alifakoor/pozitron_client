@@ -95,10 +95,10 @@ export default {
     };
   },
   computed: {
-    ...mapState(["onHoldFactors", "factorId"]),
+    ...mapState("factors", ["onHoldFactors", "factorId"]),
   },
   methods: {
-    ...mapMutations([
+    ...mapMutations("factors", [
       "addProductToFactor",
       "chageFactorIndex",
       "removeAnFactor",

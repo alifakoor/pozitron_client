@@ -1,7 +1,11 @@
 <template>
   <div class="productListBox p-ml-2 p-md-ml-0">
     <header class="boxHead">
-      <Search mediaWidth="288px" searchType="factorProduct" />
+      <Search
+        mediaWidth="288px"
+        searchType="factorProduct"
+        searchStore="products"
+      />
       <i
         class="ri-equalizer-line"
         @click="
@@ -55,7 +59,7 @@
         </div>
       </div>
     </header>
-    <div class="emptyMessage" v-if="notValidFactorSearch">
+    <div class="emptyMessage" v-if="notValidSearchProductFactor">
       <p>محصولی با این مشخصات یافت نشد.</p>
     </div>
     <div v-else-if="GridShow" class="productList">
@@ -227,13 +231,13 @@ export default {
     ),
   },
   computed: {
-    ...mapState(["factorProducts", "notValidFactorSearch"]),
+    ...mapState("products", ["factorProducts", "notValidSearchProductFactor"]),
     showProduct: function () {
       return this.factorProducts.length > 0;
     },
   },
   methods: {
-    ...mapMutations(["setFactorProduct"]),
+    ...mapMutations("products", ["setFactorProduct"]),
     changeShowProductStyle(code) {
       switch (code) {
         case 0:

@@ -2,19 +2,45 @@
   <div class="zi-panel-products-list">
     <div class="p-d-flex p-jc-between">
       <div class="actions p-d-flex">
-        <Search :width="width" searchType="product" />
+        <Search :width="width" searchType="factors" searchStore="factors" />
         <CahangeFactorStatus />
         <showDetail
-          :Fid="showDetailFlag"
+          :Factor="factors[showDetailFlag]"
           :showDetail="showDetailFlag != null"
         />
       </div>
     </div>
-    <!-- <div v-if="loadingTable" class="table-loading">
-      <div class="lds-hourglass"></div>
-    </div> -->
+    <!-- selected product message -->
+    <div
+      class="selectMessage p-d-flex p-jc-center"
+      v-if="factorSelections.length > 0"
+    >
+      <p>
+        {{
+          factorSelections.length == factors.length
+            ? `همه‌ی ${factors.length} محصول انتخاب شدند.`
+            : `${factorSelections.length} محصول از ${factors.length} محصول موجود در انبار انتخاب شد .`
+        }}
+      </p>
+
+      <Button
+        v-show="
+          factorSelections.length > 0 &&
+          factorSelections.length != factors.length
+        "
+        label="انتخاب همه  محصولات"
+        class="p-button-text p-mx-1"
+        @click="addFactorSelections(factors)"
+      />
+      <Button
+        v-show="factorSelections.length == factors.length"
+        label="از انتخاب خارج کردن محصولات"
+        class="p-button-text p-mx-1"
+        @click="() => (selectedProducts = [])"
+      />
+    </div>
     <DataTable
-      v-if="loadingTable"
+      v-if="loadingFactorTable"
       :rows="showPageCount"
       :rowHover="true"
       :paginator="true"
@@ -45,108 +71,41 @@
               <TriStateCheckbox v-model="selectValue" />
             </template>
           </Column>
-          <Column header="عکس" headerClass="zi-table-header" :rowspan="2" />
+          <Column
+            header="مرجع فاکتور"
+            headerClass="zi-table-header"
+            :rowspan="2"
+          />
           <Column
             headerClass="zi-table-header zi-table-header-lg zi-table-justify-flex-start"
             :rowspan="2"
             :colspan="2"
           >
             <template #header>
-              <div
-                class="zi-table-header-has-sub firstSort sortTable"
-                @click="sortProducts(['name'])"
-              >
-                <p class="sortCursor">نام محصول</p>
-                <p class="zi-table-header-sub">ویژگی</p>
+              <div class="zi-table-header-has-sub firstSort sortTable">
+                <p class="sortCursor">نام خریدار</p>
+                <p class="zi-table-header-sub">شماره فاکتور</p>
               </div>
-              <i
-                @click="sortProducts(['name'])"
-                v-if="nameSort == null"
-                class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-alt p-mr-1"
-              ></i>
-              <i
-                @click="sortProducts(['name'])"
-                v-else-if="!nameSort"
-                class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-up-alt"
-                style="color: #048ba8"
-              ></i>
-              <i
-                @click="sortProducts(['name'])"
-                v-else-if="nameSort"
-                class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-down"
-                style="color: #048ba8"
-              ></i>
             </template>
           </Column>
           <Column
-            header="بارکد"
+            header="وضعیت"
             headerClass="zi-table-header zi-table-header-lg"
             :rowspan="2"
           ></Column>
-          <!-- <Column
-						header="موجودی (تعداد)"
-						headerClass="zi-table-header zi-table-header-lg"
-						:colspan="2"
-					/>
-					<Column
-						header="قیمت (تومان)"
-						headerClass="zi-table-header zi-table-header-lg"
-						:colspan="2"
-					/> -->
-          <Column headerClass="zi-table-header zi-table-header-lg" :rowspan="2">
-            <template #header>
-              <div
-                class="zi-table-header-has-sub table-sort p-d-flex p-ai-center"
-                @click="sortProducts(['onlineStock'])"
-              >
-                <p class="sortCursor">موجودی (تعداد)</p>
-                <i
-                  v-if="stockSort == null"
-                  class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-alt p-mr-1"
-                ></i>
-                <i
-                  v-else-if="!stockSort"
-                  class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-up-alt"
-                  style="color: #048ba8"
-                ></i>
-                <i
-                  v-else-if="stockSort"
-                  class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-down"
-                  style="color: #048ba8"
-                ></i>
-              </div>
-            </template>
-          </Column>
           <Column
-            headerClass="zi-table-header
-					zi-table-header-lg"
-            :rowspan="2"
-          >
-            <template #header>
-              <div
-                class="zi-table-header-has-sub table-sort p-d-flex p-ai-center"
-                @click="sortProducts(['onlinePrice'])"
-              >
-                <p class="sortCursor">قیمت (تومان)</p>
-                <i
-                  v-if="priceSort == null"
-                  class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-alt p-mr-1"
-                ></i>
-                <i
-                  v-else-if="!priceSort"
-                  class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-up-alt"
-                  style="color: #048ba8"
-                ></i>
-                <i
-                  v-else-if="priceSort"
-                  class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-down"
-                  style="color: #048ba8"
-                ></i>
-              </div>
-            </template>
-          </Column>
+            header="زمان ثبت فاکتور"
+            headerClass="zi-table-header zi-table-header-lg"
+            :colspan="2"
+          />
           <Column
-            header="فروش آنلاین"
+            header="زمان ارسال"
+            headerClass="zi-table-header zi-table-header-lg"
+            :colspan="2"
+          />
+
+          <Column
+            header="مبلغ فاکتور  (تومان)"
             headerClass="zi-table-header"
             :rowspan="2"
           />
@@ -163,32 +122,30 @@
               #header
               v-if="selectedProducts && selectedProducts.length > 1"
             >
-              <i class="fa fa-trash" @click="multiDeleteProduct()"></i>
+              <i class="fa fa-trash" @click="multiDeletesortFactor()"></i>
             </template>
           </Column>
         </Row>
         <Row>
-          <!-- <Column
-						header="کل"
-						headerClass="zi-table-header zi-table-header-second-row zi-direction-ltr"
-						:sortable="true"
-					>
-					</Column>
-					<Column
-						header="آنلاین"
-						headerClass="zi-table-header zi-table-header-second-row"
-						:sortable="true"
-					/>
-					<Column
-						header="حضوری"
-						headerClass="zi-table-header zi-table-header-second-row zi-direction-ltr"
-						:sortable="true"
-					/> -->
-          <!-- <Column
-						header="آنلاین"
-						headerClass="zi-table-header zi-table-header-second-row"
-						:sortable="true"
-					/> -->
+          <Column
+            header="تاریخ"
+            headerClass="zi-table-header zi-table-header-second-row zi-direction-ltr"
+            :sortable="true"
+          >
+          </Column>
+          <Column
+            header="ساعت"
+            headerClass="zi-table-header zi-table-header-second-row"
+          />
+          <Column
+            header="تاریخ"
+            headerClass="zi-table-header zi-table-header-second-row zi-direction-ltr"
+            :sortable="true"
+          />
+          <Column
+            header="ساعت"
+            headerClass="zi-table-header zi-table-header-second-row"
+          />
         </Row>
       </ColumnGroup>
 
@@ -223,8 +180,12 @@
       :globalFilterFields="['name', 'barcode']"
     >
       <template #empty>
-        <p v-show="notValidSearch">محصولی با این مشخصات یافت نشد.</p>
-        <p v-show="factors.length == 0 && !loadingTable && !notValidSearch">
+        <p v-show="notValidFactorSearch">محصولی با این مشخصات یافت نشد.</p>
+        <p
+          v-show="
+            factors.length == 0 && !loadingFactorTable && !notValidFactorSearch
+          "
+        >
           محصولی برای نماش وجود ندارد.لطفا از پنل سایت خود،محصولات را تعریف
           کنید.
         </p>
@@ -296,7 +257,7 @@
               #header
               v-if="selectedProducts && selectedProducts.length > 1"
             >
-              <i class="fa fa-trash" @click="multiDeleteProduct()"></i>
+              <i class="fa fa-trash" @click="multiDeleteFactor()"></i>
             </template>
           </Column>
         </Row>
@@ -477,7 +438,7 @@
           <div class="zi-table-content">
             <i
               class="fa fa-trash"
-              @click="deleteProduct([slotProps.data.id])"
+              @click="deleteFactor([slotProps.data.id])"
             ></i>
           </div>
         </template>
@@ -502,27 +463,27 @@ export default {
     };
   },
   computed: {
-    ...mapState([
+    ...mapState("factors", [
       "factors",
-      "selections",
-      "loadingTable",
-      "notValidSearch",
+      "factorSelections",
+      "loadingFactorTable",
+      "notValidFactorSearch",
       "stockSort",
       "priceSort",
       "nameSort",
     ]),
   },
   methods: {
-    ...mapMutations([
-      "addSelections",
-      "sortProducts",
+    ...mapMutations("factors", [
+      "addFactorSelections",
+      "sortFactors",
       "onlineSell",
-      "deleteProduct",
-      "multiDeleteProduct",
+      "deleteFactor",
+      "multiDeleteFactor",
       "setFactors",
       "changeUserToken",
-      "emptySelection",
-      "deSelectItem",
+      "emptyFactorSelection",
+      "deSelectFactorItem",
     ]),
     showDetail(Fid) {
       this.showDetailFlag = Fid;
@@ -556,7 +517,7 @@ export default {
   },
   watch: {
     selectedProducts: function () {
-      this.addSelections(this.selectedProducts);
+      this.addFactorSelections(this.selectedProducts);
       let trueSelection = this.checkState();
       trueSelection == 0
         ? (this.selectValue = null)
@@ -572,7 +533,7 @@ export default {
         this.selectValue = null;
       } else if (newVal === null) {
         this.pageProduct.forEach((product) => {
-          this.deSelectItem(product.id);
+          this.deSelectFactorItem(product.id);
         });
       } else if (newVal === true && trueSelection != this.showPerPage) {
         let newSelection = this.selectedProducts;
@@ -585,8 +546,8 @@ export default {
     showPerPage: function () {
       this.setPageProducts();
     },
-    selections: function () {
-      this.selectedProducts = this.selections;
+    factorSelections: function () {
+      this.selectedProducts = this.factorSelections;
     },
   },
   created() {

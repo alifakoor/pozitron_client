@@ -44,7 +44,7 @@ export default {
     ),
   },
   methods: {
-    ...mapMutations(["addFeatureToNewProduct"]),
+    ...mapMutations("products", ["addFeatureToNewProduct"]),
     setData(value) {
       this.addFeatureToNewProduct(value);
     },

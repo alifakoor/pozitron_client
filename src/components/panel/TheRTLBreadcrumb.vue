@@ -176,12 +176,16 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(["changeUserToken", "createProduct", "createProduct"]),
+    ...mapMutations(["changeUserToken"]),
+    ...mapMutations("products", ["setUserTokenForProducts", "createProduct"]),
+    ...mapMutations("factors", ["setUserTokenForFactors"]),
     toggle(event) {
       this.$refs.menu.toggle(event);
     },
     logOut() {
       this.changeUserToken("");
+      this.setUserTokenForProducts("");
+      this.setUserTokenForFactors("");
       this.cookies.cookies.remove("uToken");
       this.cookies.cookies.remove("uzit");
       window.location.reload();

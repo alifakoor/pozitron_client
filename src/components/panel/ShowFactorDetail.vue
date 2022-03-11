@@ -21,7 +21,7 @@
       <div class="p-d-flex p-ai-center p-flex-column p-jc-center p-col-7">
         <DataTable
           :rows="4"
-          :value="products"
+          :value="Factor.items"
           :scrollable="true"
           dataKey="id"
           tableClass="zi-table "
@@ -30,8 +30,7 @@
           stripedRows
         >
           <template #empty>
-            <p v-show="notValidSearch">محصولی با این مشخصات یافت نشد.</p>
-            <p v-show="products.length == 0 && !loadingTable">
+            <p v-show="products.length == 0">
               محصولی برای نماش وجود ندارد.لطفا از پنل سایت خود،محصولات را تعریف
               کنید.
             </p>
@@ -77,16 +76,16 @@
             <template #body="slotProps">
               <div class="zi-table-content">
                 <img
-                  v-if="slotProps.data.images == ''"
+                  v-if="!slotProps.data.images"
                   src="../../assets/images/usersImg/DefaultImage.jpg"
                   class="product-image"
-                  :alt="slotProps.data.name"
+                  :alt="slotProps.data.id"
                 />
                 <img
                   v-else
                   :src="slotProps.data.images[0].src"
                   class="product-image"
-                  :alt="slotProps.data.name"
+                  :alt="slotProps.data.id"
                 />
               </div>
             </template>
@@ -107,52 +106,50 @@
               </div>
             </template>
           </Column>
-          <Column field="barcode" bodyClass="zi-table-body zi-table-body-lg">
+          <Column field="price" bodyClass="zi-table-body zi-table-body-lg">
             <template #body="slotProps">
               <div class="zi-table-content">
-                <div class="zi-status">
-                  <Chip :label="slotProps.data.barcode" />
-                </div>
+                <p>{{ slotProps.data.price }}</p>
               </div>
             </template>
           </Column>
-          <Column
-            field="onlineStock"
-            bodyClass="zi-table-body "
-            :sortable="true"
-            :colspan="2"
-          >
+          <Column field="quantity" bodyClass="zi-table-body " :colspan="2">
             <template #body="slotProps">
-              <div v-if="slotProps.data.infiniteStock">
-                <i class="fas fa-infinity" style="color: #048ba8"></i>
-              </div>
-              <div v-else>
-                <p>{{ slotProps.data.onlineStock }}</p>
+              <div class="zi-table-content">
+                <p>{{ slotProps.data.quantity }}</p>
               </div>
             </template>
           </Column>
-          <Column
-            field="onlineStock"
-            bodyClass="zi-table-body zi-table-body-lg"
-            :colspan="2"
-          ></Column>
+          <Column field="quantity" bodyClass="zi-table-body " :colspan="2">
+            <template #body="slotProps">
+              <div class="zi-table-content">
+                <p>{{ slotProps.data.quantity * slotProps.data.price }}</p>
+              </div>
+            </template>
+          </Column>
         </DataTable>
         <div class="tableFooter">
           <div class="footerDetail p-d-flex p-ai-center p-jc-between">
             <p>جمع اقلام</p>
-            <p>18,160,000</p>
+            <p>{{ Factor.totalPrice }}</p>
           </div>
           <div class="footerDetail p-d-flex p-ai-center p-jc-between">
             <p>هزینه حمل و نقل</p>
-            <p>20,000 <span class="redTxt">+</span></p>
+            <p>{{ Factor.shippingTotal }} <span class="redTxt">+</span></p>
           </div>
           <div class="footerDetail p-d-flex p-ai-center p-jc-between">
             <p>تخفیف</p>
-            <p>100,000-</p>
+            <p>{{ Factor.discountTotal }}-</p>
           </div>
           <div class="footerDetailAll p-d-flex p-ai-center p-jc-between">
             <p>مجموع هزینه ها</p>
-            <p class="redTxt">180,080,000</p>
+            <p class="redTxt">
+              {{
+                parseFloat(Factor.totalPrice) +
+                parseFloat(Factor.shippingTotal) -
+                parseFloat(Factor.discountTotal)
+              }}
+            </p>
           </div>
         </div>
       </div>
@@ -193,33 +190,28 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {};
   },
   props: {
-    Fid: {
+    Factor: {
       require: true,
     },
     showDetail: {
       require: true,
     },
   },
-  computed: {
-    ...mapState(["products", "selections", "editDisplay"]),
-  },
   methods: {
-    ...mapMutations(["deSelectItem", "editSelections", "setProducts"]),
-    showEdit() {
-      if (this.selections.length > 0) {
-        this.editLoading = true;
-        setTimeout(() => {
-          this.display = true;
-          this.editLoading = false;
-        }, 1500);
-      }
-    },
+    // showEdit() {
+    //   if (this.selections.length > 0) {
+    //     this.editLoading = true;
+    //     setTimeout(() => {
+    //       this.display = true;
+    //       this.editLoading = false;
+    //     }, 1500);
+    //   }
+    // },
   },
   watch: {
     editDisplay: function (newVal) {

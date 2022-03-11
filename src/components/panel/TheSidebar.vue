@@ -87,8 +87,12 @@ export default {
   },
   methods: {
     ...mapMutations(["changeUserToken"]),
+    ...mapMutations("products", ["setUserTokenForProducts"]),
+    ...mapMutations("factors", ["setUserTokenForFactors"]),
     logOut() {
       this.changeUserToken("");
+      this.setUserTokenForProducts("");
+      this.setUserTokenForFactors("");
       this.cookies.cookies.remove("uToken");
       this.cookies.cookies.remove("uzit");
       window.location.reload();

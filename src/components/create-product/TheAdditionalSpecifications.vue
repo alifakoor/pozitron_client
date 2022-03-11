@@ -105,7 +105,7 @@ export default {
     ),
   },
   methods: {
-    ...mapMutations(["addFeatureToNewProduct"]),
+    ...mapMutations("products", ["addFeatureToNewProduct"]),
     totalInventoryUpdate(value) {
       this.totalInventory = value;
     },

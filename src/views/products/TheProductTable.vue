@@ -2,7 +2,7 @@
   <div class="zi-panel-products-list">
     <div class="p-d-flex p-jc-between">
       <div class="actions p-d-flex">
-        <Search :width="width" searchType="product" />
+        <Search :width="width" searchType="product" searchStore="products" />
         <zi-bulk-edit />
       </div>
       <div @click="createProduct()">
@@ -23,24 +23,27 @@
     <!-- selected product message -->
     <div
       class="selectMessage p-d-flex p-jc-center"
-      v-if="selections.length > 0"
+      v-if="productsSelections.length > 0"
     >
       <p>
         {{
-          selections.length == products.length
+          productsSelections.length == products.length
             ? `همه‌ی ${products.length} محصول انتخاب شدند.`
-            : `${selections.length} محصول از ${products.length} محصول موجود در انبار انتخاب شد .`
+            : `${productsSelections.length} محصول از ${products.length} محصول موجود در انبار انتخاب شد .`
         }}
       </p>
 
       <Button
-        v-show="selections.length > 0 && selections.length != products.length"
+        v-show="
+          productsSelections.length > 0 &&
+          productsSelections.length != products.length
+        "
         label="انتخاب همه  محصولات"
         class="p-button-text p-mx-1"
-        @click="addSelections(products)"
+        @click="addProductSelections(products)"
       />
       <Button
-        v-show="selections.length == products.length"
+        v-show="productsSelections.length == products.length"
         label="از انتخاب خارج کردن محصولات"
         class="p-button-text p-mx-1"
         @click="() => (selectedProducts = [])"
@@ -50,7 +53,7 @@
       <div class="lds-hourglass"></div>
     </div> -->
     <DataTable
-      v-if="loadingTable"
+      v-if="loadingProductTable"
       :rows="showPageCount"
       :rowHover="true"
       :paginator="true"
@@ -260,8 +263,14 @@
       :globalFilterFields="['name', 'barcode']"
     >
       <template #empty>
-        <p v-show="notValidSearch">محصولی با این مشخصات یافت نشد.</p>
-        <p v-show="products.length == 0 && !loadingTable && !notValidSearch">
+        <p v-show="notValidProductSearch">محصولی با این مشخصات یافت نشد.</p>
+        <p
+          v-show="
+            products.length == 0 &&
+            !loadingProductTable &&
+            !notValidProductSearch
+          "
+        >
           محصولی برای نماش وجود ندارد.لطفا از پنل سایت خود،محصولات را تعریف
           کنید.
         </p>
@@ -611,28 +620,29 @@ export default {
     };
   },
   computed: {
-    ...mapState([
+    ...mapState("products", [
       "products",
-      "selections",
-      "loadingTable",
-      "notValidSearch",
+      "productsSelections",
+      "loadingProductTable",
+      "notValidProductSearch",
       "stockSort",
       "priceSort",
       "nameSort",
     ]),
   },
   methods: {
-    ...mapMutations([
-      "addSelections",
+    ...mapMutations("products", [
+      "addProductSelections",
       "sortProducts",
       "onlineSell",
       "deleteProduct",
       "multiDeleteProduct",
       "setProducts",
-      "changeUserToken",
-      "emptySelection",
-      "deSelectItem",
+      "setUserTokenForProducts",
+      "emptyProductSelection",
+      "deSelectProductItem",
     ]),
+    ...mapMutations(["changeUserToken"]),
     checkState() {
       let trueSelection = 0;
       this.pageProduct.forEach((product) => {
@@ -662,7 +672,7 @@ export default {
   },
   watch: {
     selectedProducts: function () {
-      this.addSelections(this.selectedProducts);
+      this.addProductSelections(this.selectedProducts);
       let trueSelection = this.checkState();
       trueSelection == 0
         ? (this.selectValue = null)
@@ -678,7 +688,7 @@ export default {
         this.selectValue = null;
       } else if (newVal === null) {
         this.pageProduct.forEach((product) => {
-          this.deSelectItem(product.id);
+          this.deSelectProductItem(product.id);
         });
       } else if (newVal === true && trueSelection != this.showPerPage) {
         let newSelection = this.selectedProducts;
@@ -691,8 +701,8 @@ export default {
     showPerPage: function () {
       this.setPageProducts();
     },
-    selections: function () {
-      this.selectedProducts = this.selections;
+    productsSelections: function () {
+      this.selectedProducts = this.productsSelections;
     },
   },
   created() {

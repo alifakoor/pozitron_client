@@ -1,7 +1,7 @@
 <template>
   <div class="zi-bulk-edit">
     <Button
-      v-show="selections.length > 0"
+      v-show="factorSelections.length > 0"
       class="p-button-outlined p-button-secondary"
       label="تغییر وضعیت"
       :icon="
@@ -87,7 +87,7 @@
           </label>
         </li>
       </ul>
-      <div class="changeStatusBtn" @click="changeStatus">
+      <div class="changeStatusBtn">
         <i class="ri-checkbox-circle-line"></i>
         <p>اعمال</p>
       </div>
@@ -107,39 +107,21 @@ export default {
     };
   },
   computed: {
-    ...mapState(["products", "selections", "editDisplay"]),
-    editData: function () {
-      return {
-        onlinePrice:
-          this.onlinePrice == null || this.onlinePrice == ""
-            ? null
-            : parseInt(this.onlinePrice),
-        onlineDiscount:
-          this.OnlineDiscountPercent == null || this.OnlineDiscountPercent == ""
-            ? null
-            : parseInt(this.OnlineDiscountPercent),
-        onlineStock:
-          this.onlineStock == null || this.onlineStock == ""
-            ? null
-            : parseInt(this.onlineStock),
-        onlineSell: this.onlineSell,
-      };
-    },
+    ...mapState("factors", ["factors", "factorSelections", "editDisplay"]),
   },
   methods: {
-    ...mapMutations([
-      "deSelectItem",
-      "editSelections",
-      "setProducts",
-      "changeFactorsStatus",
-    ]),
-    async changeStatus() {
-      await this.changeFactorsStatus(this.factorStatus);
-      this.display = false;
-    },
     showEdit() {
-      if (this.selections.length > 0) {
-        this.display = true;
+      if (this.factorSelections.length > 0) {
+        this.display = !this.display;
+      }
+    },
+    edit() {},
+  },
+  watch: {
+    editDisplay: function (newVal) {
+      if (!newVal) {
+        this.display = false;
+        this.sendEdit = false;
       }
     },
   },

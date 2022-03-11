@@ -1,7 +1,7 @@
 <template>
   <div class="zi-bulk-edit">
     <!-- <Button
-      v-if="selections.length == 0"
+      v-if="productsSelections.length == 0"
       class="p-button-outlined p-button-secondary"
       label="ویرایش"
       v-tooltip.bottom="{
@@ -17,7 +17,7 @@
       @click="showEdit()"
     /> -->
     <Button
-    v-show="selections.length>0"
+    v-show="productsSelections.length>0"
       class="p-button-outlined p-button-secondary"
       label="ویرایش"
       :icon="
@@ -55,11 +55,11 @@
         <div class="p-d-flex p-jc-between p-flex-row-reverse">
           <div
             class="p-d-flex p-flex-wrap p-jc-end"
-            :class="selections.length > 15 && 'scrollItemBox itemsBox'"
+            :class="productsSelections.length > 15 && 'scrollItemBox itemsBox'"
           >
             <div
               class="itemBox p-d-flex p-jc-between p-ai-center"
-              v-for="selectedItem in selections"
+              v-for="selectedItem in productsSelections"
               :key="selectedItem.id"
             >
             <p v-if="selectedItem.type == 'variation' && selectedItem.meta[
@@ -102,7 +102,7 @@
 
               <i
                 class="ri-close-circle-line"
-                @click="deSelectItem(selectedItem.id)"
+                @click="deSelectProductItem(selectedItem.id)"
               ></i>
             </div>
           </div>
@@ -196,7 +196,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["products", "selections","editDisplay"]),
+    ...mapState("products",["products", "productsSelections","editDisplay"]),
     editData: function () {
       return {
         onlinePrice:
@@ -212,9 +212,9 @@ export default {
     },
   },
   methods: {
-    ...mapMutations(["deSelectItem", "editSelections", "setProducts"]),
+    ...mapMutations("products",["deSelectProductItem", "editProductSelections"]),
     showEdit() {
-      if (this.selections.length > 0) {
+      if (this.productsSelections.length > 0) {
         this.editLoading = true;
         setTimeout(() => {
           this.display = true;
@@ -230,7 +230,7 @@ export default {
       this.allOnlineSell=false;
       if (Object.keys(lastEdit).length != 0) {
         this.sendEdit = true;
-        this.editSelections(lastEdit);
+        this.editProductSelections(lastEdit);
       }
     },
     setOnlinePrice(inputValue) {
@@ -258,6 +258,16 @@ export default {
             this.onlineStock= null;
             this.onlineSell= null;
          }
+    },
+    productsSelections:function(){
+      if(this.productsSelections.length==0){
+        this.display = false;
+        this.sendEdit = false;
+        this.onlinePrice= null;
+        this.OnlineDiscountPercent= null;
+        this.onlineStock= null;
+        this.onlineSell= null;
+      }
     }
   }
 };

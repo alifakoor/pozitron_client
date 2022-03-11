@@ -11,7 +11,11 @@ export default {
     const { cookies } = useCookies();
 
     if (cookies.get("uToken")) {
-      if (window.location.pathname === "/") {
+      if (
+        window.location.pathname === "/" ||
+        window.location.pathname === "/panel" ||
+        window.location.pathname === `/panel/${cookies.get("uzit")}`
+      ) {
         router.push({
           name: "products",
           params: { userId: cookies.get("uzit") },

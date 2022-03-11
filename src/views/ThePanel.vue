@@ -21,9 +21,13 @@ export default {
   components: { TheNavbar },
   methods: {
     ...mapMutations(["changeUserToken"]),
+    ...mapMutations("products", ["setUserTokenForProducts"]),
+    ...mapMutations("factors", ["setUserTokenForFactors"]),
   },
   created() {
     this.changeUserToken();
+    this.setUserTokenForProducts();
+    this.setUserTokenForFactors();
   },
 };
 </script>

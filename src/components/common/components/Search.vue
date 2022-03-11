@@ -6,7 +6,7 @@
         type="text"
         v-model="search"
         placeholder="با بارکد، نام، ویژگی، دسته و برچسب دنبالش بگرد"
-        @input="searchData({ searchValue: search, searchType: searchType })"
+        @input="searchingData()"
       />
     </span>
   </div>
@@ -29,6 +29,9 @@ export default {
     searchType: {
       type: String,
     },
+    searchStore: {
+      type: String,
+    },
   },
   data() {
     return {
@@ -38,7 +41,21 @@ export default {
     };
   },
   methods: {
-    ...mapMutations(["searchData"]),
+    ...mapMutations("products", ["searcProducthData"]),
+    ...mapMutations("factors", ["searchFactorData"]),
+    searchingData() {
+      if (this.searchStore == "products") {
+        this.searcProducthData({
+          searchValue: this.search,
+          searchType: this.searchType,
+        });
+      } else if (this.searchStore == "factors") {
+        this.searchFactorData({
+          searchValue: this.search,
+          searchType: this.searchType,
+        });
+      }
+    },
   },
 };
 </script>
