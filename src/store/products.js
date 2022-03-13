@@ -194,24 +194,23 @@ export default {
                 });
                 state.mainProducts = state.products;
                 state.productsSelections = [];
+                Swal.fire({
+                  position: "center-center",
+                  showCloseButton: true,
+                  icon: "success",
+                  title: "حذف محصول",
+                  showConfirmButton: false,
+                  text: text,
+                  customClass: {
+                    htmlContainer: "bottomZero",
+                  },
+                  timer: 3000,
+                });
               }
             })
             .catch((err) => {
               console.log(err);
             });
-
-          Swal.fire({
-            position: "center-center",
-            showCloseButton: true,
-            icon: "success",
-            title: "حذف محصول",
-            showConfirmButton: false,
-            text: text,
-            customClass: {
-              htmlContainer: "bottomZero",
-            },
-            timer: 3000,
-          });
         }
       });
     },
@@ -249,24 +248,23 @@ export default {
                 });
                 state.mainProducts = state.products;
                 state.productsSelections = [];
+                Swal.fire({
+                  position: "center-center",
+                  showCloseButton: true,
+                  icon: "success",
+                  title: "حذف محصول",
+                  showConfirmButton: false,
+                  text: text,
+                  customClass: {
+                    htmlContainer: "bottomZero",
+                  },
+                  timer: 3000,
+                });
               }
             })
             .catch((err) => {
               console.log(err);
             });
-
-          Swal.fire({
-            position: "center-center",
-            showCloseButton: true,
-            icon: "success",
-            title: "حذف محصول",
-            showConfirmButton: false,
-            text: text,
-            customClass: {
-              htmlContainer: "bottomZero",
-            },
-            timer: 3000,
-          });
         }
       });
     },

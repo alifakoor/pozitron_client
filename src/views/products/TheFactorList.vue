@@ -448,7 +448,7 @@
             <i
               class="svgIcon cursorPointer"
               :innerHTML="trashLine"
-              @click="deleteProduct([slotProps.data.id])"
+              @click="deleteFactor([slotProps.data.id])"
             ></i>
           </div>
         </template>

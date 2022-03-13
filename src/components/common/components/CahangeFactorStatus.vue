@@ -20,7 +20,7 @@
           <input
             type="radio"
             class="radioBtn"
-            value="0"
+            value="processing"
             name="factorStatus"
             v-model="factorStatus"
             id="status0"
@@ -34,7 +34,7 @@
           <input
             type="radio"
             class="radioBtn"
-            value="1"
+            value="payment"
             name="factorStatus"
             v-model="factorStatus"
             id="status1"
@@ -48,7 +48,7 @@
           <input
             type="radio"
             class="radioBtn"
-            value="2"
+            value="completed"
             name="factorStatus"
             v-model="factorStatus"
             id="status2"
@@ -62,7 +62,7 @@
           <input
             type="radio"
             class="radioBtn"
-            value="3"
+            value="cancelled"
             name="factorStatus"
             v-model="factorStatus"
             id="status3"
@@ -76,7 +76,7 @@
           <input
             type="radio"
             class="radioBtn"
-            value="4"
+            value="refunded"
             name="factorStatus"
             v-model="factorStatus"
             id="status4"
@@ -87,8 +87,9 @@
           </label>
         </li>
       </ul>
-      <div class="changeStatusBtn">
-        <i class="svgIcon" :innerHTML="checkCircleLine"></i>
+      <div class="changeStatusBtn" @click="changeStatus()">
+        <i v-if="!sendEdit" class="svgIcon" :innerHTML="checkCircleLine"></i>
+        <i v-else class="svgIcon" :innerHTML="loadingCircle"></i>
         <p>اعمال</p>
       </div>
     </div>
@@ -96,7 +97,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 export default {
   data() {
     return {
@@ -107,16 +108,20 @@ export default {
     };
   },
   computed: {
-    ...mapState("iconSVG", ["checkCircleLine"]),
+    ...mapState("iconSVG", ["checkCircleLine", "loadingCircle"]),
     ...mapState("factors", ["factors", "factorSelections", "editDisplay"]),
   },
   methods: {
+    ...mapMutations("factors", ["changeFactorsStatus"]),
     showEdit() {
       if (this.factorSelections.length > 0) {
         this.display = !this.display;
       }
     },
-    edit() {},
+    changeStatus() {
+      this.sendEdit = true;
+      this.changeFactorsStatus(this.factorStatus);
+    },
   },
   watch: {
     editDisplay: function (newVal) {

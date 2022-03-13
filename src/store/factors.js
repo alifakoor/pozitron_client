@@ -109,66 +109,67 @@ export default {
     },
 
     deleteFactor(state, data) {
-      // Swal.fire({
-      //   title: "حذف محصول",
-      //   text: "این فرآیند غیرقابل‌برگشت است.",
-      //   showCloseButton: true,
-      //   showCancelButton: true,
-      //   confirmButtonColor: "#E61F10",
-      //   cancelButtonColor: " ",
-      //   cancelButtonText: "بازگشت",
-      //   confirmButtonText: "حذف",
-      // }).then((result) => {
-      //   if (result.isConfirmed) {
-      //     let index = -1;
-      //     state.products.forEach((element, key) => {
-      //       if (element.id == data) {
-      //         index = key;
-      //         return;
-      //       }
-      //     });
-      //     let text = "";
-      //     text = `محصول "${state.products[index].name}" از انبار حذف شد.`;
-      //     axios
-      //       .post(
-      //         `${state.apiURL}/products/remove`,
-      //         { ids: [...data] },
-      //         {
-      //           headers: {
-      //             "Content-Type": "application/json",
-      //             "zi-access-token": state.userToken,
-      //           },
-      //         }
-      //       )
-      //       .then((response) => {
-      //         if (response.status == 200 && response.data.success) {
-      //           const removeSelected = state.products;
-      //           data.forEach((element) => {
-      //             state.products = removeSelected.filter(
-      //               (item) => item.id != element
-      //             );
-      //           });
-      //           state.mainProducts = state.products;
-      //           state.selections = [];
-      //         }
-      //       })
-      //       .catch((err) => {
-      //         console.log(err);
-      //       });
-      //     Swal.fire({
-      //       position: "center-center",
-      //       showCloseButton: true,
-      //       icon: "success",
-      //       title: "حذف محصول",
-      //       showConfirmButton: false,
-      //       text: text,
-      //       customClass: {
-      //         htmlContainer: "bottomZero",
-      //       },
-      //       timer: 3000,
-      //     });
-      //   }
-      // });
+      Swal.fire({
+        title: "حذف محصول",
+        text: "این فرآیند غیرقابل‌برگشت است.",
+        showCloseButton: true,
+        showCancelButton: true,
+        confirmButtonColor: "#E61F10",
+        cancelButtonColor: " ",
+        cancelButtonText: "بازگشت",
+        confirmButtonText: "حذف",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          let index = -1;
+          state.factors.forEach((element, key) => {
+            if (element.id == data) {
+              index = key;
+              return;
+            }
+          });
+          let text = "";
+          text = `فاکتور "${state.factors[index].id}" از انبار حذف شد.`;
+          axios
+            .delete(
+              `${state.apiURL}/orders`,
+              { ids: [...data] },
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  "zi-access-token": state.userToken,
+                },
+              }
+            )
+            .then((response) => {
+              console.log(response);
+              if (response.status == 200 && response.data.success) {
+                const removeSelected = state.factors;
+                data.forEach((element) => {
+                  state.factors = removeSelected.filter(
+                    (item) => item.id != element
+                  );
+                });
+                state.mainFactores = state.factors;
+                state.selections = [];
+                Swal.fire({
+                  position: "center-center",
+                  showCloseButton: true,
+                  icon: "success",
+                  title: "حذف محصول",
+                  showConfirmButton: false,
+                  text: text,
+                  customClass: {
+                    htmlContainer: "bottomZero",
+                  },
+                  timer: 3000,
+                });
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+      });
     },
     multiDeleteProduct(state) {
       // let deleteData = [];
@@ -294,10 +295,53 @@ export default {
       state.onHoldFactors.splice(index, 1);
     },
     changeFactorsStatus(state, statusSelection) {
-      // axios.put(`${state.apiURL}/orders/${}`,{} {
-      //   headers: {
-      //     "zi-access-token": state.userToken,
-      //   })
+      state.editDisplay = true;
+      let changeData = [];
+      state.factorSelections.forEach((element) => {
+        changeData.push(element.id);
+      });
+      axios
+        .put(
+          `${state.apiURL}/orders`,
+          {
+            ids: [...changeData],
+            status: statusSelection,
+          },
+          {
+            headers: {
+              "zi-access-token": state.userToken,
+            },
+          }
+        )
+        .then((response) => {
+          if (response.status == 200 && response.data.success) {
+            changeData.forEach((element) => {
+              state.factors.map((item) => {
+                if (item.id == element) {
+                  item.status = statusSelection;
+                }
+              });
+            });
+            state.mainFactores = state.factors;
+            state.factorSelections = [];
+            Swal.fire({
+              position: "center-center",
+              showCloseButton: true,
+              icon: "success",
+              title: "تغییر فاکتور",
+              showConfirmButton: false,
+              text: "تغییرات با موفقیت اعمال شد.",
+              customClass: {
+                htmlContainer: "bottomZero",
+              },
+              timer: 3000,
+            });
+            state.editDisplay = false;
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
   actions: {},
