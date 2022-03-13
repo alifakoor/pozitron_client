@@ -615,7 +615,7 @@ export default {
       selectValue: null,
       showPage: 1,
       showPerPage: 5,
-      pageShowCount: 5,
+      showPageCount: 5,
       pageProduct: [],
     };
   },
@@ -706,8 +706,14 @@ export default {
     },
   },
   created() {
-    this.showPerPage = Math.floor((window.innerHeight - 300) / 70);
-    this.showPageCount = Math.floor((window.innerHeight - 300) / 70);
+    this.showPerPage =
+      Math.floor((window.innerHeight - 300) / 70) < 0
+        ? 5
+        : Math.floor((window.innerHeight - 300) / 70);
+    this.showPageCount =
+      Math.floor((window.innerHeight - 300) / 70) < 0
+        ? 5
+        : Math.floor((window.innerHeight - 300) / 70);
     if (this.products.length === 0) {
       this.setProducts();
     }

@@ -36,7 +36,7 @@ export default {
   data() {
     return {
       search: "",
-      widthInput: this.$props.widthInput,
+      inputWidth: this.$props.widthInput,
       mediaWidth: this.$props.mediaWidth,
     };
   },
@@ -74,7 +74,7 @@ export default {
   background: #f9f9fb;
   border-radius: 16px;
   border: 0;
-  width: v-bind(widthInput);
+  width: v-bind(inputWidth);
   height: 32px;
   font-size: 12px;
   margin: 0px 16px 0 8px;
