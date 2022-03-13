@@ -158,7 +158,7 @@
         <a
           href="tel:09010922933"
           onclick="ga('send', 'event', { eventCategory: 'Contact', eventAction: 'Call', eventLabel: 'Mobile Button'});"
-          ><p class="phoneConnect">
+          ><p class="phoneConnect p-d-flex p-ai-center p-jc-center">
             <i class="svgIcon" :innerHTML="iconSVGs.phoneIcon"></i>933 0922 0901
           </p>
         </a>
@@ -247,7 +247,7 @@
   >
     <form>
       <div class="middleBox">
-        <p class="formTitle">
+        <p class="formTitle p-d-flex p-ai-center">
           برای ساخت کلید وارد
           <a
             :href="
@@ -266,7 +266,11 @@
             target="_blank"
           >
             پیکربندی پنل سایت ووکامرس </a
-          >خود شوید.<i :innerHTML="iconSVGs.helper" @click="modalHandle()"></i>
+          >خود شوید.<i
+            :innerHTML="iconSVGs.helper"
+            class="svgIcon"
+            @click="modalHandle()"
+          ></i>
         </p>
         <div class="inputContainer inputHeight">
           <input
@@ -973,6 +977,9 @@ export default {
     .stepCircle {
       width: 32px;
       height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border-radius: 50%;
       text-align: center;
       line-height: 32px;

@@ -4,8 +4,6 @@ import products from "./products.js";
 import factors from "./factors.js";
 import iconSVG from "./iconSVG.js";
 
-import axios from "axios";
-
 export default createStore({
   state: {
     apiURL: "https://api-dev.pozitronet.ir",

@@ -66,9 +66,9 @@ export default {
 <style lang="scss" scoped>
 @import "../../../assets/styles/variablesOfTable";
 .p-input-icon-right {
-  .pi-search {
+  .svgIcon {
     color: #7b84b2;
-    margin-right: 25px;
+    margin: -10px 25px 0 0 !important;
   }
 }
 .p-inputtext {

@@ -296,7 +296,11 @@ export default defineComponent({
     color: $errText;
   }
   .iconCorrect {
-    color: $iconCorrect;
+    svg {
+      path {
+        fill: $iconCorrect;
+      }
+    }
   }
   .errText {
     color: $errText;

@@ -7,7 +7,7 @@
       >
         <div class="p-d-flex p-jc-between p-col-12">
           <InputHasIcon
-            iconClass="ri-barcode-line"
+            :iconClass="barcodeIcon"
             inputText="بارکد "
             InPlaceholder="تایپ بارکد یا استفاده از بارکد خوان"
             inType="text"
@@ -88,7 +88,7 @@
 
 <script>
 import { defineAsyncComponent } from "vue";
-import { mapMutations } from "vuex";
+import { mapMutations, mapState } from "vuex";
 export default {
   data() {
     return {
@@ -103,6 +103,9 @@ export default {
     GeneralBox: defineAsyncComponent(() =>
       import("../common/components/GeneralBox.vue")
     ),
+  },
+  computed: {
+    ...mapState("iconSVG", ["barcodeIcon"]),
   },
   methods: {
     ...mapMutations("products", ["addFeatureToNewProduct"]),

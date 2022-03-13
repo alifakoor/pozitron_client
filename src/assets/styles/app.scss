@@ -96,6 +96,27 @@ body::-webkit-scrollbar-thumb:hover {
   }
 }
 
+.zi-sidebar {
+  li:not(.notHand) {
+    a {
+      svg {
+        path {
+          fill: #fff;
+        }
+      }
+      &.router-link-exact-active {
+        .sideIcon {
+          svg {
+            path {
+              fill: #7de6fc;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 .zi-main {
   width: 100%;
   height: max-content;
