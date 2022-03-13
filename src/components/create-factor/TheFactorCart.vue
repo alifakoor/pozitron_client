@@ -20,9 +20,9 @@
               }"
             >
               <i
-                class="ri-close-circle-line"
+                class="svgIcon cursorPointer"
+                :innerHTML="whiteClose"
                 @click="$emit('modalHandle')"
-                style="cursor: pointer"
               ></i>
               اضافات
             </p>
@@ -35,9 +35,9 @@
               }"
             >
               <i
-                class="ri-close-circle-line"
+                class="svgIcon cursorPointer"
+                :innerHTML="whiteClose"
                 @click="$emit('modalHandle')"
-                style="cursor: pointer"
               ></i>
               حمل‌و‌نقل
             </p>
@@ -50,15 +50,16 @@
               }"
             >
               <i
-                class="ri-close-circle-line"
+                class="svgIcon cursorPointer"
+                :innerHTML="whiteClose"
                 @click="$emit('modalHandle')"
-                style="cursor: pointer"
               ></i>
               تخفیف
             </p>
           </div>
           <i
-            class="pi pi-ellipsis-v"
+            class="svgIcon cursorPointer"
+            :innerHTML="treeDotIcon"
             @click="
               () => {
                 showExtraDetail =
@@ -100,7 +101,7 @@
             @changeInputValue="setExtraData"
           ></InputHasInfo>
           <div class="setChangeBtn" @click="addExtraDataTofactor">
-            <i class="ri-checkbox-circle-line"></i>
+            <i class="svgIcon" :innerHTML="checkCircleLine"></i>
             <p>اعمال</p>
           </div>
         </div>
@@ -174,12 +175,14 @@
                 />
                 <p class="price">تومان</p>
                 <i
-                  class="fa fa-edit"
+                  class="svgIcon cursorPointer"
+                  :innerHTML="editIcon"
                   v-show="editablePrice != index"
                   @click="editableInput(index)"
                 ></i>
                 <i
-                  class="ri-checkbox-circle-line"
+                  class="svgICon"
+                  :innerHTML="checkCircleLine"
                   v-show="editablePrice == index"
                   @click="editPrice(index)"
                 ></i>
@@ -198,12 +201,14 @@
                 />
                 تومان
                 <i
-                  class="fa fa-edit"
+                  class="svgIcon cursorPointer"
+                  :innerHTML="editIcon"
                   v-show="editablePrice != index"
                   @click="editableInput(index)"
                 ></i>
                 <i
-                  class="ri-checkbox-circle-line"
+                  class="svgIcon"
+                  :innerHTML="checkCircleLine"
                   v-show="editablePrice == index"
                   @click="editPrice(index)"
                 ></i>
@@ -211,7 +216,8 @@
             </div>
             <div class="counting">
               <i
-                class="pi pi-plus"
+                class="svgIcon cursorPointer"
+                :innerHTML="plusIcon"
                 @click="
                   $emit('changeCountProduct', {
                     id: product.data.id,
@@ -222,7 +228,8 @@
               <p>{{ product.count }}</p>
               <i
                 v-if="product.count == 1"
-                class="fa fa-trash"
+                class="svgIcon cursorPointer trash"
+                :innerHTML="trashLine"
                 @click="
                   $emit('changeCountProduct', {
                     id: product.data.id,
@@ -232,7 +239,8 @@
               ></i>
               <i
                 v-else
-                class="pi pi-minus"
+                class="svgIcon cursorPointer"
+                :innerHTML="minusIcon"
                 @click="
                   $emit('changeCountProduct', {
                     id: product.data.id,
@@ -260,6 +268,7 @@
 
 <script>
 import { defineAsyncComponent } from "vue";
+import { mapState } from "vuex";
 export default {
   components: {
     GeneralBox: defineAsyncComponent(() =>
@@ -274,6 +283,19 @@ export default {
       extraData: {},
       editablePrice: -1,
     };
+  },
+  computed: {
+    ...mapState("iconSVG", [
+      "whiteClose",
+      "treeDotIcon",
+      "trashLine",
+      "minusIcon",
+      "plusIcon",
+      "checkCircleLine",
+      "editIcon",
+      "discountIcon",
+      "checkCircleLine",
+    ]),
   },
   methods: {
     setExtraData(data) {

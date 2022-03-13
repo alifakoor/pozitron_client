@@ -7,7 +7,8 @@
       <div class="p-d-flex p-ai-center p-jc-around navbarInfo">
         <div class="navbarBurger">
           <i
-            class="pi pi-bars"
+            :innerHTML="menuBarIcon"
+            class="svgIcon"
             type="button"
             label="Toggle"
             @click="toggle"
@@ -18,7 +19,8 @@
         </div>
         <i
           v-if="notifCount > 0"
-          class="pi pi-bell"
+          class="svgIcon cursorPointer"
+          :innerHTML="bellIcon"
           v-badge.info="notifCount"
           @click="
             () => {
@@ -33,7 +35,8 @@
               showNotif = true;
             }
           "
-          class="pi pi-bell"
+          class="svgIcon cursorPointer"
+          :innerHTML="bellIcon"
         ></i>
         <a href="#">انبار محصولات</a>
         <a href="#" v-show="createTab">محصول</a>
@@ -42,7 +45,8 @@
           <div class="triangle2"></div>
           <i
             v-if="showNotif"
-            class="ri-close-line p-mr-1"
+            class="svgIcon cursorPointer"
+            :innerHTML="greenClose"
             @click="
               () => {
                 showNotif = false;
@@ -77,7 +81,8 @@
           :href="userDomain"
           target="_blank"
           class="p-d-flex p-ai-center p-jc-between showSiteBtn"
-          ><i class="pi pi-eye"></i> مشاهده سایت</a
+          ><i class="svgIcon cursorPointer p-m-0" :innerHTML="showEyeIcon"></i>
+          مشاهده سایت</a
         >
       </div>
       <!-- button for save product -->
@@ -87,7 +92,8 @@
       >
         <button class="productBtnCancel" @click="backToTable">لغو</button>
         <button class="productBtnSave" @click="createProduct('simple')">
-          <i class="ri-checkbox-circle-line p-mx-1"></i>ذخیره
+          <i class="svgIcon cursorPointer" :innerHTML="checkCircleLine"></i
+          >ذخیره
         </button>
       </div>
     </div>
@@ -162,6 +168,13 @@ export default {
   },
   computed: {
     ...mapState(["userDomain"]),
+    ...mapState("iconSVG", [
+      "bellIcon",
+      "greenClose",
+      "showEyeIcon",
+      "checkCircleLine",
+      "menuBarIcon",
+    ]),
     createTab: function () {
       return (
         this.$route.fullPath ==

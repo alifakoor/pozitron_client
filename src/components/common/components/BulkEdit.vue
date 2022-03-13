@@ -100,9 +100,10 @@
                 ].metaValue.length>0">)</p>
               <p>{{ selectedItem.name }}</p>
 
-              <i
-                class="ri-close-circle-line"
-                @click="deSelectProductItem(selectedItem.id)"
+               <i
+                class="svgIcon" 
+                :innerHTML="closeCircleLine"
+                @click="deSelectItem(selectedItem.id)"
               ></i>
             </div>
           </div>
@@ -196,6 +197,7 @@ export default {
     };
   },
   computed: {
+    ...mapState("iconSVG",["closeCircleLine"]),
     ...mapState("products",["products", "productsSelections","editDisplay"]),
     editData: function () {
       return {

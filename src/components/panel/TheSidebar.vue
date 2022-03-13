@@ -18,38 +18,41 @@
         class="exitAccount p-ai-center p-jc-center"
         @click="logOut()"
       >
-        <i class="ri-logout-box-r-line"></i>
+        <i class="svgIcon" :innerHTML="logoutIcon"></i>
         <p class="exitText">خروج از پوزیترون</p>
       </div>
     </div>
     <ul>
       <li>
         <router-link :to="{ name: 'dashboard', params: { userId: userID } }">
-          <i class="ri-store-2-line sideIcon"></i>
+          <i :innerHTML="sellingSideBarIcon" class="svgIcon sideIcon"></i>
           <p class="iconTxt">فروش حضوری</p>
         </router-link>
       </li>
       <li>
         <router-link :to="{ name: 'products', params: { userId: userID } }">
-          <i class="pi pi-box sideIcon"></i>
+          <i :innerHTML="productListSideBarIcon" class="svgIcon sideIcon"></i>
           <p class="iconTxt">انبار محصولات</p>
         </router-link>
       </li>
       <li>
         <router-link :to="{ name: 'factors', params: { userId: userID } }">
-          <i class="ri-file-list-line sideIcon"></i>
+          <i :innerHTML="factorListSideBarIcon" class="svgIcon sideIcon"></i>
           <p class="iconTxt">لیست فاکتورها</p>
         </router-link>
       </li>
       <li class="notHand">
         <router-link :to="{ name: 'about', params: { userId: userID } }">
-          <i class="notHand ri-group-line sideIcon"></i>
+          <i :innerHTML="userSideBarIcon" class="notHand svgIcon sideIcon"></i>
           <p class="iconTxt">مشتریان</p>
         </router-link>
       </li>
       <li class="notHand">
         <router-link :to="{ name: 'setting', params: { userId: userID } }">
-          <i class="notHand ri-settings-3-line sideIcon"></i>
+          <i
+            :innerHTML="settingSideBarIcon"
+            class="notHand svgIcon sideIcon"
+          ></i>
           <p class="iconTxt">تنظیمات</p>
         </router-link>
       </li>
@@ -59,7 +62,7 @@
 
 <script>
 import { useCookies } from "vue3-cookies";
-import { mapMutations } from "vuex";
+import { mapMutations, mapState } from "vuex";
 export default {
   data() {
     return {
@@ -84,6 +87,16 @@ export default {
         },
       ],
     };
+  },
+  computed: {
+    ...mapState("iconSVG", [
+      "sellingSideBarIcon",
+      "factorListSideBarIcon",
+      "userSideBarIcon",
+      "settingSideBarIcon",
+      "productListSideBarIcon",
+      "logoutIcon",
+    ]),
   },
   methods: {
     ...mapMutations(["changeUserToken"]),

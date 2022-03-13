@@ -2,6 +2,7 @@ import { createStore } from "vuex";
 import { useCookies } from "vue3-cookies";
 import products from "./products.js";
 import factors from "./factors.js";
+import iconSVG from "./iconSVG.js";
 
 import axios from "axios";
 
@@ -26,5 +27,6 @@ export default createStore({
   modules: {
     products: products,
     factors: factors,
+    iconSVG: iconSVG,
   },
 });

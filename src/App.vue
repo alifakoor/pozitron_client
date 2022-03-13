@@ -30,7 +30,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -38,5 +38,16 @@ export default {
   text-align: center;
   color: #2c3e50;
   direction: rtl;
+
+  .svgIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 4px;
+  }
+
+  .cursorPointer {
+    cursor: pointer;
+  }
 }
 </style>

@@ -8,11 +8,44 @@
   >
     <div class="topPic" v-show="topPic">
       <div class="loadingBox">
-        <i class="pi pi-spin pi-spinner"></i>
+        <i class="svgIcon">
+          <svg
+            version="1.1"
+            id="loader-1"
+            xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            x="0px"
+            y="0px"
+            width="25px"
+            height="25px"
+            viewBox="0 0 50 50"
+            style="enable-background: #fff; transform: scale(2.5)"
+            xml:space="preserve"
+          >
+            <path
+              fill="#49527E"
+              d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z"
+            >
+              <animateTransform
+                attributeType="xml"
+                attributeName="transform"
+                type="rotate"
+                from="0 25 25"
+                to="360 25 25"
+                dur="0.6s"
+                repeatCount="indefinite"
+              ></animateTransform>
+            </path>
+          </svg>
+        </i>
       </div>
       <div class="glassBox"></div>
-      <i class="pi pi-bookmark-fill"></i>
-      <i class="fa fa-trash" @click="deleteImgTop()"></i>
+      <i class="svgIcon topBookMark" :innerHTML="createFactorBookMark"></i>
+      <i
+        class="svgIcon topTrash"
+        :innerHTML="trashFill"
+        @click="deleteImgTop()"
+      ></i>
 
       <img id="topPic" src="" alt="" />
     </div>
@@ -22,7 +55,7 @@
           for="imageInput"
           class="inputImage p-d-flex p-ai-center p-jc-center"
         >
-          <i class="ri-upload-cloud-2-line"></i>
+          <i class="svgIcon" :innerHTML="uploadIcon"></i>
           <p>بارگذاری عکس</p>
         </label>
         <input
@@ -50,7 +83,7 @@
           for="imageInput"
           class="inputImage p-d-flex p-ai-center p-jc-center"
         >
-          <i class="ri-upload-cloud-2-line"></i>
+          <i class="svgIcon" :innerHTML="uploadIcon"></i>
           <p>بارگذاری عکس</p>
         </label>
         <input
@@ -81,6 +114,7 @@ export default {
   },
   computed: {
     ...mapState(["apiURL", "userToken"]),
+    ...mapState("iconSVG", ["uploadIcon", "createFactorBookMark", "trashFill"]),
   },
   methods: {
     dragover(event) {
@@ -117,10 +151,10 @@ export default {
         imageWrraper.classList.add(`smallImg${index}`);
         imageWrraper.setAttribute("data-key", index);
         imageWrraper.innerHTML = `<div class="loadingBox">
-        <i class="pi pi-spin pi-spinner"></i>
+        <i class="svgIcon"><svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="25px" height="25px" viewBox="0 0 50 50" style="enable-background:#fff;" xml:space="preserve"><path fill="#49527E" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z"><animateTransform attributeType="xml" attributeName="transform" type="rotate" from="0 25 25" to="360 25 25" dur="0.6s" repeatCount="indefinite"></animateTransform></path></svg></i>
       </div><div class="glassBox"></div>
-      <i class="pi pi-bookmark"></i>
-      <i class="fa fa-trash" ></i><img id="smImg${index}" src="" alt=""/>`;
+      <i class="svgIcon bookMark"><svg width="12" height="15" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.8.334c2.262 0 3.56 1.12 3.56 3.07v9.69c0 .407-.21.773-.562.977-.35.206-.773.21-1.128.01l-3.973-2.245-4.01 2.25a1.124 1.124 0 0 1-1.126-.011A1.12 1.12 0 0 1 0 13.096V3.281C0 1.408 1.298.334 3.561.334h4.24Zm0 1H3.562C1.862 1.334 1 1.989 1 3.281v9.816c0 .063.036.097.066.114.03.019.077.032.132.002l4.255-2.387a.502.502 0 0 1 .49 0l4.218 2.383a.125.125 0 0 0 .133 0 .128.128 0 0 0 .065-.115V3.327c-.005-.573-.116-1.993-2.558-1.993Zm.293 3.486a.5.5 0 0 1 0 1H3.215a.5.5 0 0 1 0-1h4.878Z" fill="#49527E"/></svg></i>
+      <i class="svgIcon trash"><svg width="13" height="14" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M10.923 4.814a.5.5 0 0 1 .459.538c-.004.046-.366 4.52-.574 6.396-.129 1.165-.898 1.874-2.06 1.895a128.182 128.182 0 0 1-5.24-.004c-1.114-.022-1.885-.744-2.01-1.886-.21-1.893-.57-6.356-.574-6.4a.5.5 0 0 1 .458-.54c.272-.007.517.184.54.459.001.029.148 1.851.308 3.654l.032.36c.081.896.163 1.758.23 2.357.07.649.42.983 1.038.996 1.666.036 3.367.038 5.2.004.656-.013 1.011-.34 1.084-1.005.207-1.862.567-6.32.571-6.366a.51.51 0 0 1 .538-.458ZM7.563.334c.613 0 1.15.413 1.309 1.004l.169.84a.6.6 0 0 0 .577.482h2.187a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1h2.187l.068-.005a.601.601 0 0 0 .51-.476l.162-.811A1.362 1.362 0 0 1 4.742.334h2.822Zm0 1H4.743c-.16 0-.301.107-.342.261l-.155.78c-.02.1-.049.194-.085.285h3.986a1.59 1.59 0 0 1-.086-.285l-.162-.81c-.034-.124-.174-.231-.334-.231Z" fill="#49527E"/></svg></i><img id="smImg${index}" src="" alt=""/>`;
         boxImage.appendChild(imageWrraper);
         let image = document.querySelector(`.smallImg > #smImg${index}`);
         this.newPic = file;

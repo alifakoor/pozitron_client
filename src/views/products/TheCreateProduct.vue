@@ -19,7 +19,7 @@
             >می‌خواهم به محصول ویژگی اضافه کنم.</label
           >
         </div>
-        <i class="pi pi-angle-down"></i>
+        <i class="svgIcon" :innerHTML="arrowDown"></i>
       </div>
     </div>
   </div>
@@ -31,6 +31,7 @@
 
 <script>
 import { defineAsyncComponent } from "vue";
+import { mapState } from "vuex";
 
 export default {
   components: {
@@ -56,6 +57,9 @@ export default {
     return {
       groupProduct: false,
     };
+  },
+  computed: {
+    ...mapState("iconSVG", ["arrowDown"]),
   },
 };
 </script>

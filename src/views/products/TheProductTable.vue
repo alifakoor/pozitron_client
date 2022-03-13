@@ -15,7 +15,7 @@
         >
           <p class="message">افزودن محصول</p>
           <div class="buttonAdd">
-            <i class="ri-add-line"></i>
+            <i class="svgIcon" :innerHTML="plusIcon"></i>
           </div>
         </div>
       </div>
@@ -91,30 +91,10 @@
             :colspan="2"
           >
             <template #header>
-              <div
-                class="zi-table-header-has-sub firstSort sortTable"
-                @click="sortProducts(['name'])"
-              >
+              <div class="zi-table-header-has-sub firstSort sortTable">
                 <p class="sortCursor">نام محصول</p>
                 <p class="zi-table-header-sub">ویژگی</p>
               </div>
-              <i
-                @click="sortProducts(['name'])"
-                v-if="nameSort == null"
-                class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-alt p-mr-1"
-              ></i>
-              <i
-                @click="sortProducts(['name'])"
-                v-else-if="!nameSort"
-                class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-up-alt"
-                style="color: #048ba8"
-              ></i>
-              <i
-                @click="sortProducts(['name'])"
-                v-else-if="nameSort"
-                class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-down"
-                style="color: #048ba8"
-              ></i>
             </template>
           </Column>
           <Column
@@ -136,23 +116,8 @@
             <template #header>
               <div
                 class="zi-table-header-has-sub table-sort p-d-flex p-ai-center"
-                @click="sortProducts(['onlineStock'])"
               >
                 <p class="sortCursor">موجودی (تعداد)</p>
-                <i
-                  v-if="stockSort == null"
-                  class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-alt p-mr-1"
-                ></i>
-                <i
-                  v-else-if="!stockSort"
-                  class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-up-alt"
-                  style="color: #048ba8"
-                ></i>
-                <i
-                  v-else-if="stockSort"
-                  class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-down"
-                  style="color: #048ba8"
-                ></i>
               </div>
             </template>
           </Column>
@@ -164,23 +129,8 @@
             <template #header>
               <div
                 class="zi-table-header-has-sub table-sort p-d-flex p-ai-center"
-                @click="sortProducts(['onlinePrice'])"
               >
                 <p class="sortCursor">قیمت (تومان)</p>
-                <i
-                  v-if="priceSort == null"
-                  class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-alt p-mr-1"
-                ></i>
-                <i
-                  v-else-if="!priceSort"
-                  class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-up-alt"
-                  style="color: #048ba8"
-                ></i>
-                <i
-                  v-else-if="priceSort"
-                  class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-down"
-                  style="color: #048ba8"
-                ></i>
               </div>
             </template>
           </Column>
@@ -202,7 +152,11 @@
               #header
               v-if="selectedProducts && selectedProducts.length > 1"
             >
-              <i class="fa fa-trash" @click="multiDeleteProduct()"></i>
+              <i
+                class="svgIcon cursorPointer"
+                :innerHTML="trashFill"
+                @click="multiDeleteProduct()"
+              ></i>
             </template>
           </Column>
         </Row>
@@ -307,20 +261,21 @@
               </div>
               <i
                 @click="sortProducts(['name'])"
+                :innerHTML="sortIcon"
                 v-if="nameSort == null"
-                class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-alt p-mr-1"
+                class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
               ></i>
               <i
                 @click="sortProducts(['name'])"
                 v-else-if="!nameSort"
-                class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-up-alt"
-                style="color: #048ba8"
+                :innerHTML="sortUp"
+                class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
               ></i>
               <i
                 @click="sortProducts(['name'])"
                 v-else-if="nameSort"
-                class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-down"
-                style="color: #048ba8"
+                :innerHTML="sortDown"
+                class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
               ></i>
             </template>
           </Column>
@@ -348,17 +303,18 @@
                 <p class="sortCursor">موجودی (تعداد)</p>
                 <i
                   v-if="stockSort == null"
-                  class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-alt p-mr-1"
+                  :innerHTML="sortIcon"
+                  class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
                 ></i>
                 <i
                   v-else-if="!stockSort"
-                  class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-up-alt"
-                  style="color: #048ba8"
+                  :innerHTML="sortUp"
+                  class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
                 ></i>
                 <i
                   v-else-if="stockSort"
-                  class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-down"
-                  style="color: #048ba8"
+                  :innerHTML="sortDown"
+                  class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
                 ></i>
               </div>
             </template>
@@ -376,17 +332,18 @@
                 <p class="sortCursor">قیمت (تومان)</p>
                 <i
                   v-if="priceSort == null"
-                  class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-alt p-mr-1"
+                  :innerHTML="sortIcon"
+                  class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
                 ></i>
                 <i
                   v-else-if="!priceSort"
-                  class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-up-alt"
-                  style="color: #048ba8"
+                  :innerHTML="sortUp"
+                  class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
                 ></i>
                 <i
                   v-else-if="priceSort"
-                  class="p-sortable-column-icon sortCursor pi pi-fw pi-sort-amount-down"
-                  style="color: #048ba8"
+                  :innerHTML="sortDown"
+                  class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
                 ></i>
               </div>
             </template>
@@ -409,7 +366,11 @@
               #header
               v-if="selectedProducts && selectedProducts.length > 1"
             >
-              <i class="fa fa-trash" @click="multiDeleteProduct()"></i>
+              <i
+                class="svgIcon cursorPointer"
+                :innerHTML="trashFill"
+                @click="multiDeleteProduct()"
+              ></i>
             </template>
           </Column>
         </Row>
@@ -523,7 +484,7 @@
       >
         <template #body="slotProps">
           <div v-if="slotProps.data.infiniteStock">
-            <i class="fas fa-infinity" style="color: #048ba8"></i>
+            <i class="svgIcon" :innerHTML="infinityIcon"></i>
           </div>
           <div v-else>
             <p>{{ slotProps.data.onlineStock }}</p>
@@ -594,7 +555,8 @@
         <template #body="slotProps">
           <div class="zi-table-content">
             <i
-              class="fa fa-trash"
+              class="svgIcon cursorPointer"
+              :innerHTML="trashLine"
               @click="deleteProduct([slotProps.data.id])"
             ></i>
           </div>
@@ -628,6 +590,15 @@ export default {
       "stockSort",
       "priceSort",
       "nameSort",
+    ]),
+    ...mapState("iconSVG", [
+      "plusIcon",
+      "trashLine",
+      "infinityIcon",
+      "trashFill",
+      "sortIcon",
+      "sortUp",
+      "sortDown",
     ]),
   },
   methods: {

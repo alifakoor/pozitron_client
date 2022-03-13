@@ -34,7 +34,10 @@
           'p-d-flex': notValidData || sameInventory,
           'p-d-none': !notValidData || !sameInventory,
         }"
-        ><i class="ri-error-warning-line p-ml-1 warningTxtIcon"></i
+        ><i
+          :innerHTML="closeCircleLine"
+          class="svgIcon warningTxtIcon iconInput iconInCorrect"
+        ></i
         >{{ validationErr }}</small
       >
       <small
@@ -53,6 +56,7 @@
 
 <script>
 import Num2persian from "num2persian";
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -107,6 +111,9 @@ export default {
     sameInventory: {
       required: false,
     },
+  },
+  computed: {
+    ...mapState("iconSVG", ["closeCircleLine"]),
   },
   methods: {
     changeNumToPersian(num) {

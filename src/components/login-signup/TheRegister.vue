@@ -4,7 +4,11 @@
     <div class="stepContainer p-d-flex">
       <div class="step">
         <div class="stepCircle" :class="stepClass[0]">
-          <i v-if="step >= 1" class="ri-check-line"></i>
+          <i
+            v-if="step >= 1"
+            class="svgIcon"
+            :innerHTML="iconSVGs.checkIcon"
+          ></i>
           <span v-else>1</span>
         </div>
       </div>
@@ -19,7 +23,11 @@
           @click="stepBack(1)"
           style="cursor: pointer"
         >
-          <i v-if="step >= 2" class="ri-check-line"></i>
+          <i
+            v-if="step >= 2"
+            class="svgIcon"
+            :innerHTML="iconSVGs.checkIcon"
+          ></i>
           <span v-else>2</span>
         </div>
       </div>
@@ -34,7 +42,11 @@
           @click="stepBack(2)"
           style="cursor: pointer"
         >
-          <i v-if="step == 3" class="ri-check-line"></i>
+          <i
+            v-if="step == 3"
+            class="svgIcon"
+            :innerHTML="iconSVGs.checkIcon"
+          ></i>
           <span v-else>3</span>
         </div>
       </div>
@@ -89,10 +101,15 @@
         class="loginButton"
         :class="loading ? 'sendData' : ''"
       >
-        <i v-show="!loading" class="pi pi-clock p-ml-1"></i>
+        <i
+          v-show="!loading"
+          class="svgIcon"
+          :innerHTML="iconSVGs.checkCircleLine"
+        ></i>
         <i
           v-show="loading && timerCounter > 0"
-          class="pi pi-spin pi-spinner p-m-1"
+          class="svgIcon"
+          :innerHTML="iconSVGs.loadingCircle"
         ></i>
         <p v-show="timerCounter > 0">تایید و ادامه</p>
         <p v-show="timerCounter == 0">ارسال مجدد کد</p>
@@ -104,7 +121,7 @@
           href="#"
           >تغییر شماره موبایل</a
         >
-        <i class="ri-arrow-left-line"></i>
+        <i class="svgIcon" :innerHTML="iconSVGs.goBackIcon"></i>
       </p>
     </form>
   </div>
@@ -131,7 +148,7 @@
     </div>
     <div class="helpConnect">
       <div class="helpConnectText">
-        <i class="pi pi-question-circle"></i>
+        <i class="svgIcon" :innerHTML="iconSVGs.questionCircle"></i>
         <p class="p-text-right">
           در صورتی که سایت اختصاصی خود را برای فروش محصول ندارید،با ما تماس
           بگیرید.
@@ -141,7 +158,9 @@
         <a
           href="tel:09010922933"
           onclick="ga('send', 'event', { eventCategory: 'Contact', eventAction: 'Call', eventLabel: 'Mobile Button'});"
-          ><p class="phoneConnect"><i class="fa fa-phone"></i>933 0922 0901</p>
+          ><p class="phoneConnect">
+            <i class="svgIcon" :innerHTML="iconSVGs.phoneIcon"></i>933 0922 0901
+          </p>
         </a>
       </div>
     </div>
@@ -166,7 +185,8 @@
           />
           <span class="floating-label">آدرس سایت فروشگاه(ضروری)</span>
           <i
-            class="ri-checkbox-circle-line iconInput iconCorrect"
+            class="iconInput iconCorrect svgIcon"
+            :innerHTML="iconSVGs.checkCircleLine"
             v-show="correctSiteURL"
           ></i>
           <p class="errText" v-show="notValidSiteURL">
@@ -206,8 +226,16 @@
         class="loginButton"
         :class="loading ? 'sendData' : ''"
       >
-        <i v-show="!loading" class="ri-checkbox-circle-line p-ml-1"></i>
-        <i v-show="loading" class="pi pi-spin pi-spinner p-m-1"></i>
+        <i
+          v-show="!loading"
+          class="svgIcon"
+          :innerHTML="iconSVGs.checkCircleLine"
+        ></i>
+        <i
+          v-show="loading"
+          class="svgIcon"
+          :innerHTML="iconSVGs.loadingCircle"
+        ></i>
         <p>تایید و ادامه</p>
       </button>
     </form>
@@ -238,7 +266,7 @@
             target="_blank"
           >
             پیکربندی پنل سایت ووکامرس </a
-          >خود شوید.<i class="pi pi-question-circle" @click="modalHandle()"></i>
+          >خود شوید.<i :innerHTML="iconSVGs.helper" @click="modalHandle()"></i>
         </p>
         <div class="inputContainer inputHeight">
           <input
@@ -258,7 +286,8 @@
             v-show="notValidKey === false"
           ></i> -->
           <i
-            class="ri-close-circle-line iconInput iconInCorrect"
+            :innerHTML="iconSVGs.closeCircleLine"
+            class="svgIcon iconInput iconInCorrect"
             v-show="notValidKey === true"
           ></i>
 
@@ -284,7 +313,8 @@
             v-show="notValidPass === false"
           ></i> -->
           <i
-            class="ri-close-circle-line iconInput iconInCorrect"
+            :innerHTML="iconSVGs.closeCircleLine"
+            class="svgIcon iconInput iconInCorrect"
             v-show="notValidPass === true"
           ></i>
           <p class="errText" v-show="notValidPass === true">
@@ -313,8 +343,16 @@
         class="loginButton"
         :class="loading ? 'sendData' : ''"
       >
-        <i v-show="!loading" class="ri-checkbox-circle-line p-ml-1"></i>
-        <i v-show="loading" class="pi pi-spin pi-spinner p-m-1"></i>
+        <i
+          v-show="!loading"
+          class="svgIcon"
+          :innerHTML="iconSVGs.checkCircleLine"
+        ></i>
+        <i
+          v-show="loading"
+          class="svgIcon"
+          :innerHTML="iconSVGs.loadingCircle"
+        ></i>
         <p>اتصال به پوزیترون</p>
       </button>
       <button
@@ -324,7 +362,11 @@
         class="loginButton"
         :class="loading ? 'sendData' : ''"
       >
-        <i v-show="loading" class="pi pi-spin pi-spinner p-m-1"></i>
+        <i
+          v-show="loading"
+          class="svgIcon"
+          :innerHTML="iconSVGs.loadingCircle"
+        ></i>
         <p>تلاش مجدد</p>
       </button>
     </form>
@@ -361,6 +403,7 @@ export default {
     const router = useRouter();
     const store = useStore();
     const { cookies } = useCookies();
+    const iconSVGs = store.state.iconSVG;
     // userToken
     const userToken = ref(null);
 
@@ -813,6 +856,7 @@ export default {
       modalShow.value = !modalShow.value;
     }
     return {
+      iconSVGs,
       loading,
       activationKeyFields,
       activationKey,

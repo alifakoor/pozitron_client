@@ -88,7 +88,7 @@
         </li>
       </ul>
       <div class="changeStatusBtn">
-        <i class="ri-checkbox-circle-line"></i>
+        <i class="svgIcon" :innerHTML="checkCircleLine"></i>
         <p>اعمال</p>
       </div>
     </div>
@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -107,6 +107,7 @@ export default {
     };
   },
   computed: {
+    ...mapState("iconSVG", ["checkCircleLine"]),
     ...mapState("factors", ["factors", "factorSelections", "editDisplay"]),
   },
   methods: {

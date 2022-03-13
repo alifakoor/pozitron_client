@@ -122,7 +122,11 @@
               #header
               v-if="selectedProducts && selectedProducts.length > 1"
             >
-              <i class="fa fa-trash" @click="multiDeletesortFactor()"></i>
+              <i
+                :innerHTML="trashFill"
+                class="svgIcon"
+                @click="multiDeleteProduct()"
+              ></i>
             </template>
           </Column>
         </Row>
@@ -257,7 +261,11 @@
               #header
               v-if="selectedProducts && selectedProducts.length > 1"
             >
-              <i class="fa fa-trash" @click="multiDeleteFactor()"></i>
+              <i
+                :innerHTML="trashFill"
+                class="svgIcon"
+                @click="multiDeleteProduct()"
+              ></i>
             </template>
           </Column>
         </Row>
@@ -293,7 +301,8 @@
           <div class="zi-table-content">
             <i
               v-if="slotProps.data.src == 'online'"
-              class="ri-global-line sourceFactor"
+              class="svgIcon"
+              :innerHTML="globalIcon"
             ></i>
           </div>
         </template>
@@ -437,8 +446,9 @@
         <template #body="slotProps">
           <div class="zi-table-content">
             <i
-              class="fa fa-trash"
-              @click="deleteFactor([slotProps.data.id])"
+              class="svgIcon cursorPointer"
+              :innerHTML="trashLine"
+              @click="deleteProduct([slotProps.data.id])"
             ></i>
           </div>
         </template>
@@ -471,6 +481,14 @@ export default {
       "stockSort",
       "priceSort",
       "nameSort",
+    ]),
+    ...mapState("iconSVG", [
+      "plusIcon",
+      "trashLine",
+      "trashFill",
+      "sortIcon",
+      "sortUp",
+      "sortDown",
     ]),
   },
   methods: {

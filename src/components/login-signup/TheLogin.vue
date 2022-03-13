@@ -49,8 +49,16 @@
           class="loginButton"
           :class="loading ? 'sendData' : ''"
         >
-          <i v-show="!loading" class="pi pi-clock p-ml-1"></i>
-          <i v-show="loading" class="pi pi-spin pi-spinner p-m-1"></i>
+          <i
+            v-show="!loading"
+            class="svgIcon"
+            :innerHTML="iconSVGs.checkCircleLine"
+          ></i>
+          <i
+            v-show="loading"
+            class="svgIcon"
+            :innerHTML="iconSVGs.loadingCircle"
+          ></i>
           <p v-show="timerCounter > 0">تایید و ادامه</p>
           <p v-show="timerCounter == 0">ارسال مجدد کد</p>
         </button>
@@ -61,7 +69,7 @@
             href="#"
             >تغییر شماره موبایل</a
           >
-          <i class="ri-arrow-left-line"></i>
+          <i class="svgIcon" :innerHTML="iconSVGs.goBackIcon"></i>
         </p>
       </form>
     </div>
@@ -84,7 +92,7 @@
       </div>
       <div class="helpConnect">
         <div class="helpConnectText">
-          <i class="pi pi-question-circle"></i>
+          <i class="svgIcon" :innerHTML="iconSVGs.questionCircle"></i>
           <p class="p-text-right">
             در صورتی که سایت اختصاصی خود را برای فروش محصول ندارید،با ما تماس
             بگیرید.
@@ -95,7 +103,8 @@
             href="tel:09010922933"
             onclick="ga('send', 'event', { eventCategory: 'Contact', eventAction: 'Call', eventLabel: 'Mobile Button'});"
             ><p class="phoneConnect">
-              <i class="fa fa-phone"></i>933 0922 0901
+              <i class="svgIcon" :innerHTML="iconSVGs.phoneIcon"></i>933 0922
+              0901
             </p>
           </a>
         </div>
@@ -123,6 +132,7 @@ export default defineComponent({
     const router = useRouter();
     const store = useStore();
     const { cookies } = useCookies();
+    const iconSVGs = store.state.iconSVG;
     // timerCounter
     const timerCounter = ref(180);
 
@@ -302,6 +312,7 @@ export default defineComponent({
     }
 
     return {
+      iconSVGs,
       cookies,
       timerCounter,
       loading,

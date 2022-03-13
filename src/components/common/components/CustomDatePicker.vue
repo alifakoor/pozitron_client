@@ -47,7 +47,7 @@
       id="productName-help"
       class="warningTxt p-ai-center"
       :class="{ 'p-d-flex': notValidData, 'p-d-none': !notValidData }"
-      ><i class="ri-error-warning-line p-ml-1 warningTxtIcon"></i
+      ><i class="svgIcon warningTxtIcon" :innerHTML="closeCircleLine"></i
       >{{ validationErr }}</small
     >
     <small class="inputInfo" :style="{ color: disabled ? '#D2D5D8' : '' }">{{
@@ -57,6 +57,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   emits: ["changeInputValue"],
   data() {
@@ -115,6 +116,9 @@ export default {
     MaxValue: {
       required: false,
     },
+  },
+  computed: {
+    ...mapState("iconSVG", ["closeCircleLine"]),
   },
   methods: {
     isDataNull() {

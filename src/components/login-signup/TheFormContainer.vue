@@ -22,7 +22,8 @@
             />
             <span class="floating-label">شماره موبایل(ضروری)</span>
             <i
-              class="ri-checkbox-circle-line iconInput iconCorrect"
+              class="iconInput iconCorrect svgIcon"
+              :innerHTML="iconSVGs.checkCircleLine"
               v-show="correctPhone"
             ></i>
             <!-- <i
@@ -41,9 +42,14 @@
         >
           <i
             v-show="!loading && timerCounter > 0"
-            class="ri-checkbox-circle-line p-ml-1"
+            class="svgIcon"
+            v-bind:innerHTML="iconSVGs.checkCircleLine"
           ></i>
-          <i v-show="loading" class="pi pi-spin pi-spinner p-m-1"></i>
+          <i
+            v-show="loading"
+            class="svgIcon"
+            v-bind:innerHTML="iconSVGs.loadingCircle"
+          ></i>
           <p>ورود به پوزیترون</p>
         </button>
       </form>
@@ -81,6 +87,7 @@ export default defineComponent({
     const router = useRouter();
     const store = useStore();
     const { cookies } = useCookies();
+    const iconSVGs = store.state.iconSVG;
     // userToken
     const userToken = ref(null);
 
@@ -172,6 +179,7 @@ export default defineComponent({
     }
 
     return {
+      iconSVGs,
       cookies,
       userToken,
       userTel,

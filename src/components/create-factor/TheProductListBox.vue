@@ -7,7 +7,8 @@
         searchStore="products"
       />
       <i
-        class="ri-equalizer-line"
+        class="svgIcon cursorPointer"
+        :innerHTML="filterIcon"
         @click="
           () => {
             displayFilter = !displayFilter;
@@ -54,7 +55,7 @@
           </li>
         </ul>
         <div class="changeStatusBtn" @click="addFilter()">
-          <i class="ri-checkbox-circle-line"></i>
+          <i class="svgIcon" :innerHTML="checkCircleLine"></i>
           <p>اعمال</p>
         </div>
       </div>
@@ -70,7 +71,7 @@
         class="productGridWrapper"
       >
         <div class="imgBox">
-          <i class="pi pi-bookmark-fill"></i>
+          <i class="svgIcon" :innerHTML="lgBookMarkIcon"></i>
           <img
             v-if="product.images[0]"
             :src="product.images[0].src"
@@ -149,7 +150,7 @@
             class="productListWrapper"
           >
             <div class="imgBox">
-              <i class="pi pi-bookmark-fill"></i>
+              <i class="svgIcon" :innerHTML="sBookMarkIcon"></i>
               <img
                 v-if="product.images[0]"
                 :src="product.images[0].src"
@@ -195,7 +196,9 @@
             </p>
             <p v-else class="outOfStock">ناموجود</p>
             <div class="btnWrapper">
-              <div class="editBtn"><i class="fa fa-edit"></i></div>
+              <div class="editBtn">
+                <i class="svgIcon" :innerHTML="editIcon"></i>
+              </div>
             </div>
           </div>
         </div>
@@ -232,6 +235,12 @@ export default {
   },
   computed: {
     ...mapState("products", ["factorProducts", "notValidSearchProductFactor"]),
+    ...mapState("iconSVG", [
+      "filterIcon",
+      "sBookMarkIcon",
+      "lgBookMarkIcon",
+      "editIcon",
+    ]),
     showProduct: function () {
       return this.factorProducts.length > 0;
     },

@@ -3,7 +3,6 @@
     <span class="p-input-icon-left p-p-0 p-col-12">
       <i
         :class="[
-          iconClass,
           { bgButtonGray: buttonIcon == 'true' },
           { bgIconGray: buttonIcon == 'false' },
         ]"
@@ -12,6 +11,7 @@
           borderColor: notValidData ? '#f44336' : '',
           height: InHeight,
         }"
+        :innerHTML="iconClass"
       ></i>
       <InputText
         :type="inType"
@@ -35,7 +35,10 @@
       id="productName-help"
       class="warningTxt p-ai-center"
       :class="{ 'p-d-flex': notValidData, 'p-d-none': !notValidData }"
-      ><i class="ri-error-warning-line p-ml-1 warningTxtIcon"></i
+      ><i
+        :innerHTML="closeCircleLine"
+        class="svgIcon warningTxtIcon iconInput iconInCorrect"
+      ></i
       >{{ validationErr }}</small
     >
     <small class="inputInfo" :style="{ color: disabled ? '#D2D5D8' : '' }">{{
@@ -45,6 +48,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   emits: ["changeInputValue"],
   data() {
@@ -102,6 +106,9 @@ export default {
     MaxValue: {
       required: false,
     },
+  },
+  computed: {
+    ...mapState("icovSVG", ["closeCircleLine"]),
   },
   methods: {
     isDataNull() {

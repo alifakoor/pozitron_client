@@ -1,7 +1,7 @@
 <template>
   <div class="zi-search">
     <span class="p-input-icon-right">
-      <i class="pi pi-search" />
+      <i class="svgIcon" :innerHTML="searchIcon" />
       <InputText
         type="text"
         v-model="search"
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "zi-search",
@@ -39,6 +39,9 @@ export default {
       inputWidth: this.$props.widthInput,
       mediaWidth: this.$props.mediaWidth,
     };
+  },
+  computed: {
+    ...mapState("iconSVG", ["searchIcon"]),
   },
   methods: {
     ...mapMutations("products", ["searcProducthData"]),

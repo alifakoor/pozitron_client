@@ -1,17 +1,26 @@
 <template>
-  <VueMultiselect
-    v-model="selected"
-    :options="dataOption"
-    :multiple="true"
-    :taggable="true"
-    @tag="addTag"
-    tag-placeholder="افزودن"
-    :placeholder="InPlaceholder"
-    label="name"
-    track-by="id"
-    selectLabel=""
-    deselectLabel=""
-  />
+  <div
+    class="p-d-flex p-ai-center p-jc-center dropdownBox p-px-4"
+    :class="InGrid"
+  >
+    <span class="dropDownIcon">
+      <slot name="icon"></slot>
+    </span>
+    <VueMultiselect
+      v-model="selected"
+      :options="options"
+      :multiple="true"
+      :taggable="true"
+      @tag="addTag"
+      tag-placeholder="افزودن"
+      :placeholder="InPlaceholder"
+      label="name"
+      track-by="code"
+      selectLabel=""
+      deselectLabel=""
+    >
+    </VueMultiselect>
+  </div>
 </template>
 
 <script>
@@ -19,7 +28,7 @@ import VueMultiselect from "vue-multiselect";
 export default {
   components: { VueMultiselect },
   props: {
-    iconClass: {
+    iconElement: {
       type: String,
       default: "",
     },
@@ -39,31 +48,61 @@ export default {
       type: String,
       default: "40px",
     },
-    dataOption: {
-      default: [],
-    },
   },
-  emits: ["addData"],
   data() {
     return {
       selected: null,
+      options: [
+        { name: "بهار", code: 1 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+        { name: "ریحانه", code: 25 },
+      ],
     };
   },
   methods: {
     addTag(newTag) {
-      this.$emit("addData", newTag);
-      // const tag = {
-      //   name: newTag,
-      //   code: newTag.substring(0, 2) + Math.floor(Math.random() * 10000000),
-      // };
-      // this.options.push(tag);
-      // this.selected.push(tag);
+      const tag = {
+        name: newTag,
+        code: newTag.substring(0, 2) + Math.floor(Math.random() * 10000000),
+      };
+      this.options.push(tag);
+      this.selected.push(tag);
     },
-  },
-  computed: {
-    // iconicClass: function () {
-    //   return String.fromCharCode(92) + this.$props.iconClass.split(0, 1);
-    // },
   },
 };
 </script>
@@ -71,12 +110,23 @@ export default {
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>
 
 <style lang="scss">
-.multiselect {
-  padding-right: 10px;
-  width: 264px;
+.dropDownIcon {
   border: 1px solid #bbc0d8;
+  border-left: 0;
+  border-radius: 0 4px 4px 0;
+  height: inherit;
+  height: v-bind(InHeight);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px 0 5px;
+}
+.multiselect {
+  height: v-bind(InHeight);
+  border: 1px solid #bbc0d8;
+  border-right: 0;
   box-sizing: border-box;
-  border-radius: 4px;
+  border-radius: 4px 0 0 4px;
   margin: 20px 0px;
   direction: rtl;
   display: flex;
@@ -110,6 +160,7 @@ export default {
     align-items: center;
     justify-content: flex-start;
     overflow-y: auto;
+    min-height: 0;
     .multiselect__placeholder {
       display: flex;
       justify-content: center;
@@ -131,9 +182,6 @@ export default {
       padding: 0;
     }
     .multiselect__input::placeholder {
-      //   position: absolute;
-      //   transform: scale(0.7) translateY(-15px);
-      //   z-index: 9999999999999999999999;
       visibility: hidden;
     }
     .multiselect__input:focus {
@@ -166,23 +214,6 @@ export default {
           text-align: right;
           color: #5c679e;
         }
-        .multiselect__tag-icon {
-          position: static;
-          margin: 0;
-          line-height: 16px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          font-weight: normal;
-        }
-        .multiselect__tag-icon::after {
-          content: "\eb97";
-          font-family: "remixicon" !important;
-          font-style: normal;
-          -webkit-font-smoothing: antialiased;
-          font-size: 16px;
-          color: #7b84b2;
-        }
       }
     }
   }
@@ -205,7 +236,6 @@ export default {
     overflow-x: hidden;
     .multiselect__content {
       margin: 8px 0px;
-      width: 256px;
       .multiselect__element {
         background: transparent;
         .multiselect__option {
@@ -237,16 +267,20 @@ export default {
         .multiselect__option[data-select="افزودن"]::after {
           order: 0;
           background: transparent;
-          content: "\ea11";
-          font-family: "remixicon" !important;
+          content: "\002B";
           font-style: normal;
           -webkit-font-smoothing: antialiased;
-          font-size: 19px;
+          font-size: 20px;
           margin: 0;
           color: #048ba8;
           width: fit-content;
           height: fit-content;
-          padding: 0;
+          padding: 7px 0px 5px 0px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: solid 1px #048ba8;
+          border-radius: 50%;
           margin: 0;
           position: static;
           line-height: 0;
@@ -281,14 +315,4 @@ export default {
     }
   }
 }
-
-// .multiselect::after {
-//   content: v-bind(iconicClass);
-//   font-family: v-bind(iconFont) !important;
-//   font-style: normal;
-//   -webkit-font-smoothing: antialiased;
-//   font-size: 19px;
-//   margin: 0 4px;
-//   color: #7b84b2;
-// }
 </style>

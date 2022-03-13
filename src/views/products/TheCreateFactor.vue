@@ -13,7 +13,8 @@
     <!-- fator box -->
     <div class="addNewFactor" v-if="factors.length == 0">
       <button @click="addFactor()">
-        <i class="ri-checkbox-circle-line p-mx-1"></i>افزودن فاکتور جدید
+        <i class="svgIcon p-mx-1" :innerHTML="checkCircleLine"></i>افزودن فاکتور
+        جدید
       </button>
     </div>
     <div
@@ -28,9 +29,14 @@
                 factor.customerData.customerName
               }}</span>
               <span v-else-if="factor.id != null">{{ factor.id }}</span>
-              <i class="pi pi-times" @click="removerFactor(index)"></i>
               <i
-                class="pi pi-plus"
+                class="svgIcon cursorPointer"
+                :innerHTML="closeIcon"
+                @click="removerFactor(index)"
+              ></i>
+              <i
+                class="svgIcon cursorPointer"
+                :innerHTML="plusTabIcon"
                 v-tooltip.bottom="{
                   value: 'فاکتور جدید',
                   class: 'customizeTootip',
@@ -43,7 +49,11 @@
                 factor.customerData.customerName
               }}</span>
               <span v-else-if="factor.id != null">{{ factor.id }}</span>
-              <i class="pi pi-times" @click="removerFactor(index)"></i>
+              <i
+                class="svgIcon cursorPointer"
+                :innerHTML="closeIcon"
+                @click="removerFactor(index)"
+              ></i>
             </template>
             <div
               class="p-col-12 p-d-flex p-flex-column p-flex-md-row p-ai-start p-jc-center p-px-0"
@@ -96,6 +106,7 @@ export default {
   },
   computed: {
     ...mapState("factors", ["onHoldFactors", "factorId"]),
+    ...mapState("iconSVG", ["plusTabIcon", "closeIcon"]),
   },
   methods: {
     ...mapMutations("factors", [
