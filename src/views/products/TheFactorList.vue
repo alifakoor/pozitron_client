@@ -457,7 +457,7 @@ export default {
       selectValue: null,
       showPage: 1,
       showPerPage: 5,
-      pageShowCount: 5,
+      showPageCount: 5,
       pageProduct: [],
       showDetailFlag: null,
     };
@@ -551,12 +551,17 @@ export default {
     },
   },
   created() {
-    // if (this.products.length === 0) {
-    //   this.setProducts();
-    // }
-    this.setFactors();
-    this.showPerPage = Math.floor((window.innerHeight - 250) / 70);
-    this.showPageCount = Math.floor((window.innerHeight - 250) / 70);
+    this.showPerPage =
+      Math.floor((window.innerHeight - 250) / 70) < 0
+        ? 6
+        : Math.floor((window.innerHeight - 250) / 70);
+    this.showPageCount =
+      Math.floor((window.innerHeight - 250) / 70) < 0
+        ? 6
+        : Math.floor((window.innerHeight - 250) / 70);
+    if (this.factors.length === 0) {
+      this.setFactors();
+    }
   },
   updated() {
     let start = (this.showPage - 1) * this.showPerPage;
