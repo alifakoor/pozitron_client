@@ -15,7 +15,7 @@
       tag-placeholder="افزودن"
       :placeholder="InPlaceholder"
       label="name"
-      track-by="code"
+      track-by="id"
       selectLabel=""
       deselectLabel=""
     >
@@ -27,6 +27,7 @@
 import VueMultiselect from "vue-multiselect";
 export default {
   components: { VueMultiselect },
+  emits: ["addOption"],
   props: {
     iconElement: {
       type: String,
@@ -48,60 +49,24 @@ export default {
       type: String,
       default: "40px",
     },
+    options: {
+      default: [],
+    },
   },
   data() {
     return {
       selected: null,
-      options: [
-        { name: "بهار", code: 1 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-        { name: "ریحانه", code: 25 },
-      ],
     };
   },
   methods: {
     addTag(newTag) {
-      const tag = {
-        name: newTag,
-        code: newTag.substring(0, 2) + Math.floor(Math.random() * 10000000),
-      };
-      this.options.push(tag);
-      this.selected.push(tag);
+      // const tag = {
+      //   name: newTag,
+      //   id: newTag.substring(0, 2) + Math.floor(Math.random() * 10000000),
+      // };
+      // this.options.push(tag);
+      // this.selected.push(tag);
+      this.$emit("addOption", newTag);
     },
   },
 };

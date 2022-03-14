@@ -489,6 +489,7 @@ export default {
       "sortIcon",
       "sortUp",
       "sortDown",
+      "globalIcon",
     ]),
   },
   methods: {
