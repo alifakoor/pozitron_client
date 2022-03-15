@@ -121,6 +121,16 @@ export default {
 }
 .zi-sidebar {
   display: none;
+
+  .pozitronText {
+    width: 101px;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 150%;
+    color: #7de6fc;
+    border-bottom: 1px solid #7de6fc;
+    padding-bottom: 15px;
+  }
 }
 
 @media (min-width: 680px) {
@@ -131,7 +141,7 @@ export default {
     flex-direction: column;
     justify-content: start;
     align-items: center;
-    padding: 50px 13px;
+    padding: 15px 13px 50px 13px;
     z-index: 99999999999999999999999999999999999999999999999999999999;
     // width: 96px;
     width: 101px;
