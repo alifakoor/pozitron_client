@@ -130,8 +130,8 @@ export default {
           let text = "";
           text = `فاکتور "${state.factors[index].id}" از انبار حذف شد.`;
           axios
-            .delete(
-              `${state.apiURL}/orders`,
+            .post(
+              `${state.apiURL}/orders/remove`,
               { ids: [...data] },
               {
                 headers: {
