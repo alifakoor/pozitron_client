@@ -35,7 +35,7 @@
                 @click="removerFactor(index)"
               ></i>
               <i
-                class="svgIcon cursorPointer"
+                class="svgIcon cursorPointer newFactor"
                 :innerHTML="plusTabIcon"
                 v-tooltip.bottom="{
                   value: 'فاکتور جدید',
@@ -236,7 +236,7 @@ export default {
     padding: 0;
     position: relative;
 
-    .pi.pi-plus {
+    .newFactor {
       position: absolute;
       bottom: 5px;
       left: 0;

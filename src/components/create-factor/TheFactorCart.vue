@@ -181,8 +181,8 @@
                   @click="editableInput(index)"
                 ></i>
                 <i
-                  class="svgICon"
-                  :innerHTML="checkCircleLine"
+                  class="svgICon cursorPointer"
+                  :innerHTML="checkCircleLinePurple"
                   v-show="editablePrice == index"
                   @click="editPrice(index)"
                 ></i>
@@ -207,8 +207,8 @@
                   @click="editableInput(index)"
                 ></i>
                 <i
-                  class="svgIcon"
-                  :innerHTML="checkCircleLine"
+                  class="svgIcon cursorPointer"
+                  :innerHTML="checkCircleLinePurple"
                   v-show="editablePrice == index"
                   @click="editPrice(index)"
                 ></i>
@@ -291,10 +291,9 @@ export default {
       "trashLine",
       "minusIcon",
       "plusIcon",
-      "checkCircleLine",
+      "checkCircleLinePurple",
       "editIcon",
       "discountIcon",
-      "checkCircleLine",
     ]),
   },
   methods: {
@@ -481,10 +480,9 @@ export default {
           margin: 0px 30px;
         }
 
-        .pi-plus,
-        .pi-minus {
-          width: 30px;
-          height: 30px;
+        i:not(.trash) {
+          width: 25px;
+          height: 25px;
           background: #23273c;
           border-radius: 2.52px;
           color: #fff;
@@ -495,11 +493,25 @@ export default {
           cursor: pointer;
         }
 
-        .fa-trash {
-          color: #7b84b2;
-          font-size: 23px;
-          cursor: pointer;
-        }
+        // .pi-plus,
+        // .pi-minus {
+        //   width: 30px;
+        //   height: 30px;
+        //   background: #23273c;
+        //   border-radius: 2.52px;
+        //   color: #fff;
+        //   display: flex;
+        //   font-size: 16px;
+        //   align-items: center;
+        //   justify-content: center;
+        //   cursor: pointer;
+        // }
+
+        // .fa-trash {
+        //   color: #7b84b2;
+        //   font-size: 23px;
+        //   cursor: pointer;
+        // }
       }
     }
   }

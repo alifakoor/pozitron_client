@@ -6,7 +6,7 @@
       label="تغییر وضعیت"
       :icon="
         !editLoading
-          ? 'ri-edit-box-line zi-button-icon'
+          ? 'pi pi-check-circle zi-button-icon'
           : 'pi pi-spin pi-spinner zi-button-icon'
       "
       iconPos="left"
@@ -149,9 +149,9 @@ export default {
     border: none !important;
     box-shadow: none !important;
 
-    .p-button-icon {
-      order: 1;
-    }
+    // .p-button-icon {
+    //   order: 1;
+    // }
 
     .p-button-label {
       font-size: 14px;

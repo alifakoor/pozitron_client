@@ -124,4 +124,10 @@ export default {
 .hiddenElement {
   visibility: hidden !important;
 }
+
+::v-deep(.inputSelectStyle) {
+  .p-dropdown-label {
+    text-align: right;
+  }
+}
 </style>
