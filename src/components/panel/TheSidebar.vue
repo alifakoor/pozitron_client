@@ -69,23 +69,6 @@ export default {
       cookies: useCookies(),
       exitBox: false,
       userID: this.$cookies.get("uzit"),
-      items: [
-        {
-          icon: "ri-store-2-line",
-        },
-        {
-          icon: "pi pi-hom",
-        },
-        {
-          icon: "ri-file-list-line",
-        },
-        {
-          icon: "ri-group-lin",
-        },
-        {
-          icon: "ri-settings-3-line",
-        },
-      ],
     };
   },
   computed: {

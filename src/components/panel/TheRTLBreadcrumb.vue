@@ -115,7 +115,6 @@ export default {
       items: [
         {
           label: "فروش حضوری",
-          icon: "ri-store-2-line",
           command: (event) => {
             this.$router.push({
               name: "dashboard",
@@ -125,7 +124,6 @@ export default {
         },
         {
           label: "انبار محصولات",
-          icon: "pi pi-box",
           command: (event) => {
             this.$router.push({
               name: "products",
@@ -135,7 +133,6 @@ export default {
         },
         {
           label: "لیست فاکتورها",
-          icon: "ri-file-list-line",
           command: (event) => {
             this.$router.push({
               name: "factors",
@@ -145,19 +142,16 @@ export default {
         },
         {
           label: "مشتریان",
-          icon: "ri-group-line",
           class: "p-disabled",
           // to: "/panel",
         },
         {
           label: "تنظیمات",
-          icon: "ri-settings-3-line",
           class: "p-disabled",
           // to: "/panel/1",
         },
         {
           label: "خروج از پوزیترون",
-          icon: "ri-logout-box-r-line",
           command: (event) => {
             this.logOut();
           },
