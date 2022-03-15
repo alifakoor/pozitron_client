@@ -37,7 +37,7 @@
       :class="{ 'p-d-flex': notValidData, 'p-d-none': !notValidData }"
       ><i
         :innerHTML="closeCircleLine"
-        class="svgIcon warningTxtIcon iconInput iconInCorrect"
+        class="svgIcon warningTxtIcon iconInCorrect"
       ></i
       >{{ validationErr }}</small
     >
@@ -108,7 +108,7 @@ export default {
     },
   },
   computed: {
-    ...mapState("icovSVG", ["closeCircleLine"]),
+    ...mapState("iconSVG", ["closeCircleLine"]),
   },
   methods: {
     isDataNull() {

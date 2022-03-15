@@ -133,27 +133,27 @@ export default {
     onlineInvertory: function () {
       this.isInventoryValid();
     },
-    limitations: function () {
-      this.onlineInvertory > this.totalInventory
-        ? (this.sameInventory = this.checked && this.limitations)
-        : "";
-    },
-    checked: function () {
-      this.onlineInvertory > this.totalInventory
-        ? (this.sameInventory = this.checked && this.limitations)
-        : "";
-    },
-    limitations: function () {
+    limitations: function (newVal) {
       this.addFeatureToNewProduct({
         name: "infiniteStock",
         inValue: this.limitations,
       });
+      newVal
+        ? (this.sameInventory = false)
+        : this.onlineInvertory > this.totalInventory
+        ? (this.sameInventory = this.checked && true)
+        : "";
     },
-    checked: function () {
+    checked: function (newVal) {
       this.addFeatureToNewProduct({
         name: "onlineSell",
         inValue: this.checked,
       });
+      newVal
+        ? this.onlineInvertory > this.totalInventory
+          ? (this.sameInventory = !this.limitations && true)
+          : ""
+        : (this.sameInventory = false);
     },
   },
 };
@@ -219,12 +219,12 @@ export default {
 }
 ::v-deep(.MySwitchInput.p-inputswitch-checked) {
   .p-inputswitch-slider {
-    border-color: #2563eb;
-    background: #2563eb;
+    border-color: #49527e;
+    background: #49527e;
   }
   .p-inputswitch-slider:hover {
-    background: #2563eb !important;
-    border-color: #2563eb;
+    background: #49527e !important;
+    border-color: #49527e;
   }
   .p-inputswitch-slider:before {
     left: 100%;

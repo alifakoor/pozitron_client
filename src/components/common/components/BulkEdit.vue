@@ -22,7 +22,7 @@
       label="ویرایش"
       :icon="
         !editLoading
-          ? 'ri-edit-box-line zi-button-icon'
+          ? 'pi pi-check-circle zi-button-icon'
           : 'pi pi-spin pi-spinner zi-button-icon'
       "
       iconPos="left"
@@ -43,7 +43,8 @@
               <Button
                 class="p-button-outlined p-button-secondary"
                 label="ویرایش"
-                :icon="sendEdit ? 'pi pi-spin pi-spinner zi-button-icon' : 'ri-checkbox-circle-line zi-button-icon'"
+                :icon="sendEdit ? 'pi pi-spin pi-spinner zi-button-icon' : 'pi pi-check-circle zi-button-icon'"
+                iconPos="right"
                 @click="edit()"
               />
             </div>
@@ -156,7 +157,7 @@
                 @changeInputValue="setOnlinePrice"
               ></InputHasInfo>
               <InputHasIcon
-                iconClass="ri-percent-line"
+                :iconClass="discountIcon"
                 inputText="تخفیف آنلاین "
                 InPlaceholder="درصد"
                 inType="number"
@@ -197,7 +198,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("iconSVG",["closeCircleLine"]),
+    ...mapState("iconSVG",["closeCircleLine","discountIcon"]),
     ...mapState("products",["products", "productsSelections","editDisplay"]),
     editData: function () {
       return {
@@ -297,9 +298,9 @@ export default {
     border: none !important;
     box-shadow: none !important;
 
-    .p-button-icon{
-      order:1;
-    }
+    // .p-button-icon{
+    //   order:1;
+    // }
 
     .p-button-label {
       font-size: 14px;
@@ -362,6 +363,9 @@ color: #49527E;
     color: #7b84b2;
     cursor: pointer;
     margin: 0px 0px 0px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
 

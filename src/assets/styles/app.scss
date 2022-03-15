@@ -331,3 +331,13 @@ body::-webkit-scrollbar-thumb:hover {
 .customizeTootip .p-tooltip-arrow {
   border-bottom-color: #fff !important;
 }
+
+.itemBox {
+  .svgIcon {
+    svg {
+      path {
+        fill: #7b84b2 !important;
+      }
+    }
+  }
+}

@@ -36,7 +36,7 @@
         }"
         ><i
           :innerHTML="closeCircleLine"
-          class="svgIcon warningTxtIcon iconInput iconInCorrect"
+          class="svgIcon warningTxtIcon iconInCorrect"
         ></i
         >{{ validationErr }}</small
       >
@@ -192,6 +192,7 @@ export default {
     color: $errorText;
     font-size: 12px;
     width: 14em;
+    text-align: right;
   }
   .warningTxtIcon {
     color: $errorText;

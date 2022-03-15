@@ -74,7 +74,7 @@
           :class="showExtraDetail ? 'p-d-flex' : 'p-d-none'"
         >
           <InputHasIcon
-            iconClass="ri-percent-line"
+            :iconClass="discountIcon"
             inputText="تخفیف"
             InPlaceholder="درصد"
             inType="number"

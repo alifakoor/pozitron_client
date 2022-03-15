@@ -1048,7 +1048,7 @@ export default {
 
   .p-datatable-thead {
     .firstSort ~ .p-sortable-column-icon {
-      margin-top: -25px;
+      margin-top: -25px !important;
     }
   }
 
