@@ -38,8 +38,13 @@
           class="svgIcon cursorPointer"
           :innerHTML="bellIcon"
         ></i>
-        <a href="#">انبار محصولات</a>
-        <a href="#" v-show="createTab">محصول</a>
+        <a href="" id="breadCrumb">انبار محصولات</a>
+        <i
+          class="svgIcon p-d-none"
+          id="breadCrumbIcon"
+          :innerHTML="greenLeftArrow"
+        ></i>
+        <a href="" id="breadCrumb2" class="p-d-none">ساخت محصول</a>
 
         <div class="notif p-ai-center p-jc-center" v-show="showNotif">
           <div class="triangle2"></div>
@@ -168,18 +173,66 @@ export default {
       "showEyeIcon",
       "checkCircleLine",
       "menuBarIcon",
+      "greenLeftArrow",
     ]),
-    createTab: function () {
-      return (
-        this.$route.fullPath ==
-        `/panel/${this.cookies.cookies.get("uzit")}/create`
-      );
-    },
   },
   watch: {
     $route(to, from) {
-      this.createTab =
-        to.fullPath == `/panel/${this.cookies.cookies.get("uzit")}/create`;
+      if (
+        to.fullPath == `/panel/${this.cookies.cookies.get("uzit")}/Dashboard`
+      ) {
+        document.getElementById("breadCrumb").innerHTML = "صندوق فروشگاهی";
+        document
+          .getElementById("breadCrumb")
+          .setAttribute(
+            "href",
+            `/panel/${this.cookies.cookies.get("uzit")}/Dashboard`
+          );
+        document.getElementById("breadCrumbIcon").classList.add("p-d-none");
+        document.getElementById("breadCrumb2").classList.add("p-d-none");
+      } else if (
+        to.fullPath == `/panel/${this.cookies.cookies.get("uzit")}/create`
+      ) {
+        document
+          .getElementById("breadCrumb")
+          .setAttribute(
+            "href",
+            `/panel/${this.cookies.cookies.get("uzit")}/products`
+          );
+        document.getElementById("breadCrumb").innerHTML = "انبار محصولات";
+        document.getElementById("breadCrumbIcon").classList.remove("p-d-none");
+        document.getElementById("breadCrumb2").classList.remove("p-d-none");
+        document
+          .getElementById("breadCrumb2")
+          .setAttribute(
+            "href",
+            `/panel/${this.cookies.cookies.get("uzit")}/create`
+          );
+      } else if (
+        to.fullPath == `/panel/${this.cookies.cookies.get("uzit")}/products`
+      ) {
+        document
+          .getElementById("breadCrumb")
+          .setAttribute(
+            "href",
+            `/panel/${this.cookies.cookies.get("uzit")}/products`
+          );
+        document.getElementById("breadCrumb").innerHTML = "انبار محصولات";
+        document.getElementById("breadCrumbIcon").classList.add("p-d-none");
+        document.getElementById("breadCrumb2").classList.add("p-d-none");
+      } else if (
+        to.fullPath == `/panel/${this.cookies.cookies.get("uzit")}/Factors`
+      ) {
+        document
+          .getElementById("breadCrumb")
+          .setAttribute(
+            "href",
+            `/panel/${this.cookies.cookies.get("uzit")}/Factors`
+          );
+        document.getElementById("breadCrumb").innerHTML = "لیست فاکتورها";
+        document.getElementById("breadCrumbIcon").classList.add("p-d-none");
+        document.getElementById("breadCrumb2").classList.add("p-d-none");
+      }
     },
   },
   methods: {
