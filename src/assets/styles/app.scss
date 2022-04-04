@@ -207,6 +207,12 @@ body::-webkit-scrollbar-thumb:hover {
   justify-self: start;
   position: absolute;
   left: 10px;
+  color: #048ba8;
+}
+
+.swal2-close:focus {
+  border: none;
+  box-shadow: none;
 }
 
 .swal2-title {

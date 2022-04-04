@@ -6,13 +6,7 @@
         <zi-bulk-edit />
       </div>
       <div @click="createProduct()">
-        <div
-          class="addMessage"
-          v-tooltip.bottom="{
-            value: 'این ویژگی به زودی فعال می‌گردد.',
-            class: 'myTooltip',
-          }"
-        >
+        <div class="addMessage">
           <p class="message">افزودن محصول</p>
           <div class="buttonAdd">
             <i class="svgIcon" :innerHTML="plusIcon"></i>
@@ -487,7 +481,9 @@
             <i class="svgIcon" :innerHTML="infinityIcon"></i>
           </div>
           <div v-else>
-            <p>{{ slotProps.data.onlineStock }}</p>
+            <p :class="slotProps.data.onlineStock == 0 ? 'zeroStock' : 'stock'">
+              {{ slotProps.data.onlineStock }}
+            </p>
           </div>
         </template>
       </Column>
@@ -723,11 +719,6 @@ export default {
   border-bottom: 1px solid rgba(196, 196, 196, 0.4);
 }
 
-.fa-trash {
-  color: #7b84b2;
-  font-size: 20px;
-  cursor: pointer;
-}
 .addMessage {
   height: 32px;
   position: relative;
@@ -742,9 +733,10 @@ export default {
     visibility: hidden;
     transition: width 0.1s linear;
     font-weight: 500;
-    font-size: 12px;
+    font-size: 0.75rem;
     line-height: 150%;
     text-align: right;
+    color: #023a46;
   }
 }
 .buttonAdd {
@@ -885,7 +877,7 @@ export default {
       .p-column-title {
         color: #49527e;
         font-weight: bold;
-        font-size: 12px;
+        font-size: 0.875rem;
         line-height: 150%;
       }
     }
@@ -894,7 +886,8 @@ export default {
       text-align: right;
 
       .zi-table-header-sub {
-        color: #9ba2c5;
+        color: #7b84b2;
+        font-size: 0.875rem;
       }
     }
   }
@@ -932,7 +925,7 @@ export default {
 
           .p-chip-text {
             font-weight: 500;
-            font-size: 12px;
+            font-size: 0.75rem;
             line-height: 20px;
             color: #131520;
             margin: unset;
@@ -950,16 +943,17 @@ export default {
       text-align: right;
 
       .zi-table-product-prop {
-        color: #bbc0d8;
+        color: #7b84b2;
       }
     }
     .zi-table-content-has-sub.zi-has-discount {
       p:first-child {
         text-decoration: line-through;
-        text-decoration-color: red;
+        text-decoration-color: #e61f10;
+        color: #131520;
       }
       p:last-child {
-        color: #065143;
+        color: #036378;
       }
     }
   }
@@ -976,6 +970,14 @@ export default {
   .zi-table-header-lg,
   .zi-table-body-lg {
     width: 11rem;
+
+    .stock {
+      color: #131520;
+    }
+
+    .zeroStock {
+      color: #eb4b00;
+    }
   }
 
   .zi-table-header-second-row {
@@ -1107,12 +1109,12 @@ export default {
 }
 ::v-deep(.zi-switch-input.p-inputswitch) {
   .p-inputswitch-slider {
-    border: solid 0.125rem #6c6c6c;
+    border: solid 0.125rem #048ba8;
     background: transparent;
   }
   .p-inputswitch-slider:before {
     background: transparent;
-    border: solid 0.125rem #6c6c6c;
+    border: solid 0.125rem #048ba8;
     width: 0.75rem;
     height: 0.75rem;
     top: 0.4rem;
@@ -1123,7 +1125,7 @@ export default {
   }
   .p-inputswitch-slider:hover {
     background: transparent !important;
-    border: solid 0.125rem #6c6c6c;
+    border: solid 0.125rem #048ba8;
   }
 
   .p-inputswitch-slider:focus {
@@ -1157,7 +1159,30 @@ export default {
   cursor: pointer;
   color: #49527e;
   font-weight: bold;
-  font-size: 12px;
+  font-size: 0.875rem;
   line-height: 150%;
+}
+
+.selectMessage {
+  p {
+    color: #000;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 130%;
+  }
+  .p-button-text {
+    color: #2c6ecb;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 130%;
+  }
+  .p-button-text:hover {
+    background: transparent;
+  }
+
+  .p-button-text:focus {
+    border: none;
+    box-shadow: none;
+  }
 }
 </style>

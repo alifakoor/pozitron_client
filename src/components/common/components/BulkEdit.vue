@@ -19,7 +19,7 @@
     <Button
     v-show="productsSelections.length>0"
       class="p-button-outlined p-button-secondary"
-      label="ویرایش"
+      label="ذخیره"
       :icon="
         !editLoading
           ? 'pi pi-check-circle zi-button-icon'
@@ -104,7 +104,7 @@
                <i
                 class="svgIcon" 
                 :innerHTML="closeCircleLine"
-                @click="deSelectItem(selectedItem.id)"
+                @click="deSelectProductItem(selectedItem.id)"
               ></i>
             </div>
           </div>
@@ -141,12 +141,12 @@
 						</div>
 					</div> -->
           <div class="p-d-flex p-jc-around p-col-12 p-flex-column">
-            <p class="p-text-right p-mx-5 p-d-flex p-ai-center p-jc-end sellTxt">
-              <InputSwitch v-model="onlineSell" class="zi-switch-input" :class="{'input-switch-unchecked' : onlineSell==false}" /> فروش
+            <p class="p-text-right  p-d-flex p-ai-center p-jc-end sellTxt">
+              <InputSwitch v-model="onlineSell" class="zi-switch-input p-mr-2" :class="{'input-switch-unchecked' : onlineSell==false}" /> فروش
               آنلاین
             </p>
 
-            <div class="p-d-flex p-jc-around p-flex-wrap">
+            <div class="p-d-flex p-jc-between p-flex-wrap inputsContainer">
               <InputHasInfo
                 inputText="قیمت آنلاین"
                 InPlaceholder="تومان"
@@ -316,10 +316,11 @@ export default {
 
 .sellTxt{
   font-weight: 500;
-font-size: 12px;
+font-size: .75rem;
 line-height: 150%;
 text-align: right;
-color: #49527E;
+color: #131520;
+margin: 16px 0px;
 }
 
 .p-dialog-mask {
@@ -336,6 +337,12 @@ color: #49527E;
   }
 }
 
+.inputsContainer{
+  .iconicInput{
+    padding:8px 0;
+  }
+}
+
 .itemsBox {
   height: 100px;
   width: 100%;
@@ -348,7 +355,7 @@ color: #49527E;
   width: fit-content;
   min-width: 64px;
   height: 24px;
-  margin: 0px 10px 5px;
+  margin: 0px 5px 5px;
   padding: 4px;
   background: #dcdeea;
   border: 1px solid #9fb3fd;

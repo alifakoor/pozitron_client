@@ -272,7 +272,7 @@ export default {
       border-radius: 4px;
       width: 123px;
       height: 40px;
-      background: #dcdeea;
+      background: #f9f9fb;
       .inputImage {
         cursor: url("../assets/images/cursor.png"), pointer;
         width: 100%;
@@ -293,6 +293,12 @@ export default {
           font-size: 14px;
         }
       }
+    }
+    .inputWrapper:hover > label > p {
+      color: #9ba2c5;
+    }
+    .inputWrapper:hover > label > i > svg > path {
+      fill: #9ba2c5;
     }
     .smallTxt {
       margin: 8px 0px;
@@ -338,7 +344,7 @@ export default {
         border: 1px solid #bbc0d8;
         height: 40px;
         border-radius: 4px;
-        background: #dcdeea;
+        background: #f9f9fb;
         p,
         i {
           cursor: url("../assets/images/cursor.png"), pointer;
@@ -355,6 +361,12 @@ export default {
           font-size: 14px;
         }
       }
+    }
+    .inputAddImages:hover > label > p {
+      color: #9ba2c5;
+    }
+    .inputAddImages:hover > label > i > svg > path {
+      fill: #9ba2c5;
     }
     .smallTxt {
       margin: 0px;
@@ -379,7 +391,7 @@ export default {
     }
     .topBookMark {
       position: absolute;
-      top: 0px;
+      top: 2px;
       right: 5px;
       color: #49527e;
       z-index: 999;

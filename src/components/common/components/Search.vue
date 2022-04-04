@@ -128,8 +128,8 @@ export default {
   }
 
   .p-inputtext::placeholder {
-    font-size: 12px;
-    color: #bbc0d8;
+    font-size: 0.75rem;
+    color: #9ba2c5;
   }
 }
 </style>

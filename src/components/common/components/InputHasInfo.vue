@@ -171,8 +171,9 @@ export default {
     right: 10%;
     transform: translateY(-10%);
     background-color: #fff;
-    font-size: 12px;
-    color: #7b84b2;
+    font-weight: 500;
+    font-size: 0.75rem;
+    color: #49527e;
   }
   .iconInput {
     width: 32px;
@@ -214,7 +215,8 @@ export default {
 
   .inputStyle::placeholder {
     color: #bbc0d8;
-    font-size: 12px;
+    font-weight: Regular;
+    font-size: 0.875rem;
   }
 
   .inputStyle:hover {

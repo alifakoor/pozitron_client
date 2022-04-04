@@ -1,7 +1,7 @@
 <template>
   <GeneralBox title="مشخصات تکمیلی" InHeight="380px" InGrid="p-md-8">
     <template #InnerHtml>
-      <h5 class="p-px-3 p-pt-4">فروش حضوری</h5>
+      <h5 class="p-px-3 p-pt-4 titleHead">فروش حضوری</h5>
       <div
         class="p-col-12 p-d-flex p-flex-column p-jc-center p-ai-start p-pt-0"
       >
@@ -50,8 +50,8 @@
             >
           </div>
         </div>
-        <div class="p-d-flex p-jc-start p-col-12">
-          <h5 class="p-mx-2">فروش آنلاین</h5>
+        <div class="p-d-flex p-jc-start p-col-12 p-ai-center">
+          <h5 class="p-mx-2 titleHead">فروش آنلاین</h5>
           <InputSwitch v-model="checked" class="MySwitchInput"></InputSwitch>
         </div>
         <div class="p-d-flex p-jc-start p-col-12 p-pl-5">
@@ -238,5 +238,13 @@ export default {
   .p-inputswitch-slider {
     box-shadow: none;
   }
+}
+
+.titleHead {
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 150%;
+  color: #49527e;
+  margin-right: 12px !important;
 }
 </style>
