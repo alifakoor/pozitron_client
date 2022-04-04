@@ -620,6 +620,10 @@ export default {
           });
       }
     },
+
+    // deleteImage(state){
+
+    // }
   },
   actions: {},
   modules: {},

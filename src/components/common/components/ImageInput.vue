@@ -100,6 +100,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import { mapState } from "vuex";
 
 export default {
@@ -109,10 +110,12 @@ export default {
       newPic: null,
       images: [],
       hasImage: false,
+      imageList: [],
     };
   },
   computed: {
     ...mapState("iconSVG", ["uploadIcon", "createFactorBookMark", "trashFill"]),
+    ...mapState("products", ["apiURL", "userToken"]),
   },
   methods: {
     dragover(event) {
@@ -123,19 +126,25 @@ export default {
       let file = event.dataTransfer.files[0];
       this.addNewImg(file);
     },
-    addNewImg(file) {
+    async addNewImg(file) {
+      let makeImg = null;
       this.hasImage = true;
       let newImg = null;
       if (this.images.length === 0) {
         this.topPic = file;
         let image = document.getElementById("topPic");
         image.src = URL.createObjectURL(this.topPic);
-        setTimeout(function () {
+        makeImg = await this.sendImgToDB(file);
+        if (makeImg) {
           document
             .querySelector(".topPic .loadingBox")
             .classList.add("hiddenElement");
-        }, 1000);
-        newImg = { file: this.topPic, index: 0 };
+          newImg = { file: this.topPic, index: 0 };
+        } else {
+          this.topPic = null;
+          hasImage = false;
+          document.getElementById("topPic").remove();
+        }
       } else {
         let index = this.images.length;
         let boxImage = document.querySelector(".smallImages");
@@ -152,53 +161,62 @@ export default {
         let image = document.querySelector(`.smallImg > #smImg${index}`);
         this.newPic = file;
         image.src = URL.createObjectURL(this.newPic);
-        setTimeout(function () {
+        makeImg = await this.sendImgToDB(file);
+        if (makeImg) {
           document
             .querySelector(`.smallImg${index} > .loadingBox`)
             .classList.add("hiddenElement");
-        }, 1000);
-        document
-          .querySelector(`.smallImg${index} > .trash`)
-          .addEventListener("click", () => {
-            Swal.fire({
-              title: "حذف عکس",
-              text: "این فرآیند غیرقابل‌برگشت است.",
-              showCloseButton: true,
-              showCancelButton: true,
-              confirmButtonColor: "#E61F10",
-              cancelButtonColor: " ",
-              cancelButtonText: "بازگشت",
-              confirmButtonText: "حذف",
-            }).then((result) => {
-              if (result.isConfirmed) {
-                const removeImg = this.images;
-                this.images = removeImg.filter((image) => {
-                  return image.index !== index;
-                });
-                document.querySelector(`.smallImg${index}`).remove();
-              }
+          document
+            .querySelector(`.smallImg${index} > .trash`)
+            .addEventListener("click", () => {
+              Swal.fire({
+                title: "حذف عکس",
+                text: "این فرآیند غیرقابل‌برگشت است.",
+                showCloseButton: true,
+                showCancelButton: true,
+                confirmButtonColor: "#E61F10",
+                cancelButtonColor: " ",
+                cancelButtonText: "بازگشت",
+                confirmButtonText: "حذف",
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  let deleted = this.deleteImgFromDB(index);
+                  if (deleted) {
+                    const removeImg = this.images;
+                    this.images = removeImg.filter((image) => {
+                      return image.index !== index;
+                    });
+                    document.querySelector(`.smallImg${index}`).remove();
+                  }
+                }
+              });
             });
-          });
-        document
-          .querySelector(`.smallImg${index} > .bookMark`)
-          .addEventListener("click", () => {
-            let lastTop = this.topPic;
-            this.topPic = this.images.filter((image) => {
-              return image.index == index;
-            })[0].file;
-            this.images.map((image) => {
-              if (image.index == index) {
-                image.file = lastTop;
-              }
+          document
+            .querySelector(`.smallImg${index} > .bookMark`)
+            .addEventListener("click", () => {
+              let lastTop = this.topPic;
+              let topImg = this.imageList[0];
+              this.topPic = this.images.filter((image) => {
+                return image.index == index;
+              })[0].file;
+              this.images.map((image) => {
+                if (image.index == index) {
+                  image.file = lastTop;
+                }
+              });
+              this.imageList[0] = this.imageList[index];
+              this.imageList[index] = topImg;
+              let imageTop = document.getElementById("topPic");
+              imageTop.src = URL.createObjectURL(this.topPic);
+              let image = document.querySelector(`.smallImg${index} > img`);
+              image.src = URL.createObjectURL(lastTop);
             });
-            let imageTop = document.getElementById("topPic");
-            imageTop.src = URL.createObjectURL(this.topPic);
-            let image = document.querySelector(`.smallImg${index} > img`);
-            image.src = URL.createObjectURL(lastTop);
-          });
-        newImg = { file: this.newPic, index: index };
+          newImg = { file: this.newPic, index: index };
+        } else {
+          document.querySelector(`.smallImg${index}`).remove();
+        }
       }
-      this.images.push(newImg);
+      makeImg ? this.images.push(newImg) : "";
     },
     imageInput(event) {
       let file = event.target.files[0];
@@ -218,27 +236,89 @@ export default {
         confirmButtonText: "حذف",
       }).then((result) => {
         if (result.isConfirmed) {
-          this.images.splice(0, 1);
-          if (this.images.length === 0) {
-            this.topPic = null;
-            this.hasImage = false;
-          } else {
-            console.log(this.images);
-            let indexClass = document
-              .querySelectorAll(".smallImg")[0]
-              .getAttribute("data-key");
-            console.log(indexClass);
-            this.topPic = this.images.filter((image) => {
-              return image.index == indexClass;
-            })[0].file;
-            console.log(this.topPic);
-            console.log(this.images);
-            let image = document.getElementById("topPic");
-            image.src = URL.createObjectURL(this.topPic);
-            document.querySelector(`.smallImg${indexClass}`).remove();
+          let deleted = this.deleteImgFromDB(0);
+          if (deleted) {
+            this.images.splice(0, 1);
+            if (this.images.length === 0) {
+              this.topPic = null;
+              this.hasImage = false;
+            } else {
+              console.log(this.images);
+              let indexClass = document
+                .querySelectorAll(".smallImg")[0]
+                .getAttribute("data-key");
+              console.log(indexClass);
+              this.topPic = this.images.filter((image) => {
+                return image.index == indexClass;
+              })[0].file;
+              console.log(this.topPic);
+              console.log(this.images);
+              let image = document.getElementById("topPic");
+              image.src = URL.createObjectURL(this.topPic);
+              document.querySelector(`.smallImg${indexClass}`).remove();
+            }
           }
         }
       });
+    },
+    async sendImgToDB(File) {
+      let formData = new FormData();
+      formData.append("image", File);
+      let result = null;
+      await axios
+        .post(`${this.apiURL}/products/upload`, formData, {
+          headers: {
+            "zi-access-token": this.userToken,
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          console.log(response);
+          if (response.data.success && response.status) {
+            this.imageList.push(response.data.data);
+            result = true;
+          } else {
+            result = false;
+          }
+        })
+        .catch((err) => {
+          result = false;
+        });
+      return result;
+    },
+    async deleteImgFromDB(index) {
+      let imgName = this.imageList[index].name;
+      await axios
+        .delete(`${this.apiURL}/products/upload/${imgName}`, {
+          headers: {
+            "zi-access-token": this.userToken,
+          },
+        })
+        .then((response) => {
+          console.log(response);
+          if (response.data.success && response.status) {
+            this.imageList.splice(index, 1);
+            Swal.fire({
+              position: "center-center",
+              showCloseButton: true,
+              icon: "success",
+              title: "حذف عکس",
+              showConfirmButton: false,
+              text: "عکس با موفقیت حذف شد.",
+              customClass: {
+                htmlContainer: "bottomZero",
+              },
+              timer: 3000,
+            });
+            return true;
+          }
+        })
+        .catch((err) => {
+          result = false;
+          console.log(err);
+        });
+
+      return false;
     },
   },
 };
