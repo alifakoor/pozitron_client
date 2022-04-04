@@ -134,7 +134,6 @@
           <Column
             header="تاریخ"
             headerClass="zi-table-header zi-table-header-second-row zi-direction-ltr"
-            :sortable="true"
           >
           </Column>
           <Column
@@ -144,7 +143,6 @@
           <Column
             header="تاریخ"
             headerClass="zi-table-header zi-table-header-second-row zi-direction-ltr"
-            :sortable="true"
           />
           <Column
             header="ساعت"
@@ -271,20 +269,63 @@
         </Row>
         <Row>
           <Column
-            header="تاریخ"
             headerClass="zi-table-header zi-table-header-second-row zi-direction-ltr"
-            :sortable="true"
           >
+            <template #header>
+              <div
+                class="zi-table-header-has-sub table-sort p-d-flex p-ai-center cursorPointer"
+                @click="sortFactors(['createdAt'])"
+              >
+                <p class="sortCursor">تاریخ</p>
+                <i
+                  v-if="createSort == null"
+                  :innerHTML="sortIcon"
+                  class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
+                ></i>
+                <i
+                  v-else-if="!createSort"
+                  :innerHTML="sortUp"
+                  class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
+                ></i>
+                <i
+                  v-else-if="createSort"
+                  :innerHTML="sortDown"
+                  class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
+                ></i>
+              </div>
+            </template>
           </Column>
           <Column
             header="ساعت"
             headerClass="zi-table-header zi-table-header-second-row"
           />
           <Column
-            header="تاریخ"
             headerClass="zi-table-header zi-table-header-second-row zi-direction-ltr"
-            :sortable="true"
-          />
+          >
+            <template #header>
+              <div
+                class="zi-table-header-has-sub table-sort p-d-flex p-ai-center cursorPointer"
+                @click="sortFactors(['deliveryDate'])"
+              >
+                <p class="sortCursor">تاریخ</p>
+                <i
+                  v-if="deliverySort == null"
+                  :innerHTML="sortIcon"
+                  class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
+                ></i>
+                <i
+                  v-else-if="!deliverySort"
+                  :innerHTML="sortUp"
+                  class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
+                ></i>
+                <i
+                  v-else-if="deliverySort"
+                  :innerHTML="sortDown"
+                  class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
+                ></i>
+              </div>
+            </template>
+          </Column>
           <Column
             header="ساعت"
             headerClass="zi-table-header zi-table-header-second-row"
@@ -319,7 +360,7 @@
                 {{ slotProps.data.name || "نامشخص" }}
               </p>
               <span class="zi-table-product-prop">
-                #{{ slotProps.data.id }}
+                {{ slotProps.data.id }}#
               </span>
             </div>
           </div>
@@ -478,9 +519,8 @@ export default {
       "factorSelections",
       "loadingFactorTable",
       "notValidFactorSearch",
-      "stockSort",
-      "priceSort",
-      "nameSort",
+      "createSort",
+      "deliverySort",
     ]),
     ...mapState("iconSVG", [
       "plusIcon",
@@ -874,6 +914,7 @@ export default {
 
       .zi-table-product-prop {
         color: #bbc0d8;
+        display: flex;
       }
     }
     .zi-table-content-has-sub.zi-has-discount {

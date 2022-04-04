@@ -17,6 +17,8 @@ export default {
     factorIndex: 0,
     factorId: 1,
     onHoldFactors: [],
+    createSort: null,
+    deliverySort: null,
   },
   mutations: {
     setUserTokenForFactors(state, data = null) {
@@ -43,65 +45,29 @@ export default {
     },
     sortFactors(state, data) {
       switch (data[0]) {
-        case "name":
+        case "createdAt":
           {
-            state.stockSort = null;
-            state.priceSort = null;
-            state.nameSort == null
-              ? (state.nameSort = false)
-              : (state.nameSort = !state.nameSort);
-            state.products.sort((a, b) => {
-              return state.nameSort
-                ? b.name.localeCompare(a.name)
-                : a.name.localeCompare(b.name);
+            state.deliverySort = null;
+            state.createSort == null
+              ? (state.createSort = false)
+              : (state.createSort = !state.createSort);
+            state.factors.sort((a, b) => {
+              return state.createSort
+                ? b.createdAt.localeCompare(a.createdAt)
+                : a.createdAt.localeCompare(b.createdAt);
             });
           }
           break;
-        case "onlinePrice":
+        case "deliveryDate":
           {
-            state.stockSort = null;
-            state.nameSort = null;
-            state.priceSort == null
-              ? (state.priceSort = false)
-              : (state.priceSort = !state.priceSort);
-            state.products.sort((a, b) => {
-              if (a.onlineDiscount > 0 && b.onlineDiscount > 0) {
-                return !state.priceSort
-                  ? a.onlineSalePrice - b.onlineSalePrice
-                  : b.onlineSalePrice - a.onlineSalePrice;
-              } else if (a.onlineDiscount > 0 && b.onlineDiscount == 0) {
-                return !state.priceSort
-                  ? a.onlineSalePrice - b.onlinePrice
-                  : b.onlinePrice - a.onlineSalePrice;
-              } else if (a.onlineDiscount == 0 && b.onlineDiscount > 0) {
-                return !state.priceSort
-                  ? a.onlinePrice - b.onlineSalePrice
-                  : b.onlineSalePrice - a.onlinePrice;
-              } else {
-                return !state.priceSort
-                  ? a.onlinePrice - b.onlinePrice
-                  : b.onlinePrice - a.onlinePrice;
-              }
-            });
-          }
-          break;
-        case "onlineStock":
-          {
-            state.priceSort = null;
-            state.nameSort = null;
-            state.stockSort == null
-              ? (state.stockSort = false)
-              : (state.stockSort = !state.stockSort);
-            state.products.sort((a, b) => {
-              if (a.infiniteStock) {
-                return !state.stockSort ? 1 : -1;
-              } else if (b.infiniteStock) {
-                return !state.stockSort ? -1 : 1;
-              } else {
-                return !state.stockSort
-                  ? a.onlineStock - b.onlineStock
-                  : b.onlineStock - a.onlineStock;
-              }
+            state.createSort = null;
+            state.deliverySort == null
+              ? (state.deliverySort = false)
+              : (state.deliverySort = !state.deliverySort);
+            state.factors.sort((a, b) => {
+              return state.deliverySort
+                ? b.deliveryDate.localeCompare(a.deliveryDate)
+                : a.deliveryDate.localeCompare(b.deliveryDate);
             });
           }
           break;
