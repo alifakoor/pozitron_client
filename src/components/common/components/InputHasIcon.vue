@@ -28,6 +28,7 @@
         @blur="isDataNull()"
         @click="() => (notValidData = false)"
         :class="{ 'p-invalid': notValidData }"
+        :name="inputName"
         aria-describedby="productName-help"
       />
     </span>

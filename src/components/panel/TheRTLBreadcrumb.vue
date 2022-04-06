@@ -96,8 +96,17 @@
         :class="createTab ? 'p-d-flex' : 'p-d-none'"
       >
         <button class="productBtnCancel" @click="backToTable">لغو</button>
-        <button class="productBtnSave" @click="createProduct('simple')">
-          <i class="svgIcon cursorPointer" :innerHTML="checkCircleLine"></i
+        <button class="productBtnSave" @click="creatNewProduct()">
+          <i
+            v-if="creating"
+            class="svgIcon cursorPointer"
+            :innerHTML="loadingCircle"
+          ></i>
+          <i
+            v-else
+            class="svgIcon cursorPointer"
+            :innerHTML="checkCircleLine"
+          ></i
           >ذخیره
         </button>
       </div>
@@ -117,6 +126,7 @@ export default {
       showNotif: false,
       notifCount: 1,
       exitBox: false,
+      creating: false,
       items: [
         {
           label: "فروش حضوری",
@@ -167,6 +177,7 @@ export default {
   },
   computed: {
     ...mapState(["userDomain"]),
+    ...mapState("products", ["creatingProduct"]),
     ...mapState("iconSVG", [
       "bellIcon",
       "greenClose",
@@ -174,10 +185,12 @@ export default {
       "checkCircleLine",
       "menuBarIcon",
       "greenLeftArrow",
+      "loadingCircle",
     ]),
   },
   watch: {
     $route(to, from) {
+      this.createTab = false;
       if (
         to.fullPath == `/panel/${this.cookies.cookies.get("uzit")}/Dashboard`
       ) {
@@ -193,6 +206,7 @@ export default {
       } else if (
         to.fullPath == `/panel/${this.cookies.cookies.get("uzit")}/create`
       ) {
+        this.createTab = true;
         document
           .getElementById("breadCrumb")
           .setAttribute(
@@ -234,6 +248,25 @@ export default {
         document.getElementById("breadCrumb2").classList.add("p-d-none");
       }
     },
+    creatingProduct: function () {
+      if (this.creatingProduct) {
+        this.creating = false;
+        this.$router.push({
+          name: "products",
+          params: { userId: this.cookies.cookies.get("uzit") },
+        });
+      }
+    },
+  },
+  created() {
+    if (
+      this.$router.currentRoute.value.fullPath ==
+      `/panel/${this.cookies.cookies.get("uzit")}/create`
+    ) {
+      this.createTab = true;
+    } else {
+      this.createTab = false;
+    }
   },
   methods: {
     ...mapMutations(["changeUserToken"]),
@@ -255,6 +288,17 @@ export default {
         name: "products",
         params: { userId: this.cookies.cookies.get("uzit") },
       });
+    },
+    creatNewProduct() {
+      if (document.querySelector("input[name='name'").value == "") {
+        document.getElementById("productName-help").classList.add("p-d-flex");
+        document
+          .getElementById("productName-help")
+          .classList.remove("p-d-none");
+      } else {
+        this.creating = true;
+        this.createProduct("simple");
+      }
     },
   },
 };

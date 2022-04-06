@@ -101,7 +101,7 @@
 
 <script>
 import axios from "axios";
-import { mapState } from "vuex";
+import { mapMutations, mapState } from "vuex";
 
 export default {
   data() {
@@ -118,6 +118,7 @@ export default {
     ...mapState("products", ["apiURL", "userToken"]),
   },
   methods: {
+    ...mapMutations("products", ["setImagesForProduct"]),
     dragover(event) {
       event.preventDefault();
     },
@@ -206,6 +207,7 @@ export default {
               });
               this.imageList[0] = this.imageList[index];
               this.imageList[index] = topImg;
+              this.setImagesForProduct(this.imageList);
               let imageTop = document.getElementById("topPic");
               imageTop.src = URL.createObjectURL(this.topPic);
               let image = document.querySelector(`.smallImg${index} > img`);
@@ -274,8 +276,9 @@ export default {
         })
         .then((response) => {
           console.log(response);
-          if (response.data.success && response.status) {
+          if (response.data.success && response.status == 200) {
             this.imageList.push(response.data.data);
+            this.setImagesForProduct(this.imageList);
             result = true;
           } else {
             result = false;
@@ -296,8 +299,9 @@ export default {
         })
         .then((response) => {
           console.log(response);
-          if (response.data.success && response.status) {
+          if (response.data.success && response.status == 200) {
             this.imageList.splice(index, 1);
+            this.setImagesForProduct(this.imageList);
             Swal.fire({
               position: "center-center",
               showCloseButton: true,

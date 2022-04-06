@@ -402,7 +402,7 @@
         <template #body="slotProps">
           <div class="zi-table-content">
             <img
-              v-if="slotProps.data.images == ''"
+              v-if="slotProps.data.images.lenght == 0"
               src="../../assets/images/usersImg/DefaultImage.jpg"
               class="product-image"
               :alt="slotProps.data.name"

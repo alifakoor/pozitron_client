@@ -73,6 +73,7 @@
         <div class="imgBox">
           <i class="svgIcon" :innerHTML="lgBookMarkIcon"></i>
           <img
+            draggable="false"
             v-if="product.images[0]"
             :src="product.images[0].src"
             :alt="product.name"
@@ -82,6 +83,7 @@
             src="../../assets/images/usersImg/DefaultImage.jpg"
             class="product-image"
             :alt="product.name"
+            draggable="false"
           />
         </div>
         <p class="productName">{{ product.name }}</p>
@@ -155,12 +157,14 @@
                 v-if="product.images[0]"
                 :src="product.images[0].src"
                 :alt="product.name"
+                draggable="false"
               />
               <img
                 v-else
                 src="../../assets/images/usersImg/DefaultImage.jpg"
                 class="product-image"
                 :alt="product.name"
+                draggable="false"
               />
             </div>
             <div class="nameBox">

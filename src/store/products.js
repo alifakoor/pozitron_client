@@ -1,5 +1,6 @@
 import { useCookies } from "vue3-cookies";
 import axios from "axios";
+import Router from "../router/index";
 
 export default {
   namespaced: true,
@@ -21,6 +22,8 @@ export default {
     notValidSearchProductFactor: false,
     editDisplay: null,
     newProduct: {},
+    creatingProduct: null,
+    newProductImg: [],
   },
   mutations: {
     setUserTokenForProducts(state, data = null) {
@@ -557,27 +560,42 @@ export default {
       state.newProduct[feature.name] = feature.inValue;
     },
 
-    createProduct(state, type) {
+    setImagesForProduct(state, data) {
+      state.newProductImg = data;
+    },
+
+    async createProduct(state, type) {
+      state.creatingProdut = false;
       state.newProduct["type"] = type;
       let Product = Object.entries(state.newProduct).reduce(
         (a, [k, v]) => (v === null ? a : ((a[k] = v), a)),
         {}
       );
-      console.log(Product);
-      axios
+      if (state.newProductImg == []) {
+        state.newProduct["images"] = [];
+      } else {
+        state.newProduct["images"] = state.newProductImg;
+      }
+      await axios
         .post(
           `${state.apiURL}/products/create`,
           {
-            Product,
+            ...Product,
           },
           { headers: { "zi-access-token": state.userToken } }
         )
         .then((response) => {
           console.log(response);
+          if (response.status == 200 && response.data.success) {
+            state.creatingProduct = true;
+            state.products.push(response.data.data);
+            state.mainProducts.push(response.data.data);
+          }
         })
         .catch((err) => {
           console.log(err);
         });
+      state.creatingProduct = null;
     },
 
     setFactorProduct(state) {
@@ -620,10 +638,6 @@ export default {
           });
       }
     },
-
-    // deleteImage(state){
-
-    // }
   },
   actions: {},
   modules: {},
