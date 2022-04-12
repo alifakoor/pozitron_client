@@ -361,14 +361,17 @@ export default {
                   fields.onlineStock
                     ? (product.onlineStock = fields.onlineStock)
                     : "";
+                  fields.stock ? (product.stock = fields.stock) : "";
                   // add changing for onlinePrice & onlineDiscount changing
                   fields.onlinePrice
                     ? (product.onlinePrice = fields.onlinePrice)
                     : "";
+                  fields.price ? (product.price = fields.price) : "";
 
                   fields.onlineDiscount
                     ? (product.onlineDiscount = fields.onlineDiscount)
                     : "";
+                  fields.discount ? (product.discount = fields.discount) : "";
 
                   fields.onlinePrice || fields.onlineDiscount
                     ? (product.onlineSalePrice = Math.floor(
@@ -376,9 +379,15 @@ export default {
                           ((100 - product.onlineDiscount) / 100)
                       ))
                     : "";
+                  fields.price || fields.discount
+                    ? (product.salePrice = Math.floor(
+                        product.price * ((100 - product.discount) / 100)
+                      ))
+                    : "";
                   fields.onlineDiscount == 0
                     ? (product.onlineDiscount = 0)
                     : "";
+                  fields.discount == 0 ? (product.discount = 0) : "";
                 }
               });
             });
