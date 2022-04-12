@@ -19,7 +19,7 @@
     <Button
     v-show="productsSelections.length>0"
       class="p-button-outlined p-button-secondary"
-      label="ذخیره"
+      label="ویرایش"
       :icon="
         !editLoading
           ? 'pi pi-check-circle zi-button-icon'
@@ -42,7 +42,7 @@
             <div class="zi-bulk-edit">
               <Button
                 class="p-button-outlined p-button-secondary"
-                label="ویرایش"
+                label="ذخیره"
                 :icon="sendEdit ? 'pi pi-spin pi-spinner zi-button-icon' : 'pi pi-check-circle zi-button-icon'"
                 iconPos="right"
                 @click="edit()"
@@ -111,35 +111,39 @@
         </div>
         <Divider class="p-m-0 p-p-0" type="solid" />
         <div class="p-d-flex p-flex-column">
-          <!-- <div class="p-d-flex p-jc-around p-col-12 p-flex-column">
-						<p class="p-text-right p-mx-5">فروش حضوری</p>
-						<div class="p-d-flex p-jc-around">
+          <div class="p-d-flex p-jc-around p-col-12 p-flex-column">
+						<p class="p-text-right p-d-flex p-ai-center p-jc-end sellTxt">فروش حضوری</p>
+						<div class="p-d-flex p-jc-between p-flex-wrap inputsContainer">
 							<InputHasInfo
 								inputText="قیمت حضوری"
 								InPlaceholder="تومان"
 								explaination="true"
 								inType="number"
-								InGrid="p-col-3"
+								InGrid="p-col-12 p-lg-3"
 								InHeight="32px"
+                @changeInputValue="setPrice"
 							></InputHasInfo>
 							<InputHasIcon
-								iconClass="ri-percent-line"
+								:iconClass="discountIcon"
 								inputText="تخفیف حضوری "
 								InPlaceholder="درصد"
 								inType="number"
-								InGrid="p-col-3"
+								InGrid="p-col-12 p-lg-3"
 								InHeight="32px"
+                :MaxValue="100"
+                @changeInputValue="setDiscountPercent"
 							></InputHasIcon>
 
 							<InputHasInfo
 								inputText="موجودی کل"
 								InPlaceholder="تعداد"
 								inType="number"
-								InGrid="p-col-3"
+								InGrid="p-col-12 p-lg-3"
 								InHeight="32px"
+                @changeInputValue="setStock"
 							></InputHasInfo>
 						</div>
-					</div> -->
+					</div>
           <div class="p-d-flex p-jc-around p-col-12 p-flex-column">
             <p class="p-text-right  p-d-flex p-ai-center p-jc-end sellTxt">
               <InputSwitch v-model="onlineSell" class="zi-switch-input p-mr-2" :class="{'input-switch-unchecked' : onlineSell==false}" /> فروش
@@ -192,8 +196,11 @@ export default {
       editLoading: false,
       sendEdit: false,
       onlinePrice: null,
+      price: null,
+      discountPercent: null,
       OnlineDiscountPercent: null,
       onlineStock: null,
+      stock: null,
       onlineSell: null,
     };
   },
@@ -204,12 +211,20 @@ export default {
       return {
         onlinePrice:
           this.onlinePrice == null  || this.onlinePrice=="" ? null : parseInt(this.onlinePrice),
+        price:
+          this.price == null  || this.price=="" ? null : parseInt(this.price),
         onlineDiscount:
           this.OnlineDiscountPercent == null || this.OnlineDiscountPercent == ""
             ? null
             : parseInt(this.OnlineDiscountPercent),
+        discount:
+          this.discountPercent == null || this.discountPercent == ""
+            ? null
+            : parseInt(this.discountPercent),
         onlineStock:
           this.onlineStock == null ||  this.onlineStock == "" ? null : parseInt(this.onlineStock),
+        stock:
+          this.stock == null ||  this.stock == "" ? null : parseInt(this.stock),
         onlineSell: this.onlineSell,
       };
     },
@@ -244,6 +259,15 @@ export default {
     },
     setOnlineStock(inputValue) {
       this.onlineStock = inputValue;
+    },
+    setPrice(inputValue) {
+      this.price = inputValue;
+    },
+    setDiscountPercent(inputValue) {
+      this.discountPercent = inputValue;
+    },
+    setStock(inputValue) {
+      this.stock = inputValue;
     },
   },
   watch:{

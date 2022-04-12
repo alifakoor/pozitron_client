@@ -96,17 +96,17 @@
             headerClass="zi-table-header zi-table-header-lg"
             :rowspan="2"
           ></Column>
-          <!-- <Column
-						header="موجودی (تعداد)"
-						headerClass="zi-table-header zi-table-header-lg"
-						:colspan="2"
-					/>
-					<Column
-						header="قیمت (تومان)"
-						headerClass="zi-table-header zi-table-header-lg"
-						:colspan="2"
-					/> -->
-          <Column headerClass="zi-table-header zi-table-header-lg" :rowspan="2">
+          <Column
+            header="موجودی (تعداد)"
+            headerClass="zi-table-header zi-table-header-lg"
+            :colspan="2"
+          />
+          <Column
+            header="قیمت (تومان)"
+            headerClass="zi-table-header zi-table-header-lg"
+            :colspan="2"
+          />
+          <!-- <Column headerClass="zi-table-header zi-table-header-lg" :rowspan="2">
             <template #header>
               <div
                 class="zi-table-header-has-sub table-sort p-d-flex p-ai-center"
@@ -127,7 +127,7 @@
                 <p class="sortCursor">قیمت (تومان)</p>
               </div>
             </template>
-          </Column>
+          </Column> -->
           <Column
             header="فروش آنلاین"
             headerClass="zi-table-header"
@@ -155,27 +155,23 @@
           </Column>
         </Row>
         <Row>
-          <!-- <Column
-						header="کل"
-						headerClass="zi-table-header zi-table-header-second-row zi-direction-ltr"
-						:sortable="true"
-					>
-					</Column>
-					<Column
-						header="آنلاین"
-						headerClass="zi-table-header zi-table-header-second-row"
-						:sortable="true"
-					/>
-					<Column
-						header="حضوری"
-						headerClass="zi-table-header zi-table-header-second-row zi-direction-ltr"
-						:sortable="true"
-					/> -->
-          <!-- <Column
-						header="آنلاین"
-						headerClass="zi-table-header zi-table-header-second-row"
-						:sortable="true"
-					/> -->
+          <Column
+            header="کل"
+            headerClass="zi-table-header zi-table-header-second-row zi-direction-ltr"
+          >
+          </Column>
+          <Column
+            header="آنلاین"
+            headerClass="zi-table-header zi-table-header-second-row"
+          />
+          <Column
+            header="حضوری"
+            headerClass="zi-table-header zi-table-header-second-row zi-direction-ltr"
+          />
+          <Column
+            header="آنلاین"
+            headerClass="zi-table-header zi-table-header-second-row"
+          />
         </Row>
       </ColumnGroup>
 
@@ -278,17 +274,21 @@
             headerClass="zi-table-header zi-table-header-lg"
             :rowspan="2"
           ></Column>
+          <Column
+            header="موجودی (تعداد)"
+            headerClass="zi-table-header zi-table-header-lg"
+            :colspan="2"
+          />
+          <Column
+            header="قیمت (تومان)"
+            headerClass="zi-table-header zi-table-header-lg"
+            :colspan="2"
+          />
           <!-- <Column
-						header="موجودی (تعداد)"
-						headerClass="zi-table-header zi-table-header-lg"
-						:colspan="2"
-					/>
-					<Column
-						header="قیمت (تومان)"
-						headerClass="zi-table-header zi-table-header-lg"
-						:colspan="2"
-					/> -->
-          <Column headerClass="zi-table-header zi-table-header-lg" :rowspan="2">
+            headerClass="zi-table-header zi-table-header-lg"
+            :rowspan="2"
+            :colspan="2"
+          >
             <template #header>
               <div
                 class="zi-table-header-has-sub table-sort p-d-flex p-ai-center"
@@ -317,6 +317,7 @@
             headerClass="zi-table-header
 					zi-table-header-lg"
             :rowspan="2"
+            :colspan="2"
           >
             <template #header>
               <div
@@ -341,7 +342,7 @@
                 ></i>
               </div>
             </template>
-          </Column>
+          </Column> -->
           <Column
             header="فروش آنلاین"
             headerClass="zi-table-header"
@@ -369,27 +370,110 @@
           </Column>
         </Row>
         <Row>
-          <!-- <Column
-						header="کل"
-						headerClass="zi-table-header zi-table-header-second-row zi-direction-ltr"
-						:sortable="true"
-					>
-					</Column>
-					<Column
-						header="آنلاین"
-						headerClass="zi-table-header zi-table-header-second-row"
-						:sortable="true"
-					/>
-					<Column
-						header="حضوری"
-						headerClass="zi-table-header zi-table-header-second-row zi-direction-ltr"
-						:sortable="true"
-					/> -->
-          <!-- <Column
-						header="آنلاین"
-						headerClass="zi-table-header zi-table-header-second-row"
-						:sortable="true"
-					/> -->
+          <Column
+            headerClass="zi-table-header zi-table-header-second-row zi-direction-ltr"
+          >
+            <template #header>
+              <div
+                class="zi-table-header-has-sub table-sort p-d-flex p-ai-center"
+                @click="sortProducts(['stock'])"
+              >
+                <p class="sortCursor">کل</p>
+                <i
+                  v-if="stockSort == null"
+                  :innerHTML="sortIcon"
+                  class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
+                ></i>
+                <i
+                  v-else-if="!stockSort"
+                  :innerHTML="sortUp"
+                  class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
+                ></i>
+                <i
+                  v-else-if="stockSort"
+                  :innerHTML="sortDown"
+                  class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
+                ></i>
+              </div>
+            </template>
+          </Column>
+          <Column headerClass="zi-table-header zi-table-header-second-row">
+            <template #header>
+              <div
+                class="zi-table-header-has-sub table-sort p-d-flex p-ai-center"
+                @click="sortProducts(['onlineStock'])"
+              >
+                <p class="sortCursor">آنلاین</p>
+                <i
+                  v-if="onlineStockSort == null"
+                  :innerHTML="sortIcon"
+                  class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
+                ></i>
+                <i
+                  v-else-if="!onlineStockSort"
+                  :innerHTML="sortUp"
+                  class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
+                ></i>
+                <i
+                  v-else-if="onlineStockSort"
+                  :innerHTML="sortDown"
+                  class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
+                ></i>
+              </div>
+            </template>
+          </Column>
+          <Column
+            headerClass="zi-table-header zi-table-header-second-row zi-direction-ltr"
+          >
+            <template #header>
+              <div
+                class="zi-table-header-has-sub table-sort p-d-flex p-ai-center"
+                @click="sortProducts(['onlinePrice'])"
+              >
+                <p class="sortCursor">آنلاین</p>
+                <i
+                  v-if="onlinePriceSort == null"
+                  :innerHTML="sortIcon"
+                  class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
+                ></i>
+                <i
+                  v-else-if="!onlinePriceSort"
+                  :innerHTML="sortUp"
+                  class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
+                ></i>
+                <i
+                  v-else-if="onlinePriceSort"
+                  :innerHTML="sortDown"
+                  class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
+                ></i>
+              </div>
+            </template>
+          </Column>
+          <Column headerClass="zi-table-header zi-table-header-second-row">
+            <template #header>
+              <div
+                class="zi-table-header-has-sub table-sort p-d-flex p-ai-center"
+                @click="sortProducts(['price'])"
+              >
+                <p class="sortCursor">حضوری</p>
+                <i
+                  v-if="priceSort == null"
+                  :innerHTML="sortIcon"
+                  class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
+                ></i>
+                <i
+                  v-else-if="!priceSort"
+                  :innerHTML="sortUp"
+                  class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
+                ></i>
+                <i
+                  v-else-if="priceSort"
+                  :innerHTML="sortDown"
+                  class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
+                ></i>
+              </div>
+            </template>
+          </Column>
         </Row>
       </ColumnGroup>
       <Column
@@ -402,7 +486,7 @@
         <template #body="slotProps">
           <div class="zi-table-content">
             <img
-              v-if="slotProps.data.images.lenght == 0"
+              v-if="slotProps.data.images.length == 0"
               src="../../assets/images/usersImg/DefaultImage.jpg"
               class="product-image"
               :alt="slotProps.data.name"
@@ -471,11 +555,19 @@
           </div>
         </template>
       </Column>
-      <Column
-        field="onlineStock"
-        bodyClass="zi-table-body zi-table-body-lg"
-        :sortable="true"
-      >
+      <Column field="stock" bodyClass="zi-table-body " :sortable="true">
+        <template #body="slotProps">
+          <div v-if="slotProps.data.infiniteStock">
+            <i class="svgIcon" :innerHTML="infinityIcon"></i>
+          </div>
+          <div v-else>
+            <p :class="slotProps.data.stock == 0 ? 'zeroStock' : 'stock'">
+              {{ slotProps.data.stock }}
+            </p>
+          </div>
+        </template>
+      </Column>
+      <Column field="onlineStock" bodyClass="zi-table-body" :sortable="true">
         <template #body="slotProps">
           <div v-if="slotProps.data.infiniteStock">
             <i class="svgIcon" :innerHTML="infinityIcon"></i>
@@ -487,10 +579,9 @@
           </div>
         </template>
       </Column>
-      <!-- <Column field="onlineStock" bodyClass="zi-table-body"></Column> -->
       <Column
         field="onlinePrice"
-        bodyClass="zi-table-body zi-table-body-lg"
+        bodyClass="zi-table-body"
         bodyStyle="padding-right: 0;"
         :sortable="true"
       >
@@ -512,30 +603,30 @@
           </div>
         </template>
       </Column>
-      <!-- <Column
-				field="onlinePrice"
-				bodyClass="zi-table-body"
-				bodyStyle="padding-right: 0;"
-			>
-				<template #body="slotProps">
-					<div
-						:class="[
-							'zi-table-content-has-sub',
-							slotProps.data.onlineDiscount
-								? 'zi-has-discount'
-								: null,
-						]"
-					>
-						<p>{{ slotProps.data.onlinePrice.toLocaleString() }}</p>
-						<p v-if="slotProps.data.onlineDiscount">
-							{{ slotProps.data.onlinePrice.toLocaleString() }}
-							<Tag
-								:value="`${slotProps.data.onlineDiscount}%`"
-							></Tag>
-						</p>
-					</div>
-				</template>
-			</Column> -->
+      <Column
+        field="price"
+        bodyClass="zi-table-body "
+        bodyStyle="padding-right: 0;"
+        :sortable="true"
+      >
+        <template #body="slotProps">
+          <div class="zi-table-content">
+            <div
+              :class="[
+                'zi-table-content-has-sub',
+                slotProps.data.discount > 0 ? 'zi-has-discount' : null,
+              ]"
+            >
+              <p>
+                {{ slotProps.data.price.toLocaleString() }}
+              </p>
+              <p v-if="slotProps.data.discount > 0">
+                {{ slotProps.data.salePrice.toLocaleString() }}
+              </p>
+            </div>
+          </div>
+        </template>
+      </Column>
       <Column bodyClass="zi-table-body">
         <template #body="slotProps">
           <div class="zi-table-content">
@@ -586,6 +677,8 @@ export default {
       "stockSort",
       "priceSort",
       "nameSort",
+      "onlineStockSort",
+      "onlinePriceSort",
     ]),
     ...mapState("iconSVG", [
       "plusIcon",
