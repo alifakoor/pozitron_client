@@ -17,6 +17,8 @@ export default {
     priceSort: null,
     nameSort: null,
     stockSort: null,
+    onlinePriceSort: null,
+    onlineStockSort: null,
     loadingProductTable: true,
     notValidProductSearch: false,
     notValidSearchProductFactor: false,
@@ -57,6 +59,8 @@ export default {
           {
             state.stockSort = null;
             state.priceSort = null;
+            state.onlinePriceSort = null;
+            state.onlineStockSort = null;
             state.nameSort == null
               ? (state.nameSort = false)
               : (state.nameSort = !state.nameSort);
@@ -69,36 +73,90 @@ export default {
           break;
         case "onlinePrice":
           {
-            state.stockSort = null;
+            state.priceSort = null;
+            state.onlineStockSort = null;
             state.nameSort = null;
-            state.priceSort == null
-              ? (state.priceSort = false)
-              : (state.priceSort = !state.priceSort);
+            state.stockSort = null;
+            state.onlinePriceSort == null
+              ? (state.onlinePriceSort = false)
+              : (state.onlinePriceSort = !state.onlinePriceSort);
             state.products.sort((a, b) => {
               if (a.onlineDiscount > 0 && b.onlineDiscount > 0) {
-                return !state.priceSort
+                return !state.onlinePriceSort
                   ? a.onlineSalePrice - b.onlineSalePrice
                   : b.onlineSalePrice - a.onlineSalePrice;
               } else if (a.onlineDiscount > 0 && b.onlineDiscount == 0) {
-                return !state.priceSort
+                return !state.onlinePriceSort
                   ? a.onlineSalePrice - b.onlinePrice
                   : b.onlinePrice - a.onlineSalePrice;
               } else if (a.onlineDiscount == 0 && b.onlineDiscount > 0) {
-                return !state.priceSort
+                return !state.onlinePriceSort
                   ? a.onlinePrice - b.onlineSalePrice
                   : b.onlineSalePrice - a.onlinePrice;
               } else {
-                return !state.priceSort
+                return !state.onlinePriceSort
                   ? a.onlinePrice - b.onlinePrice
                   : b.onlinePrice - a.onlinePrice;
               }
             });
           }
           break;
+        case "price":
+          {
+            state.onlinePriceSort = null;
+            state.onlineStockSort = null;
+            state.nameSort = null;
+            state.stockSort = null;
+            state.priceSort == null
+              ? (state.priceSort = false)
+              : (state.priceSort = !state.priceSort);
+            state.products.sort((a, b) => {
+              if (a.discount > 0 && b.discount > 0) {
+                return !state.priceSort
+                  ? a.salePrice - b.salePrice
+                  : b.salePrice - a.salePrice;
+              } else if (a.discount > 0 && b.discount == 0) {
+                return !state.priceSort
+                  ? a.salePrice - b.price
+                  : b.price - a.salePrice;
+              } else if (a.discount == 0 && b.discount > 0) {
+                return !state.priceSort
+                  ? a.price - b.salePrice
+                  : b.salePrice - a.price;
+              } else {
+                return !state.priceSort ? a.price - b.price : b.price - a.price;
+              }
+            });
+          }
+          break;
         case "onlineStock":
           {
+            state.onlinePriceSort = null;
             state.priceSort = null;
             state.nameSort = null;
+            state.stockSort = null;
+            state.onlineStockSort == null
+              ? (state.onlineStockSort = false)
+              : (state.onlineStockSort = !state.onlineStockSort);
+            state.products.sort((a, b) => {
+              if (a.infiniteStock) {
+                return !state.onlineStockSort ? 1 : -1;
+              } else if (b.infiniteStock) {
+                return !state.onlineStockSort ? -1 : 1;
+              } else {
+                return !state.onlineStockSort
+                  ? a.onlineStock - b.onlineStock
+                  : b.onlineStock - a.onlineStock;
+              }
+            });
+          }
+          break;
+        case "stock":
+          {
+            state.onlinePriceSort = null;
+            state.priceSort = null;
+            state.nameSort = null;
+            state.onlineStockSort = null;
             state.stockSort == null
               ? (state.stockSort = false)
               : (state.stockSort = !state.stockSort);
@@ -108,9 +166,7 @@ export default {
               } else if (b.infiniteStock) {
                 return !state.stockSort ? -1 : 1;
               } else {
-                return !state.stockSort
-                  ? a.onlineStock - b.onlineStock
-                  : b.onlineStock - a.onlineStock;
+                return !state.stockSort ? a.stock - b.stock : b.stock - a.stock;
               }
             });
           }

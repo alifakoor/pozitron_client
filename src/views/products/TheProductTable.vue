@@ -376,7 +376,7 @@
             <template #header>
               <div
                 class="zi-table-header-has-sub table-sort p-d-flex p-ai-center"
-                @click="sortProducts(['onlineStock'])"
+                @click="sortProducts(['stock'])"
               >
                 <p class="sortCursor">کل</p>
                 <i
@@ -405,17 +405,17 @@
               >
                 <p class="sortCursor">آنلاین</p>
                 <i
-                  v-if="stockSort == null"
+                  v-if="onlineStockSort == null"
                   :innerHTML="sortIcon"
                   class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
                 ></i>
                 <i
-                  v-else-if="!stockSort"
+                  v-else-if="!onlineStockSort"
                   :innerHTML="sortUp"
                   class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
                 ></i>
                 <i
-                  v-else-if="stockSort"
+                  v-else-if="onlineStockSort"
                   :innerHTML="sortDown"
                   class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
                 ></i>
@@ -432,17 +432,17 @@
               >
                 <p class="sortCursor">آنلاین</p>
                 <i
-                  v-if="priceSort == null"
+                  v-if="onlinePriceSort == null"
                   :innerHTML="sortIcon"
                   class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
                 ></i>
                 <i
-                  v-else-if="!priceSort"
+                  v-else-if="!onlinePriceSort"
                   :innerHTML="sortUp"
                   class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
                 ></i>
                 <i
-                  v-else-if="priceSort"
+                  v-else-if="onlinePriceSort"
                   :innerHTML="sortDown"
                   class="p-sortable-column-icon sortCursor svgIcon p-mr-1"
                 ></i>
@@ -453,7 +453,7 @@
             <template #header>
               <div
                 class="zi-table-header-has-sub table-sort p-d-flex p-ai-center"
-                @click="sortProducts(['onlinePrice'])"
+                @click="sortProducts(['price'])"
               >
                 <p class="sortCursor">حضوری</p>
                 <i
@@ -555,19 +555,7 @@
           </div>
         </template>
       </Column>
-      <Column field="onlineStock" bodyClass="zi-table-body " :sortable="true">
-        <template #body="slotProps">
-          <div v-if="slotProps.data.infiniteStock">
-            <i class="svgIcon" :innerHTML="infinityIcon"></i>
-          </div>
-          <div v-else>
-            <p :class="slotProps.data.onlineStock == 0 ? 'zeroStock' : 'stock'">
-              {{ slotProps.data.onlineStock }}
-            </p>
-          </div>
-        </template>
-      </Column>
-      <Column field="stock" bodyClass="zi-table-body" :sortable="true">
+      <Column field="stock" bodyClass="zi-table-body " :sortable="true">
         <template #body="slotProps">
           <div v-if="slotProps.data.infiniteStock">
             <i class="svgIcon" :innerHTML="infinityIcon"></i>
@@ -575,6 +563,18 @@
           <div v-else>
             <p :class="slotProps.data.stock == 0 ? 'zeroStock' : 'stock'">
               {{ slotProps.data.stock }}
+            </p>
+          </div>
+        </template>
+      </Column>
+      <Column field="onlineStock" bodyClass="zi-table-body" :sortable="true">
+        <template #body="slotProps">
+          <div v-if="slotProps.data.infiniteStock">
+            <i class="svgIcon" :innerHTML="infinityIcon"></i>
+          </div>
+          <div v-else>
+            <p :class="slotProps.data.onlineStock == 0 ? 'zeroStock' : 'stock'">
+              {{ slotProps.data.onlineStock }}
             </p>
           </div>
         </template>
@@ -677,6 +677,8 @@ export default {
       "stockSort",
       "priceSort",
       "nameSort",
+      "onlineStockSort",
+      "onlinePriceSort",
     ]),
     ...mapState("iconSVG", [
       "plusIcon",
