@@ -9,11 +9,82 @@
     :modal="true"
   >
     <template #header>
-      <div class="p-d-flex p-flex-column">
-        <div class="p-d-flex p-ai-center p-jc-between p-flex-reverse">
-          <p class="factorNum">جزئیات فاکتور 21371#</p>
-          <p class="userName">(هدی احمدی)</p>
-          <p class="factorStatus">تکمیل شده</p>
+      <div
+        class="p-d-flex p-flex-column p-ai-start p-jc-center"
+        style="width: 100%"
+      >
+        <div class="p-d-flex p-jc-between" style="width: 100%">
+          <div class="p-d-flex">
+            <div class="p-d-flex p-ai-center p-jc-between p-flex-reverse">
+              <i
+                v-if="src == 'online'"
+                class="svgIcon p-d-flex"
+                :innerHTML="globalIcon"
+              ></i>
+              <i v-else class="svgIcon p-d-flex" :innerHTML="offlineICon"></i>
+              <p class="factorNum">جزئیات فاکتور 21371#</p>
+              <p class="userName">(هدی احمدی)</p>
+              <p class="factorStatus">تکمیل شده</p>
+            </div>
+          </div>
+          <div class="p-d-flex p-ai-center">
+            <i
+              class="svgIcon p-d-flex p-ml-3 p-ai-center"
+              :innerHTML="printIcon"
+            ></i>
+            <Button
+              v-if="src != 'online'"
+              class="p-button-outlined p-button-secondary p-ml-5"
+              label="ویرایش"
+              :icon="
+                !editLoading
+                  ? 'pi pi-check-circle zi-button-icon'
+                  : 'pi pi-spin pi-spinner zi-button-icon'
+              "
+              iconPos="left"
+              @click="showEdit()"
+            />
+          </div>
+        </div>
+        <div class="p-d-flex p-mr-2">
+          <p class="dateStyle">
+            {{
+              new Date(
+                new Date(Factor.createdAt)
+                  .toISOString()
+                  .slice(0, 19)
+                  .split("T")[0]
+              )
+                .toLocaleDateString("fa-IR")
+                .split("/")[2]
+            }}
+          </p>
+          <p>/</p>
+          <p class="dateStyle">
+            {{
+              new Date(
+                new Date(Factor.createdAt)
+                  .toISOString()
+                  .slice(0, 19)
+                  .split("T")[0]
+              )
+                .toLocaleDateString("fa-IR")
+                .split("/")[1]
+            }}
+          </p>
+          <p>/</p>
+          <p class="dateStyle">
+            {{
+              new Date(
+                new Date(Factor.createdAt)
+                  .toISOString()
+                  .slice(0, 19)
+                  .split("T")[0]
+              )
+                .toLocaleDateString("fa-IR")
+                .split("/")[0]
+            }}
+          </p>
         </div>
       </div>
     </template>
@@ -77,7 +148,7 @@
               <div class="zi-table-content">
                 <img
                   v-if="!slotProps.data.images"
-                  src="../../assets/images/usersImg/DefaultImage.jpg"
+                  src="../../../assets/images/usersImg/DefaultImage.jpg"
                   class="product-image"
                   :alt="slotProps.data.id"
                 />
@@ -109,7 +180,7 @@
           <Column field="price" bodyClass="zi-table-body zi-table-body-lg">
             <template #body="slotProps">
               <div class="zi-table-content">
-                <p>{{ slotProps.data.price }}</p>
+                <p>{{ slotProps.data.price.toLocaleString() }}</p>
               </div>
             </template>
           </Column>
@@ -123,7 +194,13 @@
           <Column field="quantity" bodyClass="zi-table-body " :colspan="2">
             <template #body="slotProps">
               <div class="zi-table-content">
-                <p>{{ slotProps.data.quantity * slotProps.data.price }}</p>
+                <p>
+                  {{
+                    (
+                      slotProps.data.quantity * slotProps.data.price
+                    ).toLocaleString()
+                  }}
+                </p>
               </div>
             </template>
           </Column>
@@ -131,23 +208,31 @@
         <div class="tableFooter">
           <div class="footerDetail p-d-flex p-ai-center p-jc-between">
             <p>جمع اقلام</p>
-            <p>{{ Factor.totalPrice }}</p>
+            <p>{{ Factor.totalPrice.toLocaleString() }}</p>
           </div>
           <div class="footerDetail p-d-flex p-ai-center p-jc-between">
             <p>هزینه حمل و نقل</p>
-            <p>{{ Factor.shippingTotal }} <span class="redTxt">+</span></p>
+            <p>
+              {{ Factor.shippingTotal.toLocaleString() }}
+              <span class="redTxt p-mr-1">+</span>
+            </p>
           </div>
           <div class="footerDetail p-d-flex p-ai-center p-jc-between">
             <p>تخفیف</p>
-            <p>{{ Factor.discountTotal }}-</p>
+            <p>
+              {{ Factor.discountTotal.toLocaleString() }}
+              <span class="redTxt p-mr-1">-</span>
+            </p>
           </div>
           <div class="footerDetailAll p-d-flex p-ai-center p-jc-between">
             <p>مجموع هزینه ها</p>
             <p class="redTxt">
               {{
-                parseFloat(Factor.totalPrice) +
-                parseFloat(Factor.shippingTotal) -
-                parseFloat(Factor.discountTotal)
+                (
+                  parseFloat(Factor.totalPrice) +
+                  parseFloat(Factor.shippingTotal) -
+                  parseFloat(Factor.discountTotal)
+                ).toLocaleString()
               }}
             </p>
           </div>
@@ -155,7 +240,7 @@
       </div>
       <div class="p-d-flex p-ai-start p-jc-center p-col-5">
         <div class="card">
-          <TabView ref="tabview1" class="tabview-custom">
+          <TabView ref="tabview1" class="tabview-custom" v-if="src == 'online'">
             <TabPanel header="صورت حساب">
               <ul>
                 <li>هدی احمدی</li>
@@ -183,6 +268,22 @@
               </ul>
             </TabPanel>
           </TabView>
+
+          <TabView ref="tabview1" class="tabview-custom" v-else>
+            <TabPanel header="اطلاعات مشتری">
+              <ul>
+                <li>هدی احمدی</li>
+                <li>تهران</li>
+                <li>تهران</li>
+                <li>سعادت آباد-کوی فردوس</li>
+                <li>7978 788 0930</li>
+                <li>14322662277</li>
+                <li>hoda@gmail.com</li>
+                <li>لطفا پیش از ارسال هماهنگ شود.</li>
+                <li>تولدت مبارک عزیزم</li>
+              </ul>
+            </TabPanel>
+          </TabView>
         </div>
       </div>
     </div>
@@ -190,9 +291,26 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   data() {
-    return {};
+    return {
+      months: {
+        "01": "فروردین",
+        "02": "اردیبهشت",
+        "03": "خرداد",
+        "04": "تیر",
+        "05": "مرداد",
+        "06": "شهریور",
+        "07": "مهر",
+        "08": "آبان",
+        "09": "آذز",
+        10: "دی",
+        11: "بهمن",
+        12: "اسفند",
+      },
+    };
   },
   props: {
     Factor: {
@@ -201,6 +319,12 @@ export default {
     showDetail: {
       require: true,
     },
+    src: {
+      require: true,
+    },
+  },
+  computed: {
+    ...mapState("iconSVG", ["globalIcon", "offlineICon", "printIcon"]),
   },
   methods: {
     // showEdit() {
@@ -230,6 +354,27 @@ export default {
 
 <style lang="scss" scoped>
 @import "../../../assets/styles/variablesOfTable";
+
+::v-deep(.p-button.p-button-secondary) {
+  width: 77px;
+  height: 32px;
+  border-radius: 4px;
+  padding: 8px;
+  border: none !important;
+  box-shadow: none !important;
+  background-color: #048ba8 !important;
+  text-align: center;
+
+  .p-button-label {
+    font-size: 14px;
+    color: #fff;
+    line-height: 168%;
+  }
+}
+
+.dateStyle {
+  text-decoration: underline;
+}
 .factorNum {
   font-weight: bold;
   font-size: 24px;
@@ -272,6 +417,12 @@ export default {
   letter-spacing: 0.25px;
   color: #065143;
 }
+
+// ::v-deep(.p-dialog-header) {
+//   .p-dialog-header-icon {
+//     color: red;
+//   }
+// }
 
 ::v-deep(.zi-table) {
   border-spacing: 0;
