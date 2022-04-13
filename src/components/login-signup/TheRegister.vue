@@ -4,7 +4,11 @@
     <div class="stepContainer p-d-flex">
       <div class="step">
         <div class="stepCircle" :class="stepClass[0]">
-          <i v-if="step >= 1" class="ri-check-line"></i>
+          <i
+            v-if="step >= 1"
+            class="svgIcon"
+            :innerHTML="iconSVGs.checkIcon"
+          ></i>
           <span v-else>1</span>
         </div>
       </div>
@@ -19,11 +23,15 @@
           @click="stepBack(1)"
           style="cursor: pointer"
         >
-          <i v-if="step >= 2" class="ri-check-line"></i>
+          <i
+            v-if="step >= 2"
+            class="svgIcon"
+            :innerHTML="iconSVGs.checkIcon"
+          ></i>
           <span v-else>2</span>
         </div>
       </div>
-      <small :class="step >= 1 ? 'smallText' : null">ساخت دامنه</small>
+      <small :class="step >= 1 ? 'smallText' : null">انتخاب دامنه</small>
     </div>
     <div class="stepLine stepLine2" :class="stepClass[1]"></div>
     <div class="stepContainer p-d-flex">
@@ -34,7 +42,11 @@
           @click="stepBack(2)"
           style="cursor: pointer"
         >
-          <i v-if="step == 3" class="ri-check-line"></i>
+          <i
+            v-if="step == 3"
+            class="svgIcon"
+            :innerHTML="iconSVGs.checkIcon"
+          ></i>
           <span v-else>3</span>
         </div>
       </div>
@@ -43,20 +55,12 @@
       >
     </div>
   </div>
-  <!-- <div class="container-fluid">
-    <br /><br />
-    <ul class="list-unstyled multi-steps">
-      <li>Start</li>
-      <li>First Step</li>
-      <li class="is-active">Middle Stage</li>
-      <li>Finish</li>
-    </ul>
-  </div> -->
+
+  <!-- step 1 form -->
   <div
     v-if="step == 0"
     class="innerBox innerBox1 p-d-flex p-ai-start p-jc-start p-flex-column"
   >
-    <!-- step 1 form -->
     <form>
       <div class="middleBox">
         <p class="formTitle">
@@ -97,10 +101,15 @@
         class="loginButton"
         :class="loading ? 'sendData' : ''"
       >
-        <i v-show="!loading" class="pi pi-clock p-ml-1"></i>
+        <i
+          v-show="!loading"
+          class="svgIcon"
+          :innerHTML="iconSVGs.checkCircleLine"
+        ></i>
         <i
           v-show="loading && timerCounter > 0"
-          class="pi pi-spin pi-spinner p-m-1"
+          class="svgIcon"
+          :innerHTML="iconSVGs.loadingCircle"
         ></i>
         <p v-show="timerCounter > 0">تایید و ادامه</p>
         <p v-show="timerCounter == 0">ارسال مجدد کد</p>
@@ -112,13 +121,52 @@
           href="#"
           >تغییر شماره موبایل</a
         >
-        <i class="ri-arrow-left-line"></i>
+        <i class="svgIcon" :innerHTML="iconSVGs.goBackIcon"></i>
       </p>
     </form>
   </div>
   <!-- step 2 form -->
+  <div v-if="choosenSite && step == 1" class="chooseSiteBox">
+    <div class="titleDomain">
+      <p class="header">سایت‌های موجود</p>
+      <p class="text">پنل کاربری دلخواه خود را انتخاب کنید.</p>
+    </div>
+    <div class="DomainCards">
+      <DomainCard
+        DomainCardClass="boldDomainCard"
+        @addDomainLink="
+          () => {
+            choosenSite = false;
+          }
+        "
+      ></DomainCard>
+      <DomainCard
+        :Demo="true"
+        :register="true"
+        DomainCardClass="grayDomainCard"
+      ></DomainCard>
+    </div>
+    <div class="helpConnect">
+      <div class="helpConnectText">
+        <i class="svgIcon" :innerHTML="iconSVGs.questionCircle"></i>
+        <p class="p-text-right">
+          در صورتی که سایت اختصاصی خود را برای فروش محصول ندارید،با ما تماس
+          بگیرید.
+        </p>
+      </div>
+      <div class="helpPhone">
+        <a
+          href="tel:09010922933"
+          onclick="ga('send', 'event', { eventCategory: 'Contact', eventAction: 'Call', eventLabel: 'Mobile Button'});"
+          ><p class="phoneConnect p-d-flex p-ai-center p-jc-center">
+            <i class="svgIcon" :innerHTML="iconSVGs.phoneIcon"></i>933 0922 0901
+          </p>
+        </a>
+      </div>
+    </div>
+  </div>
   <div
-    v-else-if="step == 1"
+    v-else-if="step == 1 && !choosenSite"
     class="innerBox innerBox2 p-d-flex p-ai-start p-jc-start p-flex-column"
   >
     <form>
@@ -137,7 +185,8 @@
           />
           <span class="floating-label">آدرس سایت فروشگاه(ضروری)</span>
           <i
-            class="ri-checkbox-circle-line iconInput iconCorrect"
+            class="iconInput iconCorrect svgIcon"
+            :innerHTML="iconSVGs.checkCircleLine"
             v-show="correctSiteURL"
           ></i>
           <p class="errText" v-show="notValidSiteURL">
@@ -172,12 +221,21 @@
         </div>
       </div> -->
       <button
+        id="domainCheckBut"
         @click.prevent="changeStep()"
         class="loginButton"
         :class="loading ? 'sendData' : ''"
       >
-        <i v-show="!loading" class="ri-checkbox-circle-line p-ml-1"></i>
-        <i v-show="loading" class="pi pi-spin pi-spinner p-m-1"></i>
+        <i
+          v-show="!loading"
+          class="svgIcon"
+          :innerHTML="iconSVGs.checkCircleLine"
+        ></i>
+        <i
+          v-show="loading"
+          class="svgIcon"
+          :innerHTML="iconSVGs.loadingCircle"
+        ></i>
         <p>تایید و ادامه</p>
       </button>
     </form>
@@ -189,7 +247,7 @@
   >
     <form>
       <div class="middleBox">
-        <p class="formTitle">
+        <p class="formTitle p-d-flex p-ai-center">
           برای ساخت کلید وارد
           <a
             :href="
@@ -208,7 +266,11 @@
             target="_blank"
           >
             پیکربندی پنل سایت ووکامرس </a
-          >خود شوید.<i class="pi pi-question-circle" @click="modalHandle()"></i>
+          >خود شوید.<i
+            :innerHTML="iconSVGs.helper"
+            class="svgIcon"
+            @click="modalHandle()"
+          ></i>
         </p>
         <div class="inputContainer inputHeight">
           <input
@@ -228,7 +290,8 @@
             v-show="notValidKey === false"
           ></i> -->
           <i
-            class="ri-close-circle-line iconInput iconInCorrect"
+            :innerHTML="iconSVGs.closeCircleLine"
+            class="svgIcon iconInput iconInCorrect"
             v-show="notValidKey === true"
           ></i>
 
@@ -254,7 +317,8 @@
             v-show="notValidPass === false"
           ></i> -->
           <i
-            class="ri-close-circle-line iconInput iconInCorrect"
+            :innerHTML="iconSVGs.closeCircleLine"
+            class="svgIcon iconInput iconInCorrect"
             v-show="notValidPass === true"
           ></i>
           <p class="errText" v-show="notValidPass === true">
@@ -277,22 +341,36 @@
         </ProgressBar>
       </div>
       <button
+        id="connectPozBut"
         v-if="myColor == '#558b6e'"
         @click.prevent="changeStep()"
         class="loginButton"
         :class="loading ? 'sendData' : ''"
       >
-        <i v-show="!loading" class="ri-checkbox-circle-line p-ml-1"></i>
-        <i v-show="loading" class="pi pi-spin pi-spinner p-m-1"></i>
+        <i
+          v-show="!loading"
+          class="svgIcon"
+          :innerHTML="iconSVGs.checkCircleLine"
+        ></i>
+        <i
+          v-show="loading"
+          class="svgIcon"
+          :innerHTML="iconSVGs.loadingCircle"
+        ></i>
         <p>اتصال به پوزیترون</p>
       </button>
       <button
         v-else
+        id="retryConnPozBut"
         @click.prevent="createConnection()"
         class="loginButton"
         :class="loading ? 'sendData' : ''"
       >
-        <i v-show="loading" class="pi pi-spin pi-spinner p-m-1"></i>
+        <i
+          v-show="loading"
+          class="svgIcon"
+          :innerHTML="iconSVGs.loadingCircle"
+        ></i>
         <p>تلاش مجدد</p>
       </button>
     </form>
@@ -313,6 +391,7 @@ import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import GuidModal from "./TheGuidModal.vue";
 import axios from "axios";
+import DomainCard from "../common/components/DomainCard.vue";
 
 export default {
   emits: ["changingNumber", "sendCode"],
@@ -328,6 +407,7 @@ export default {
     const router = useRouter();
     const store = useStore();
     const { cookies } = useCookies();
+    const iconSVGs = store.state.iconSVG;
     // userToken
     const userToken = ref(null);
 
@@ -348,6 +428,7 @@ export default {
     const pozitronUrl = ref("");
     const notValidPozURL = ref(false);
     const correctPozURL = ref(false);
+    const choosenSite = ref(true);
     //form 3 variables
     const notValidPass = ref(null);
     const notValidKey = ref(null);
@@ -400,20 +481,28 @@ export default {
       return value;
     });
 
-    watchEffect(
-      () => {
-        inputs.value[0].focus();
-      },
-      {
-        flush: "post",
-      }
-    );
+    if (cookies.get("keepU") === "rrrr") {
+      step.value = 1;
+      cookies.remove("keepU");
+    }
+
+    if (step.value === 0) {
+      watchEffect(
+        () => {
+          inputs.value[0].focus();
+        },
+        {
+          flush: "post",
+        }
+      );
+    }
 
     let interval = setInterval(() => {
       if (timerCounter.value > 0) {
         timerCounter.value -= 1;
       }
     }, 1000);
+
     // ----------------------functions-------------------------
     function createConnection() {
       progressValue.value = 0;
@@ -506,6 +595,7 @@ export default {
                     } else {
                       urlExist.value = false;
                       step.value += 1;
+
                       loading.value = false;
                     }
                   }
@@ -560,7 +650,7 @@ export default {
     }
 
     function stepBack(prevStep) {
-      if (step.value > 0) {
+      if (step.value > 0 && prevStep < step.value) {
         step.value = prevStep;
       }
     }
@@ -770,6 +860,7 @@ export default {
       modalShow.value = !modalShow.value;
     }
     return {
+      iconSVGs,
       loading,
       activationKeyFields,
       activationKey,
@@ -778,6 +869,7 @@ export default {
       stepClass,
       mySteps,
       siteUrl,
+      choosenSite,
       pozitronUrl,
       useKey,
       passKey,
@@ -809,7 +901,7 @@ export default {
       sendCode,
     };
   },
-  components: { GuidModal },
+  components: { GuidModal, DomainCard },
 };
 </script>
 
@@ -885,6 +977,9 @@ export default {
     .stepCircle {
       width: 32px;
       height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       border-radius: 50%;
       text-align: center;
       line-height: 32px;
@@ -936,6 +1031,118 @@ export default {
   a {
     font-size: 0.9rem;
     color: cadetblue;
+  }
+}
+
+.chooseSiteBox {
+  width: 504px;
+  height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  position: absolute;
+  top: 140px;
+  .titleDomain {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px 40px 0px 222px;
+    width: 468px;
+    height: 64px;
+    margin: 24px 0px;
+    .header {
+      font-family: "VazirFD";
+      font-style: normal;
+      font-weight: 500;
+      font-size: 18px;
+      line-height: 180%;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      color: #363d5d;
+      margin: 8px 0px;
+    }
+    .text {
+      font-family: "VazirFD";
+      font-style: normal;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 171%;
+      display: flex;
+      align-items: center;
+      text-align: right;
+      color: #6c6c6c;
+      margin: 8px 0px;
+    }
+  }
+  .DomainCards {
+    width: 504px;
+    height: 152px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 76px;
+    margin: 24px 0px;
+    .grayDomainCard {
+      box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+    }
+    .boldDomainCard {
+      border: 1px solid #048ba8;
+      box-sizing: border-box;
+      box-shadow: 0px 8px 32px rgba(73, 82, 126, 0.15);
+    }
+  }
+  .helpConnect {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 0px 40px 0px 64px;
+    width: 504px;
+    height: 88px;
+    .helpConnectText {
+      margin: 16px 0px;
+      width: 400px;
+      height: 48px;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+      align-items: flex-start;
+      padding: 0px;
+      p {
+        color: #6c6c6c;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 13px;
+        line-height: 171%;
+        width: 373px;
+      }
+      i {
+        color: #b83b00;
+        margin: 0px 8px;
+      }
+    }
+    .helpPhone {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      padding: 0px;
+      width: 122px;
+      height: 24px;
+      margin: 16px 0px;
+      a {
+        color: #49527e;
+        font-weight: 500;
+        font-size: 14px;
+        line-height: 150%;
+        i {
+          margin: 0px 8px;
+        }
+      }
+    }
   }
 }
 

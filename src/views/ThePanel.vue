@@ -1,24 +1,33 @@
 <template>
-  <div class="zi-navbar">
-    <zi-rtl-breadcrumb :home="home" :model="items" />
-  </div>
-  <div class="p-d-flex">
+  <TheNavbar></TheNavbar>
+  <div class="p-d-flex bx" style="background: #f6f6f7">
     <zi-sidebar />
     <div class="zi-main">
       <div class="content">
-        <router-view />
+        <router-view v-slot="{ Component }">
+          <keep-alive>
+            <component :is="Component" />
+          </keep-alive>
+        </router-view>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapMutations } from "vuex";
+import TheNavbar from "../components/panel/TheNavbar.vue";
 export default {
-  data() {
-    return {
-      home: { icon: "pi pi-home", to: "/" },
-      items: [{ label: "محصولات" }],
-    };
+  components: { TheNavbar },
+  methods: {
+    ...mapMutations(["changeUserToken"]),
+    ...mapMutations("products", ["setUserTokenForProducts"]),
+    ...mapMutations("factors", ["setUserTokenForFactors"]),
+  },
+  created() {
+    this.changeUserToken();
+    this.setUserTokenForProducts();
+    this.setUserTokenForFactors();
   },
 };
 </script>

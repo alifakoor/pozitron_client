@@ -22,7 +22,7 @@
         }"
         :disabled="disabled"
         :min="inType == 'number' ? 0 : ''"
-        @blur="$emit('InvertoryUpdate', parseInt(inputValue))"
+        @blur="isValidData()"
         @click="() => (notValidData = false)"
         :class="{ 'p-invalid': notValidData || sameInventory }"
         aria-describedby="onlinePrice-help"
@@ -34,7 +34,10 @@
           'p-d-flex': notValidData || sameInventory,
           'p-d-none': !notValidData || !sameInventory,
         }"
-        ><i class="ri-error-warning-line p-ml-1 warningTxtIcon"></i
+        ><i
+          :innerHTML="closeCircleLine"
+          class="svgIcon warningTxtIcon iconInCorrect"
+        ></i
         >{{ validationErr }}</small
       >
       <small
@@ -53,6 +56,7 @@
 
 <script>
 import Num2persian from "num2persian";
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -63,6 +67,10 @@ export default {
   },
   emits: ["InvertoryUpdate", "changeInputValue"],
   props: {
+    inputName: {
+      type: String,
+      default: "",
+    },
     inputText: {
       type: String,
       default: "",
@@ -104,9 +112,24 @@ export default {
       required: false,
     },
   },
+  computed: {
+    ...mapState("iconSVG", ["closeCircleLine"]),
+  },
   methods: {
     changeNumToPersian(num) {
       return Num2persian(num);
+    },
+    isValidData() {
+      if (this.$props.validation == "true") {
+        if (this.inputValue === "" || this.inputValue === null) {
+          this.notValidData = true;
+        } else {
+          this.notValidData = false;
+          this.$emit("InvertoryUpdate", parseInt(this.inputValue));
+        }
+      } else {
+        this.$emit("InvertoryUpdate", parseInt(this.inputValue));
+      }
     },
     // addComma(newValue, oldValue) {
     //   let nf = new Intl.NumberFormat("en-US");
@@ -121,7 +144,14 @@ export default {
   },
   watch: {
     inputValue: function () {
-      this.$emit("changeInputValue", this.inputValue);
+      if (this.inputName != "") {
+        this.$emit("changeInputValue", {
+          name: this.inputName,
+          inValue: this.inputValue,
+        });
+      } else {
+        this.$emit("changeInputValue", this.inputValue);
+      }
     },
   },
 };
@@ -138,14 +168,16 @@ export default {
     padding: 0px 8px;
     position: absolute;
     top: 0;
-    right: 5%;
+    right: 10%;
     transform: translateY(-10%);
     background-color: #fff;
-    font-size: 12px;
+    font-weight: 500;
+    font-size: 0.75rem;
+    color: #49527e;
   }
   .iconInput {
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
     left: 0 !important;
     margin-top: 0;
     top: 0;
@@ -154,13 +186,14 @@ export default {
     align-items: center;
     background: $iconGray;
     border-radius: 4px 0px 0px 4px;
-    border: 1px solid #a7acb1;
     border-right: none;
+    transform: scale(0.9);
   }
   .warningTxt {
     color: $errorText;
     font-size: 12px;
     width: 14em;
+    text-align: right;
   }
   .warningTxtIcon {
     color: $errorText;
@@ -168,22 +201,39 @@ export default {
   }
   .inputStyle {
     width: 100%;
-    font-size: 12px;
+    font-size: 14px;
     color: $textMuted;
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
-    border: 1px solid #a7acb1;
+    border: 1px solid #bbc0d8;
     border-radius: 4px;
     height: 40px;
     padding-right: 10px !important;
   }
+
+  .inputStyle::placeholder {
+    color: #bbc0d8;
+    font-weight: Regular;
+    font-size: 0.875rem;
+  }
+
+  .inputStyle:hover {
+    border: 1px solid #bbc0d8;
+  }
+
+  .inputStyle:focus {
+    box-shadow: none;
+    border: 2px solid #7b84b2;
+  }
+
   .explaination {
     display: inline-block;
     width: 100%;
     font-size: 12px;
     overflow-wrap: break-word;
+    color: #7b84b2;
   }
 }
 </style>

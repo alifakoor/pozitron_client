@@ -15,13 +15,14 @@
     "primeicons": "^5.0.0",
     "primevue": "^3.10.0",
     "register-service-worker": "^1.7.2",
-    "remixicon": "^2.5.0",
     "sass": "^1.44.0",
     "sweetalert2": "^11.3.0",
     "vue": "^3.2.23",
+    "vue-multiselect": "^3.0.0-alpha.2",
     "vue-router": "^4.0.12",
     "vue-the-mask": "^0.11.1",
     "vue3-cookies": "^1.0.6",
+    "vue3-persian-datetime-picker": "^1.2.2",
     "vuex": "^4.0.2"
   },
   "devDependencies": {

@@ -5,21 +5,22 @@
       <div class="headerInfo">
         <h4>ساخت کلید API در صفحه ووکامرس</h4>
         <i
-          class="ri-close-line"
+          class="svgIcon"
           @click="$emit('modalHandle')"
+          :innerHTML="greenClose"
           style="cursor: pointer"
         ></i>
       </div>
       <p class="textInfo">از طریق مسیر زیر یک کلید API اضافه کنید.</p>
       <div class="stepGuid">
         <p class="textInfo">ووکامرس</p>
-        <i class="ri-arrow-left-s-line arrowRight"></i>
+        <i class="svgIcon arrowRight" :innerHTML="greenLeftArrow"></i>
         <p class="textInfo">پیکربندی</p>
-        <i class="ri-arrow-left-s-line arrowRight"></i>
+        <i class="svgIcon arrowRight" :innerHTML="greenLeftArrow"></i>
         <p class="textInfo">پیشرفته</p>
-        <i class="ri-arrow-left-s-line arrowRight"></i>
+        <i class="svgIcon arrowRight" :innerHTML="greenLeftArrow"></i>
         <p class="textInfo">Rest API</p>
-        <i class="ri-arrow-left-s-line arrowRight"></i>
+        <i class="svgIcon arrowRight" :innerHTML="greenLeftArrow"></i>
         <p class="textInfo">افرودن کلید</p>
       </div>
       <p class="textInfo">
@@ -65,6 +66,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -99,6 +101,9 @@ export default {
         },
       ],
     };
+  },
+  computed: {
+    ...mapState("iconSVG", ["greenClose", "greenLeftArrow"]),
   },
   props: ["modalShow"],
   emits: ["modalHandle"],
