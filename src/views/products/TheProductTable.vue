@@ -60,7 +60,7 @@
       ]"
       dataKey="id"
       tableClass="zi-table "
-      :scrollHeight="`${Math.ceil((showPageCount * 70 + 70) / 16)}rem`"
+      :scrollHeight="`${Math.ceil((showPageCount * 70 + 70) / 16) + 1}rem`"
       responsiveLayout="scroll"
     >
       <ColumnGroup type="header">
@@ -202,7 +202,7 @@
       v-model:selection="selectedProducts"
       dataKey="id"
       tableClass="zi-table "
-      :scrollHeight="`${Math.ceil((showPageCount * 70 + 70) / 16)}rem`"
+      :scrollHeight="`${Math.ceil((showPageCount * 70 + 70) / 16) + 1}rem`"
       responsiveLayout="scroll"
       :globalFilterFields="['name', 'barcode']"
     >
