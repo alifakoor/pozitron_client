@@ -229,7 +229,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "../../assets/styles/variablesOfTable";
+@import "../../../assets/styles/variablesOfTable";
 .factorNum {
   font-weight: bold;
   font-size: 24px;
