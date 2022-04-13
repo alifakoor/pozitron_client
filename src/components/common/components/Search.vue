@@ -1,35 +1,64 @@
 <template>
   <div class="zi-search">
     <span class="p-input-icon-right">
-      <i class="pi pi-search" />
+      <i class="svgIcon" :innerHTML="searchIcon" />
       <InputText
         type="text"
-        v-model="searchData"
+        v-model="search"
         placeholder="با بارکد، نام، ویژگی، دسته و برچسب دنبالش بگرد"
-        @input="searchProduct(searchData)"
+        @input="searchingData()"
       />
     </span>
   </div>
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   name: "zi-search",
   props: {
-    width: {
+    widthInput: {
       type: String,
-      default: "50%",
+      default: "282px",
+    },
+    mediaWidth: {
+      type: String,
+      default: "182px",
+    },
+    searchType: {
+      type: String,
+    },
+    searchStore: {
+      type: String,
     },
   },
   data() {
     return {
-      searchData: "",
+      search: "",
+      inputWidth: this.$props.widthInput,
+      mediaWidth: this.$props.mediaWidth,
     };
   },
+  computed: {
+    ...mapState("iconSVG", ["searchIcon"]),
+  },
   methods: {
-    ...mapMutations(["searchProduct"]),
+    ...mapMutations("products", ["searcProducthData"]),
+    ...mapMutations("factors", ["searchFactorData"]),
+    searchingData() {
+      if (this.searchStore == "products") {
+        this.searcProducthData({
+          searchValue: this.search,
+          searchType: this.searchType,
+        });
+      } else if (this.searchStore == "factors") {
+        this.searchFactorData({
+          searchValue: this.search,
+          searchType: this.searchType,
+        });
+      }
+    },
   },
 };
 </script>
@@ -37,18 +66,18 @@ export default {
 <style lang="scss" scoped>
 @import "../../../assets/styles/variablesOfTable";
 .p-input-icon-right {
-  .pi-search {
+  .svgIcon {
     color: #7b84b2;
-    margin-right: 25px;
+    margin: -10px 25px 0 0 !important;
   }
 }
 .p-inputtext {
   padding: 16px;
-  padding-right: 40px !important;
+  padding-right: 2.5rem !important;
   background: #f9f9fb;
   border-radius: 16px;
   border: 0;
-  width: 282px;
+  width: v-bind(inputWidth);
   height: 32px;
   font-size: 12px;
   margin: 0px 16px 0 8px;
@@ -56,12 +85,8 @@ export default {
 
 @media (max-width: 680px) {
   .p-inputtext {
-    width: 182px;
+    width: v-bind(mediaWidth);
   }
-}
-.p-inputtext::placeholder {
-  font-size: 12px;
-  color: #b4b4b4;
 }
 
 .p-inputtext:focus {
@@ -99,7 +124,12 @@ export default {
 
   .p-inputtext {
     text-align: right;
-    font-family: Vazir;
+    font-family: "Vazir";
+  }
+
+  .p-inputtext::placeholder {
+    font-size: 0.75rem;
+    color: #9ba2c5;
   }
 }
 </style>

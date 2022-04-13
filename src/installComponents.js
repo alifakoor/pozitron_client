@@ -1,7 +1,4 @@
 // prime vue
-import Breadcrumb from "primevue/breadcrumb";
-import BreadcrumbItem from "primevue/breadcrumb/BreadcrumbItem.vue";
-import InputText from "primevue/inputtext/InputText.vue";
 import Button from "primevue/button/Button.vue";
 import Dialog from "primevue/dialog/Dialog.vue";
 import DataTable from "primevue/datatable/DataTable.vue";
@@ -11,8 +8,6 @@ import Row from "primevue/row/Row.vue";
 import Chip from "primevue/chip/Chip.vue";
 import Tag from "primevue/tag/Tag.vue";
 import Badge from "primevue/badge/Badge.vue";
-import InputSwitch from "primevue/inputswitch/InputSwitch.vue";
-import Checkbox from "primevue/checkbox/Checkbox.vue";
 import TriStateCheckbox from "primevue/tristatecheckbox";
 import Galleria from "primevue/galleria";
 import ProgressBar from "primevue/progressbar";
@@ -21,23 +16,35 @@ import Tooltip from "primevue/tooltip";
 import Divider from "primevue/divider";
 import Textarea from "primevue/textarea";
 import Menu from "primevue/menu";
+import InputText from "primevue/inputtext";
+import Dropdown from "primevue/dropdown";
+import InputSwitch from "primevue/inputswitch";
+import Checkbox from "primevue/checkbox";
+import FileUpload from "primevue/fileupload";
+import TabView from "primevue/tabview";
+import TabPanel from "primevue/tabpanel";
+import Skeleton from "primevue/skeleton";
 
 // zi
 import RTLBreadcrumb from "./components/panel/TheRTLBreadcrumb.vue";
-import Navbar from "./components/panel/TheNavbar.vue";
 import Sidebar from "./components/panel/TheSidebar.vue";
 import Search from "./components/common/components/Search.vue";
 import BulkEdit from "./components/common/components/BulkEdit.vue";
+import ShowDetail from "./components/common/components/ShowFactorDetail.vue";
 
 //mine
 import InputHasIcon from "./components/common/components/InputHasIcon.vue";
 import InputHasInfo from "./components/common/components/InputHasInfo.vue";
+import ImageInput from "./components/common/components/ImageInput.vue";
+import SelectOption from "./components/common/components/SelectOption.vue";
+import SelectDropDown from "./components/common/components/SelectDropDown.vue";
+import CahangeFactorStatus from "./components/common/components/CahangeFactorStatus.vue";
+import DomainCard from "./components/common/components/DomainCard.vue";
+import CustomDatePicker from "./components/common/components/CustomDatePicker.vue";
 
 export default {
   install(app) {
     // primevue
-    app.component("Breadcrumb", Breadcrumb);
-    app.component("BreadcrumbItem", BreadcrumbItem);
     app.component("InputText", InputText);
     app.component("Button", Button);
     app.component("Dialog", Dialog);
@@ -58,16 +65,27 @@ export default {
     app.component("Menu", Menu);
     app.directive("badge", BadgeDirective);
     app.directive("tooltip", Tooltip);
+    app.component("Dropdown", Dropdown);
+    app.component("SelectOption", SelectOption);
+    app.component("DomainCard", DomainCard);
+    app.component("FileUpload", FileUpload);
+    app.component("TabView", TabView);
+    app.component("TabPanel", TabPanel);
+    app.component("Skeleton", Skeleton);
 
     //mine
     app.component("InputHasIcon", InputHasIcon);
     app.component("InputHasInfo", InputHasInfo);
+    app.component("ImageInput", ImageInput);
+    app.component("SelectDropDown", SelectDropDown);
+    app.component("CahangeFactorStatus", CahangeFactorStatus);
 
     // zi
     app.component("zi-rtl-breadcrumb", RTLBreadcrumb);
-    app.component("zi-navbar", Navbar);
     app.component("zi-sidebar", Sidebar);
-    app.component("zi-search", Search);
+    app.component("Search", Search);
     app.component("zi-bulk-edit", BulkEdit);
+    app.component("showDetail", ShowDetail);
+    app.component("CustomDatePicker", CustomDatePicker);
   },
 };
