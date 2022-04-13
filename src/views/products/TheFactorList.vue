@@ -7,6 +7,7 @@
         <showDetail
           :Factor="factors[showDetailFlag]"
           :showDetail="showDetailFlag != null"
+          :src="showDetailSrc"
         />
       </div>
     </div>
@@ -356,7 +357,10 @@
         <template #body="slotProps">
           <div class="zi-table-content">
             <div class="zi-table-content-has-sub">
-              <p class="factorName" @click="showDetail(slotProps.data.id)">
+              <p
+                class="factorName"
+                @click="showDetail(slotProps.data.id, slotProps.data.src)"
+              >
                 {{ slotProps.data.name || "نامشخص" }}
               </p>
               <span class="zi-table-product-prop">
@@ -511,6 +515,7 @@ export default {
       showPageCount: 5,
       pageProduct: [],
       showDetailFlag: null,
+      showDetailSrc: "",
     };
   },
   computed: {
@@ -544,8 +549,9 @@ export default {
       "emptyFactorSelection",
       "deSelectFactorItem",
     ]),
-    showDetail(Fid) {
+    showDetail(Fid, src) {
       this.showDetailFlag = Fid;
+      this.showDetailSrc = src;
     },
     checkState() {
       let trueSelection = 0;

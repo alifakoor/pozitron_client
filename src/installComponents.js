@@ -30,7 +30,7 @@ import RTLBreadcrumb from "./components/panel/TheRTLBreadcrumb.vue";
 import Sidebar from "./components/panel/TheSidebar.vue";
 import Search from "./components/common/components/Search.vue";
 import BulkEdit from "./components/common/components/BulkEdit.vue";
-import ShowDetail from "./components/panel/ShowFactorDetail.vue";
+import ShowDetail from "./components/common/components/ShowFactorDetail.vue";
 
 //mine
 import InputHasIcon from "./components/common/components/InputHasIcon.vue";
